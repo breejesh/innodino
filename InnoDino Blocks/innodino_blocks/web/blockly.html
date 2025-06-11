@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Blockly Workspace</title>
+  
+  <!-- Blockly Dependencies -->
+  <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+  <script src="https://unpkg.com/blockly/javascript_compressed"></script>
+  <script src="https://unpkg.com/blockly/msg/en"></script>
+  
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+    #blocklyDiv {
+      height: 100vh;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="blocklyDiv"></div>
+  
+  <script src="blockly_init.js"></script>
+  
+  <script>
+    // Initialize workspace change listener
+    function setupWorkspaceListener() {
+      if (window.workspace) {
+        window.workspace.addChangeListener(function(event) {
+          // Generate code whenever blocks change
+          if (event.type === Blockly.Events.BLOCK_CHANGE || 
+              event.type === Blockly.Events.BLOCK_CREATE || 
+              event.type === Blockly.Events.BLOCK_DELETE ||
+              event.type === Blockly.Events.BLOCK_MOVE) {
+            
+            const code = Blockly.JavaScript.workspaceToCode(window.workspace);
+            
+            // Send code to parent window (Flutter)
+            if (window.parent !== window) {
+              window.parent.postMessage({ 
+                type: 'blocklyCode', 
+                code: code 
+              }, '*');
+            }
+          }
+        });
+      }
+    }
+    
+    // Wait for workspace to be initialized, then set up listener
+    setTimeout(setupWorkspaceListener, 100);
+  </script>
+</body>
+</html>
