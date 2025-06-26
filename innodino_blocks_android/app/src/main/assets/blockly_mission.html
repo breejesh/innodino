@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dino Blockly Mission</title>
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            background: #FAFAFA;
+        }
+
+        #blocklyDiv {
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .blocklyMainBackground {
+            fill: #FAFAFA;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="blocklyDiv"></div>
+    <xml id="toolbox" style="display: none"></xml>
+    <script>
+        // Android will inject toolbox XML and initial blocks
+        function loadBlockly(toolboxXml, initialXml) {
+            document.getElementById('toolbox').innerHTML = toolboxXml;
+            const workspace = Blockly.inject('blocklyDiv', {
+                toolbox: document.getElementById('toolbox'),
+                scrollbars: true,
+                trashcan: true,
+                zoom: { controls: true, wheel: true, startScale: 1.0, maxScale: 2, minScale: 0.3 }
+            });
+            if (initialXml) {
+                Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(initialXml), workspace);
+            }
+            window.getBlocklyXml = function () {
+                return Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(workspace));
+            };
+            window.markMissionDone = function () {
+                if (window.Android && window.Android.onMissionDone) {
+                    window.Android.onMissionDone(window.getBlocklyXml());
+                }
+            };
+        }
+    </script>
+</body>
+
+</html>

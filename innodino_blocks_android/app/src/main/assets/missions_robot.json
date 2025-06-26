@@ -1,0 +1,44 @@
+{
+	"missions": [
+		{
+			"id": "bot_1",
+			"title": "Mission 1: Zara's First Move",
+			"description": "Guide Zara the DinoBot to the lost city by moving her forward!",
+			"allowedBlocks": ["move_forward"],
+			"icon": "🤖",
+			"nextMissionId": "bot_2"
+		},
+		{
+			"id": "bot_2",
+			"title": "Mission 2: The Turning Point",
+			"description": "Teach Zara to turn left and right to navigate obstacles.",
+			"allowedBlocks": ["move_forward", "turn_left", "turn_right"],
+			"icon": "🔄",
+			"nextMissionId": "bot_3"
+		},
+		{
+			"id": "bot_3",
+			"title": "Mission 3: The Looping Path",
+			"description": "Use loops to help Zara cross the Dino Bridge.",
+			"allowedBlocks": ["move_forward", "turn_left", "turn_right", "repeat"],
+			"icon": "🔁",
+			"nextMissionId": "bot_4"
+		},
+		{
+			"id": "bot_4",
+			"title": "Mission 4: The Sensor Challenge",
+			"description": "Use sensors to avoid danger and reach the city gates.",
+			"allowedBlocks": ["move_forward", "turn_left", "turn_right", "repeat", "read_sensor", "controls_if"],
+			"icon": "🦖",
+			"nextMissionId": "bot_5"
+		},
+		{
+			"id": "bot_5",
+			"title": "FINALE: Save the Lost Dino City!",
+			"description": "Combine all your skills to help Zara save the city!",
+			"allowedBlocks": ["move_forward", "turn_left", "turn_right", "repeat", "read_sensor", "controls_if", "variables_set"],
+			"icon": "🏆",
+			"nextMissionId": null
+		}
+	]
+}

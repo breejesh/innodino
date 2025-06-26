@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M100,100 m-100,0 a100,100 0 1,0 200,0 a100,100 0 1,0 -200,0"/>
+    <path
+        android:fillColor="#6FCF97"
+        android:pathData="M100,100 m-60,0 a60,60 0 1,0 120,0 a60,60 0 1,0 -120,0"/>
+    <!-- Place for logo overlay, you can replace with bitmap if needed -->
+</vector>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/dino_green">
+
+    <FrameLayout
+        android:layout_width="120dp"
+        android:layout_height="120dp">
+        
+        <View
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:background="@drawable/splash_logo_circle"/>
+            
+        <ImageView
+            android:id="@+id/splashLogo"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:src="@drawable/logo"
+            android:contentDescription="InnoDino Logo"/>
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/splashText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="InnoDino Blocks"
+        android:textColor="@color/pure_white"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_marginTop="24dp"/>
+
+</LinearLayout>

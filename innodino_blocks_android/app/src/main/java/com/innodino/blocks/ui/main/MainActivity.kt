@@ -1,6 +1,7 @@
 package com.innodino.blocks.ui.main
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,11 +34,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.innodino.blocks.R
 import com.innodino.blocks.ui.led.LEDCrystalActivity
 import com.innodino.blocks.ui.dinobot.DinobotExpeditionActivity
 import com.innodino.blocks.ui.theme.InodinoBlocksTheme
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.core.view.WindowCompat
 
 /**
  * 🏠 Main Activity - Home Screen
@@ -47,8 +51,14 @@ class MainActivity : ComponentActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Force status bar to black for MainActivity
+        WindowCompat.setDecorFitsSystemWindows(window, true)
         setContent {
             InodinoBlocksTheme {
+                SideEffect {
+                    window.statusBarColor = android.graphics.Color.BLACK
+                    window.navigationBarColor = android.graphics.Color.BLACK
+                }
                 HomeScreen(
                     onLEDAdventureClick = { startLEDAdventure() },
                     onRobotAdventureClick = { startRobotAdventure() }
@@ -74,14 +84,7 @@ fun HomeScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF2D9CDB), // Tech Teal
-                        Color(0xFF6FCF97)  // Dino Green
-                    )
-                )
-            )
+            .background(Color(0xFF6FCF97)) // Dino Green solid background
     ) {
         // Animated playful background shapes
         Canvas(modifier = Modifier.fillMaxSize()) {
@@ -156,8 +159,8 @@ fun HomeScreen(
                         subtitle = stringResource(R.string.robot_module_subtitle),
                         icon = "\uD83E\uDD16",
                         gradientColors = listOf(
-                            Color(0xFF6FCF97), // Dino Green
-                            Color(0xFF2D9CDB)  // Tech Teal
+                            Color(0xFF2D9CDB), // Tech Teal ONLY
+                            Color(0xFF2D9CDB)
                         ),
                         adventureText = stringResource(R.string.robot_adventures),
                         freePlayText = stringResource(R.string.robot_free_play),
@@ -245,7 +248,8 @@ fun HeroHeader() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(140.dp),
+            .height(140.dp)
+            .background(Color(0xFF6FCF97)), // Dino Green
         contentAlignment = Alignment.Center
     ) {
         Column(

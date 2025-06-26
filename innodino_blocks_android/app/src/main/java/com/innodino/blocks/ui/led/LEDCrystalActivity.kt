@@ -1,5 +1,7 @@
 package com.innodino.blocks.ui.led
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,10 +15,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -24,7 +28,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.innodino.blocks.R
+import com.innodino.blocks.model.MissionData
+import com.innodino.blocks.ui.MissionCodeBuilderHostActivity
 import com.innodino.blocks.ui.theme.InodinoBlocksTheme
+import com.innodino.blocks.util.MissionLoader
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -33,71 +40,38 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 @AndroidEntryPoint
 class LEDCrystalActivity : ComponentActivity() {
-    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            InodinoBlocksTheme {
-                LEDCrystalScreen(
-                    onBackClick = { finish() },
-                    onMissionClick = { missionId -> 
-                        // TODO: Navigate to specific mission
-                    }
-                )
-            }
+            val missions = remember { MissionLoader.loadMissions(this) }
+            val completed = remember { getCompletedMissions(this) }
+            LEDCrystalScreen(
+                missions = missions,
+                completedMissions = completed,
+                onBackClick = { finish() },
+                onMissionClick = { missionId ->
+                    val intent = Intent(this, MissionCodeBuilderHostActivity::class.java)
+                    intent.putExtra("MISSION_ID", missionId)
+                    startActivity(intent)
+                }
+            )
         }
+    }
+
+    private fun getCompletedMissions(context: Context): Set<String> {
+        val prefs = context.getSharedPreferences("mission_progress", Context.MODE_PRIVATE)
+        return prefs.getStringSet("completed", emptySet()) ?: emptySet()
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LEDCrystalScreen(
+    missions: List<MissionData>,
+    completedMissions: Set<String>,
     onBackClick: () -> Unit,
-    onMissionClick: (Int) -> Unit
+    onMissionClick: (String) -> Unit
 ) {
-    val missions = listOf(
-        LEDMission(
-            id = 1,
-            title = "Mission 1: Awakening the First Crystal",
-            description = "Learn the ancient art of Light Magic by mastering basic LED commands",
-            icon = "💎",
-            isLocked = false,
-            concepts = listOf("Set LED", "Row/Col Coordinates")
-        ),
-        LEDMission(
-            id = 2,
-            title = "Mission 2: Memory Crystals of Elder Triceratops",
-            description = "Master the secrets of Memory Magic using Variables",
-            icon = "🧠",
-            isLocked = false,
-            concepts = listOf("Variables", "Set LED", "Memory Storage")
-        ),
-        LEDMission(
-            id = 3,
-            title = "Mission 3: The Guardian's Challenge",
-            description = "Learn Sensing Magic with the Ultrasonic Sensor",
-            icon = "👁️",
-            isLocked = true,
-            concepts = listOf("Read Distance", "If/Else", "Comparisons")
-        ),
-        LEDMission(
-            id = 4,
-            title = "Mission 4: Rhythm of the Ancient Pterodactyl",
-            description = "Master Rhythm Magic through loop patterns",
-            icon = "🔄",
-            isLocked = true,
-            concepts = listOf("Repeat Loop", "Patterns", "Animation")
-        ),
-        LEDMission(
-            id = 5,
-            title = "FINALE: The Great Illumination Ceremony",
-            description = "Combine all magic to restore Digital Dinosaur Valley!",
-            icon = "🌟",
-            isLocked = true,
-            concepts = listOf("All Skills", "Map Function", "Master Quest")
-        )
-    )
-    
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -120,22 +94,6 @@ fun LEDCrystalScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                TopAppBar(
-                    title = { },
-                    navigationIcon = {
-                        IconButton(onClick = onBackClick) {
-                            Icon(
-                                Icons.Default.ArrowBack,
-                                contentDescription = "Back",
-                                tint = Color.White
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.Transparent
-                    )
-                )
-                
                 Text(
                     text = "💎 LED Crystal Chronicles",
                     fontSize = 24.sp,
@@ -164,9 +122,19 @@ fun LEDCrystalScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(missions) { mission ->
+                val isFirst = missions.indexOf(mission) == 0
+                val prevCompleted = missions.getOrNull(missions.indexOf(mission) - 1)?.id in completedMissions
+                val isUnlocked = isFirst || prevCompleted || mission.id in completedMissions
+                val activity = LocalContext.current as? android.app.Activity
                 MissionCard(
                     mission = mission,
-                    onClick = { onMissionClick(mission.id) }
+                    isUnlocked = isUnlocked,
+                    onClick = { if (isUnlocked && activity != null) {
+                        val intent = Intent(activity, MissionCodeBuilderHostActivity::class.java)
+                        intent.putExtra("MISSION_ID", mission.id)
+                        intent.putExtra("MISSION_MODULE", "led")
+                        activity.startActivity(intent)
+                    }}
                 )
             }
         }
@@ -175,19 +143,18 @@ fun LEDCrystalScreen(
 
 @Composable
 fun MissionCard(
-    mission: LEDMission,
+    mission: MissionData,
+    isUnlocked: Boolean,
     onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .then(
-                if (!mission.isLocked) Modifier.clickable { onClick() } else Modifier
-            ),
+            .clickable(enabled = isUnlocked) { onClick() },
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (mission.isLocked) Color(0xFFF5F5F5) else Color.White
+            containerColor = if (!isUnlocked) Color(0xFFF5F5F5) else Color.White
         )
     ) {
         Row(
@@ -200,7 +167,7 @@ fun MissionCard(
                     .size(60.dp)
                     .background(
                         brush = Brush.radialGradient(
-                            colors = if (mission.isLocked) {
+                            colors = if (!isUnlocked) {
                                 listOf(Color.Gray, Color.LightGray)
                             } else {
                                 listOf(Color(0xFFEB5757), Color(0xFFFF8A65))
@@ -211,7 +178,7 @@ fun MissionCard(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = if (mission.isLocked) "🔒" else mission.icon,
+                    text = if (!isUnlocked) "🔒" else mission.icon,
                     fontSize = 24.sp
                 )
             }
@@ -226,7 +193,7 @@ fun MissionCard(
                     text = mission.title,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = if (mission.isLocked) Color.Gray else Color(0xFF4F4F4F)
+                    color = if (!isUnlocked) Color.Gray else Color(0xFF4F4F4F)
                 )
                 
                 Spacer(modifier = Modifier.height(4.dp))
@@ -234,7 +201,7 @@ fun MissionCard(
                 Text(
                     text = mission.description,
                     fontSize = 14.sp,
-                    color = if (mission.isLocked) Color.Gray else Color(0xFF4F4F4F).copy(alpha = 0.7f),
+                    color = if (!isUnlocked) Color.Gray else Color(0xFF4F4F4F).copy(alpha = 0.7f),
                     lineHeight = 18.sp
                 )
                 
@@ -244,58 +211,47 @@ fun MissionCard(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    mission.concepts.take(2).forEach { concept ->
+                    // If you want to show concepts, add a 'concepts' field to MissionData and JSON, otherwise remove this block or use allowedBlocks as chips
+                    mission.allowedBlocks.take(2).forEach { block ->
                         Box(
                             modifier = Modifier
                                 .background(
-                                    color = if (mission.isLocked) Color.LightGray else Color(0xFFEB5757).copy(alpha = 0.1f),
+                                    color = if (!isUnlocked) Color.LightGray else Color(0xFFEB5757).copy(alpha = 0.1f),
                                     shape = RoundedCornerShape(8.dp)
                                 )
                                 .padding(horizontal = 8.dp, vertical = 4.dp)
                         ) {
                             Text(
-                                text = concept,
+                                text = block,
                                 fontSize = 10.sp,
-                                color = if (mission.isLocked) Color.Gray else Color(0xFFEB5757),
+                                color = if (!isUnlocked) Color.Gray else Color(0xFFEB5757),
                                 fontWeight = FontWeight.Medium
                             )
                         }
                     }
-                    if (mission.concepts.size > 2) {
+                    if (mission.allowedBlocks.size > 2) {
                         Text(
-                            text = "+${mission.concepts.size - 2}",
+                            text = "+${mission.allowedBlocks.size - 2}",
                             fontSize = 10.sp,
-                            color = if (mission.isLocked) Color.Gray else Color(0xFF4F4F4F).copy(alpha = 0.6f)
+                            color = if (!isUnlocked) Color.Gray else Color(0xFF4F4F4F).copy(alpha = 0.6f)
                         )
                     }
                 }
             }
-            
-            // Status indicator
-            if (!mission.isLocked) {
-                Text(
-                    text = "▶️",
-                    fontSize = 16.sp
-                )
-            }
         }
     }
 }
-
-data class LEDMission(
-    val id: Int,
-    val title: String,
-    val description: String,
-    val icon: String,
-    val isLocked: Boolean,
-    val concepts: List<String>
-)
 
 @Preview(showBackground = true)
 @Composable
 fun LEDCrystalScreenPreview() {
     InodinoBlocksTheme {
         LEDCrystalScreen(
+            missions = listOf(
+                MissionData("1", "Mission 1", "Description 1", listOf("block1"), "💎"),
+                MissionData("2", "Mission 2", "Description 2", listOf("block2"), "🧠")
+            ),
+            completedMissions = setOf(),
             onBackClick = {},
             onMissionClick = {}
         )
