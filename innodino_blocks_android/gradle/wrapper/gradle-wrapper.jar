@@ -1,0 +1,3 @@
+# This is a placeholder for gradle-wrapper.jar
+# In a real project, this would be downloaded automatically when running gradlew
+# For now, this serves as a marker file for the wrapper system

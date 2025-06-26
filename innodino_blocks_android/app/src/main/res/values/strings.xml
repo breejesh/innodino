@@ -1,0 +1,85 @@
+<resources>
+    <string name="app_name">InnoDino Blocks</string>
+    
+    <!-- Main Screen -->
+    <string name="main_title">Choose Your Adventure</string>
+    <string name="main_subtitle">Block-based programming made fun and engaging</string>
+    
+    <!-- LED Crystal Chronicles -->
+    <string name="led_module_title">LED Crystal Chronicles</string>
+    <string name="led_module_subtitle">Rex\'s Quest to Restore Digital Dinosaur Valley</string>
+    <string name="led_adventures">LED Adventures</string>
+    <string name="led_adventures_desc">Guided missions with fun challenges</string>
+    <string name="led_free_play">Free Play</string>
+    <string name="led_free_play_desc">Create your own LED patterns</string>
+    
+    <!-- DinoBot Expedition -->
+    <string name="robot_module_title">DinoBot Expedition</string>
+    <string name="robot_module_subtitle">Zara\'s Journey to Save the Lost Dino City</string>
+    <string name="robot_adventures">Robot Adventures</string>
+    <string name="robot_adventures_desc">Exciting robot missions and challenges</string>
+    <string name="robot_free_play">Free Play</string>
+    <string name="robot_free_play_desc">Experiment with robot movements</string>
+    
+    <!-- Mission Titles -->
+    <string name="mission_1_title">Mission 1: Awakening the First Crystal</string>
+    <string name="mission_2_title">Mission 2: Memory Crystals of Elder Triceratops</string>
+    <string name="mission_3_title">Mission 3: The Guardian\'s Challenge</string>
+    <string name="mission_4_title">Mission 4: Rhythm of the Ancient Pterodactyl</string>
+    <string name="mission_5_title">FINALE: The Great Illumination Ceremony</string>
+    
+    <string name="robot_mission_1_title">Mission 1: First Steps in the Ruined City</string>
+    <string name="robot_mission_2_title">Mission 2: The Engineer\'s Workshop</string>
+    <string name="robot_mission_3_title">Mission 3: The Sensor Sage\'s Trial</string>
+    <string name="robot_mission_4_title">Mission 4: Dance of the Ancient Guardians</string>
+    <string name="robot_mission_5_title">FINALE: The Great Rescue Operation</string>
+    
+    <!-- Block Programming -->
+    <string name="blocks_palette">Block Palette</string>
+    <string name="programming_canvas">Programming Canvas</string>
+    <string name="run_code">Run Code</string>
+    <string name="clear_canvas">Clear Canvas</string>
+    <string name="save_project">Save Project</string>
+    <string name="load_project">Load Project</string>
+    
+    <!-- Block Types -->
+    <string name="block_set_led">Set LED</string>
+    <string name="block_move_robot">Move Robot</string>
+    <string name="block_stop_robot">Stop Robot</string>
+    <string name="block_variable_set">Set Variable</string>
+    <string name="block_variable_get">Get Variable</string>
+    <string name="block_if_else">If/Else</string>
+    <string name="block_repeat_loop">Repeat Loop</string>
+    <string name="block_read_distance">Read Distance</string>
+    <string name="block_comparison">Comparison</string>
+    <string name="block_number">Number</string>
+    
+    <!-- Hardware Simulation -->
+    <string name="led_matrix_simulator">LED Matrix Simulator</string>
+    <string name="robot_simulator">Robot Simulator</string>
+    <string name="sensor_readings">Sensor Readings</string>
+    <string name="hardware_connected">Hardware Connected</string>
+    <string name="hardware_disconnected">Hardware Disconnected</string>
+    
+    <!-- Messages -->
+    <string name="coming_soon">Coming soon!</string>
+    <string name="mission_completed">Mission Completed!</string>
+    <string name="code_executed">Code executed successfully</string>
+    <string name="code_error">Error in code execution</string>
+    <string name="blocks_connected">Blocks connected</string>
+    <string name="victory_achieved">Victory Achieved! 🎉</string>
+    
+    <!-- Navigation -->
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="home">Home</string>
+    <string name="settings">Settings</string>
+    <string name="help">Help</string>
+    
+    <!-- Accessibility -->
+    <string name="dino_icon">Dinosaur icon</string>
+    <string name="led_icon">LED light icon</string>
+    <string name="robot_icon">Robot icon</string>
+    <string name="drag_block">Drag block to canvas</string>
+    <string name="connect_blocks">Connect blocks together</string>
+</resources>

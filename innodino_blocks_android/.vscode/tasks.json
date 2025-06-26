@@ -1,0 +1,49 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build Android App",
+			"type": "shell",
+			"command": ".\\gradlew.bat",
+			"args": [
+				"build"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"isBackground": false
+		},
+		{
+			"label": "Clean Android Project",
+			"type": "shell",
+			"command": ".\\gradlew.bat",
+			"args": [
+				"clean"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"isBackground": false
+		},
+		{
+			"label": "Build Debug APK",
+			"type": "shell",
+			"command": ".\\gradlew.bat",
+			"args": [
+				"assembleDebug"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"isBackground": false
+		},
+		{
+			"label": "Install Debug APK",
+			"type": "shell",
+			"command": ".\\gradlew.bat",
+			"args": [
+				"installDebug"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"isBackground": false
+		}
+	]
+}

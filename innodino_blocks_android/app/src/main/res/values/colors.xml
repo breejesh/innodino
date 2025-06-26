@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- InnoDino Brand Colors -->
+    <color name="dino_green">#6FCF97</color>
+    <color name="dino_green_light">#A8DDB5</color>
+    <color name="dino_green_dark">#5AAF85</color>
+    <color name="tech_teal">#2D9CDB</color>
+    <color name="tech_teal_light">#66B6E5</color>
+    <color name="tech_teal_dark">#1E6F96</color>
+    <color name="sun_yellow">#FFCE55</color>
+    <color name="sun_yellow_light">#FFD97D</color>
+    <color name="sun_yellow_dark">#E6B84A</color>
+    <color name="soft_coral">#EB5757</color>
+    <color name="soft_coral_light">#EF7A7A</color>
+    <color name="soft_coral_dark">#D44848</color>
+    <color name="cloud_white">#FAFAFA</color>
+    <color name="slate_gray">#4F4F4F</color>
+    <color name="slate_gray_light">#7A7A7A</color>
+    <color name="slate_gray_dark">#3A3A3A</color>
+    <color name="pure_white">#FFFFFF</color>
+    <color name="dino_brown">#A47551</color>
+    
+    <!-- Material Design 3 Colors -->
+    <color name="md_theme_light_primary">@color/dino_green</color>
+    <color name="md_theme_light_onPrimary">@color/pure_white</color>
+    <color name="md_theme_light_primaryContainer">#D7F8E4</color>
+    <color name="md_theme_light_onPrimaryContainer">#002110</color>
+    <color name="md_theme_light_secondary">@color/tech_teal</color>
+    <color name="md_theme_light_onSecondary">@color/pure_white</color>
+    <color name="md_theme_light_secondaryContainer">#B8E7FF</color>
+    <color name="md_theme_light_onSecondaryContainer">#001E2B</color>
+    <color name="md_theme_light_tertiary">@color/sun_yellow</color>
+    <color name="md_theme_light_onTertiary">@color/slate_gray</color>
+    <color name="md_theme_light_tertiaryContainer">#FFECB3</color>
+    <color name="md_theme_light_onTertiaryContainer">#2E1B00</color>
+    <color name="md_theme_light_error">@color/soft_coral</color>
+    <color name="md_theme_light_errorContainer">#FFDAD6</color>
+    <color name="md_theme_light_onError">@color/pure_white</color>
+    <color name="md_theme_light_onErrorContainer">#410002</color>
+    <color name="md_theme_light_background">@color/cloud_white</color>
+    <color name="md_theme_light_onBackground">@color/slate_gray</color>
+    <color name="md_theme_light_surface">@color/pure_white</color>
+    <color name="md_theme_light_onSurface">@color/slate_gray</color>
+    <color name="md_theme_light_surfaceVariant">#F0F0F0</color>
+    <color name="md_theme_light_onSurfaceVariant">#666666</color>
+    <color name="md_theme_light_outline">#CCCCCC</color>
+    <color name="md_theme_light_inverseOnSurface">#F5F5F5</color>
+    <color name="md_theme_light_inverseSurface">#313131</color>
+    <color name="md_theme_light_inversePrimary">#B8E7C7</color>
+    
+    <!-- Block Programming Colors -->
+    <color name="block_led_primary">#FF6B9D</color>
+    <color name="block_led_secondary">#FF8FAB</color>
+    <color name="block_robot_primary">#4ECDC4</color>
+    <color name="block_robot_secondary">#7ED7D1</color>
+    <color name="block_variable_primary">#9B59B6</color>
+    <color name="block_variable_secondary">#B574C4</color>
+    <color name="block_condition_primary">#F39C12</color>
+    <color name="block_condition_secondary">#F5B041</color>
+    <color name="block_loop_primary">#E74C3C</color>
+    <color name="block_loop_secondary">#EC7063</color>
+    
+    <!-- Status Colors -->
+    <color name="success_green">#27AE60</color>
+    <color name="warning_orange">#F39C12</color>
+    <color name="info_blue">#3498DB</color>
+    
+    <!-- Gradient Colors -->
+    <color name="gradient_start_led">@color/soft_coral</color>
+    <color name="gradient_end_led">#FF8A65</color>
+    <color name="gradient_start_robot">@color/dino_green</color>
+    <color name="gradient_end_robot">#81C784</color>
+    
+    <!-- Additional Material Design Colors -->
+    <color name="purple_500">#9C27B0</color>
+    <color name="purple_700">#7B1FA2</color>
+</resources>

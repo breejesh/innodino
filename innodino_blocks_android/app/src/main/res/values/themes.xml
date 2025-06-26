@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme -->
+    <style name="Theme.InodinoBlocks" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Primary brand color -->
+        <item name="colorPrimary">@color/dino_green</item>
+        <item name="colorPrimaryDark">@color/dino_green_dark</item>
+        <item name="colorAccent">@color/tech_teal</item>
+        
+        <!-- Background colors -->
+        <item name="android:colorBackground">@color/cloud_white</item>
+        <item name="android:textColorPrimary">@color/slate_gray</item>
+        <item name="android:textColorSecondary">@color/slate_gray_light</item>
+        
+        <!-- Status bar -->
+        <item name="android:statusBarColor">@color/dino_green_dark</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+    </style>
+    
+    <!-- Card Styles -->
+    <style name="Theme.InodinoBlocks.Card">
+        <item name="android:background">@color/cloud_white</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:elevation">8dp</item>
+    </style>
+    
+    <!-- Button Styles -->
+    <style name="Theme.InodinoBlocks.Button">
+        <item name="android:paddingHorizontal">24dp</item>
+        <item name="android:paddingVertical">12dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:minWidth">88dp</item>
+    </style>
+    
+    <style name="Theme.InodinoBlocks.Button.Primary" parent="Theme.InodinoBlocks.Button">
+        <item name="android:background">@color/dino_green</item>
+        <item name="android:textColor">@color/pure_white</item>
+        <item name="android:elevation">4dp</item>
+    </style>
+    
+    <style name="Theme.InodinoBlocks.Button.Secondary" parent="Theme.InodinoBlocks.Button">
+        <item name="android:background">@drawable/button_outlined</item>
+        <item name="android:textColor">@color/tech_teal</item>
+    </style>
+    
+    <!-- Text Styles -->
+    <style name="Theme.InodinoBlocks.Text">
+        <item name="android:textColor">@color/slate_gray</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+    
+    <style name="Theme.InodinoBlocks.Text.Headline" parent="Theme.InodinoBlocks.Text">
+        <item name="android:textColor">@color/slate_gray</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:fontFamily">sans-serif-black</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="Theme.InodinoBlocks.Text.Title" parent="Theme.InodinoBlocks.Text">
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="Theme.InodinoBlocks.Text.Body" parent="Theme.InodinoBlocks.Text">
+        <item name="android:textSize">16sp</item>
+        <item name="android:alpha">0.8</item>
+    </style>
+    
+    <!-- Block Programming Styles -->
+    <style name="Theme.InodinoBlocks.Block">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:textColor">@color/pure_white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    
+    <style name="Theme.InodinoBlocks.Block.LED" parent="Theme.InodinoBlocks.Block">
+        <item name="android:background">@drawable/block_led_background</item>
+    </style>
+    
+    <style name="Theme.InodinoBlocks.Block.Robot" parent="Theme.InodinoBlocks.Block">
+        <item name="android:background">@drawable/block_robot_background</item>
+    </style>
+    
+    <style name="Theme.InodinoBlocks.Block.Variable" parent="Theme.InodinoBlocks.Block">
+        <item name="android:background">@drawable/block_variable_background</item>
+    </style>
+    
+    <style name="Theme.InodinoBlocks.Block.Condition" parent="Theme.InodinoBlocks.Block">
+        <item name="android:background">@drawable/block_condition_background</item>
+    </style>
+    
+    <style name="Theme.InodinoBlocks.Block.Loop" parent="Theme.InodinoBlocks.Block">
+        <item name="android:background">@drawable/block_loop_background</item>
+    </style>
+</resources>
