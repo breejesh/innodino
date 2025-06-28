@@ -4,7 +4,7 @@
 			"id": "led_1",
 			"title": "Mission 1: Awakening the First Crystal",
 			"description": "Learn the ancient art of Light Magic by mastering basic LED commands",
-			"allowedBlocks": ["set_led"],
+			"allowedBlocks": ["controls_repeat_ext", "math_number", "text"],
 			"icon": "💡",
 			"nextMissionId": "led_2"
 		},

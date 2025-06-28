@@ -21,13 +21,15 @@ class MissionCodeBuilderViewModel(app: Application) : AndroidViewModel(app) {
     private val _completedMissions = MutableLiveData<Set<String>>()
     val completedMissions: LiveData<Set<String>> = _completedMissions
 
-    fun loadMissions(context: Context, assetFile: String = "missions_led.json") {
+    fun loadMissions(context: Context, assetFile: String = "missions_led.json", forceMissionId: String? = null) {
         val loaded = MissionLoader.loadMissions(context, assetFile)
         _missions.value = loaded
         val completed = prefs.getStringSet("completed", emptySet()) ?: emptySet()
         _completedMissions.value = completed
-        // Set first incomplete mission as current
-        _currentMission.value = loaded.firstOrNull { it.id !in completed }
+        _currentMission.value = when {
+            forceMissionId != null -> loaded.firstOrNull { it.id == forceMissionId }
+            else -> loaded.firstOrNull { it.id !in completed }
+        }
     }
 
     fun markMissionDone(missionId: String) {
@@ -41,5 +43,12 @@ class MissionCodeBuilderViewModel(app: Application) : AndroidViewModel(app) {
 
     fun setCurrentMission(mission: MissionData?) {
         _currentMission.value = mission
+    }
+
+    fun clearCompletedMissions() {
+        prefs.edit().remove("completed").apply()
+        _completedMissions.value = emptySet()
+        // Reset current mission to first
+        _currentMission.value = _missions.value?.firstOrNull()
     }
 }

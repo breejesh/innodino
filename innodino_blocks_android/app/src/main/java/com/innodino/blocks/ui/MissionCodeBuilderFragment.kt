@@ -9,9 +9,19 @@ import android.webkit.WebViewClient
 import android.webkit.JavascriptInterface
 import android.widget.Button
 import android.widget.TextView
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.core.content.ContextCompat
+import android.webkit.WebResourceRequest
+import android.util.Log
+import android.widget.Toast
+import android.webkit.WebChromeClient
+import android.widget.LinearLayout
+import android.os.Handler
+import android.os.Looper
+import android.widget.ProgressBar
 import com.innodino.blocks.R
 import com.innodino.blocks.viewmodel.MissionCodeBuilderViewModel
 
@@ -21,6 +31,10 @@ import com.innodino.blocks.viewmodel.MissionCodeBuilderViewModel
  */
 class MissionCodeBuilderFragment : Fragment() {
     private val viewModel: MissionCodeBuilderViewModel by viewModels()
+    private var webViewLoaded = false
+    private var pendingToolboxXml: String? = null
+    private var missionLoaded = false
+    private var timeoutHandler: Handler? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -31,70 +45,166 @@ class MissionCodeBuilderFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val context = requireContext()
+        Log.d("MissionCodeBuilder", "Fragment created, arguments: $arguments")
         val missionId = arguments?.getString("MISSION_ID")
         val module = arguments?.getString("MISSION_MODULE") ?: "led"
         val assetFile = if (module == "robot") "missions_robot.json" else "missions_led.json"
-        viewModel.loadMissions(context, assetFile)
-        // If a missionId is provided, set it as the current mission
-        missionId?.let { id ->
-            viewModel.missions.observe(viewLifecycleOwner) { missions ->
-                missions?.find { it.id == id }?.let { mission ->
-                    viewModel.setCurrentMission(mission)
-                } ?: run {
-                    // Mission not found, show error or fallback
-                    view.findViewById<TextView>(R.id.missionTitle)?.text = "Mission not found"
-                    view.findViewById<TextView>(R.id.missionDescription)?.text = "Please return and try again."
+        Log.d("MissionCodeBuilder", "Loading missions from asset: $assetFile, missionId: $missionId")
+        viewModel.loadMissions(context, assetFile, forceMissionId = missionId)
+
+        val missionNumberView = view.findViewById<TextView>(R.id.missionNumber)
+        val descView = view.findViewById<TextView>(R.id.missionDescription)
+        val markDoneBtn = view.findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.markDoneButton)
+        val blocklyWebView = view.findViewById<WebView>(R.id.blocklyWebView)
+        val progressBar = ProgressBar(context).apply {
+            isIndeterminate = true
+            visibility = View.VISIBLE
+        }
+        (view as ViewGroup).addView(progressBar)
+        blocklyWebView.settings.javaScriptEnabled = true
+        blocklyWebView.settings.domStorageEnabled = true
+        blocklyWebView.webChromeClient = WebChromeClient()
+        blocklyWebView.setBackgroundColor(ContextCompat.getColor(context, R.color.cloud_white))
+        blocklyWebView.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                Log.d("MissionCodeBuilder", "WebView loaded: $url")
+                webViewLoaded = true
+                pendingToolboxXml?.let {
+                    Log.d("MissionCodeBuilder", "Injecting toolbox after WebView load: $it")
+                    blocklyWebView.evaluateJavascript("setToolbox(`$it`);", null)
+                    pendingToolboxXml = null
                 }
+                progressBar.visibility = View.GONE
+            }
+            override fun onReceivedError(view: WebView?, errorCode: Int, description: String?, failingUrl: String?) {
+                Log.e("MissionCodeBuilder", "WebView error: $description")
+                descView.text = "Error: $description"
+                blocklyWebView.visibility = View.GONE
+                markDoneBtn.visibility = View.GONE
+                progressBar.visibility = View.GONE
             }
         }
+        blocklyWebView.loadUrl("file:///android_asset/blockly_mobile.html")
+        Log.d("MissionCodeBuilder", "WebView loading blockly_mobile.html")
 
-        val titleView = view.findViewById<TextView>(R.id.missionTitle)
-        val descView = view.findViewById<TextView>(R.id.missionDescription)
-        val markDoneBtn = view.findViewById<Button>(R.id.markDoneButton)
-        val blocklyWebView = view.findViewById<WebView>(R.id.blocklyWebView)
-        blocklyWebView.settings.javaScriptEnabled = true
-        blocklyWebView.webViewClient = WebViewClient()
-        blocklyWebView.addJavascriptInterface(object {
-            @JavascriptInterface
-            fun onMissionDone(blocklyXml: String) {
-                // Save progress and move to next mission
-                activity?.runOnUiThread {
+        // Timeout if mission not loaded in 3 seconds
+        timeoutHandler = Handler(Looper.getMainLooper())
+        timeoutHandler?.postDelayed({
+            if (!missionLoaded) {
+                Log.e("MissionCodeBuilder", "Mission data load timeout")
+                descView.text = "Mission failed to load. Please check your mission data or try again."
+                blocklyWebView.visibility = View.GONE
+                markDoneBtn.visibility = View.GONE
+                progressBar.visibility = View.GONE
+                Toast.makeText(requireContext(), "Mission data failed to load!", Toast.LENGTH_LONG).show()
+            }
+        }, 5000) // Increase timeout to 5 seconds for slow devices
+
+        // Observe mission and update UI/toolbox
+        viewModel.currentMission.observe(viewLifecycleOwner) { mission ->
+            val num = mission?.id?.substringAfterLast('_')?.toIntOrNull()?.let { "#$it" } ?: ""
+            missionNumberView.text = num
+            descView.text = mission?.description ?: ""
+            Log.d("MissionCodeBuilder", "Mission observer triggered: $mission")
+            if (mission == null) {
+                Log.e("MissionCodeBuilder", "Mission is null!")
+                descView.text = "Please return and try again."
+                blocklyWebView.visibility = View.GONE
+                markDoneBtn.visibility = View.GONE
+                progressBar.visibility = View.GONE
+                return@observe
+            }
+            missionLoaded = true
+            Log.d("MissionCodeBuilder", "Mission loaded: ${mission.title}, allowedBlocks: ${mission.allowedBlocks}")
+            // RESTORED: Use mission-specific toolbox
+            val toolboxXml = buildToolboxXml(mission.allowedBlocks)
+            Log.d("MissionCodeBuilder", "Toolbox XML: $toolboxXml")
+            if (toolboxXml.isBlank()) {
+                Log.e("MissionCodeBuilder", "Toolbox XML is blank! Mission: ${mission.title}, allowedBlocks: ${mission.allowedBlocks}")
+                descView.text = "No blocks available for this mission!"
+                blocklyWebView.visibility = View.GONE
+                markDoneBtn.visibility = View.GONE
+                progressBar.visibility = View.GONE
+                Toast.makeText(requireContext(), "No blocks available for this mission!", Toast.LENGTH_LONG).show()
+                return@observe
+            }
+            Log.d("MissionCodeBuilder", "webViewLoaded: $webViewLoaded, pendingToolboxXml: $pendingToolboxXml")
+            if (webViewLoaded) {
+                Log.d("MissionCodeBuilder", "Injecting toolbox immediately: $toolboxXml")
+                blocklyWebView.evaluateJavascript("setToolbox(`$toolboxXml`);", null)
+            } else {
+                Log.d("MissionCodeBuilder", "Toolbox injection pending until WebView loads.")
+                pendingToolboxXml = toolboxXml
+            }
+            // Extra debug: check WebView visibility and URL
+            Log.d("MissionCodeBuilder", "blocklyWebView.visibility: ${blocklyWebView.visibility}, URL: ${blocklyWebView.url}")
+            blocklyWebView.postDelayed({
+                Log.d("MissionCodeBuilder", "(Delayed) blocklyWebView.visibility: ${blocklyWebView.visibility}, URL: ${blocklyWebView.url}")
+            }, 1000)
+
+            // Set mission title and description
+            // titleView.text = mission.title
+            descView.text = mission.description
+        }
+
+        // Set header background color based on module
+        val headerView = view.findViewById<View>(R.id.missionHeader)
+        val headerColor = when (module) {
+            "robot" -> ContextCompat.getColor(requireContext(), R.color.tech_teal) // #2D9CDB
+            else -> ContextCompat.getColor(requireContext(), R.color.soft_coral) // #EB5757 (red for LED)
+        }
+        headerView.setBackgroundColor(headerColor)
+
+        // Mark as Done button
+        markDoneBtn.setOnClickListener {
+            markDoneBtn.animate()
+                .rotationBy(360f)
+                .scaleX(1.3f).scaleY(1.3f)
+                .setDuration(250)
+                .withEndAction {
+                    markDoneBtn.animate().scaleX(1f).scaleY(1f).setDuration(150).start()
                     viewModel.currentMission.value?.let { mission ->
                         viewModel.markMissionDone(mission.id)
+                        // Move to next mission if available
+                        if (!mission.nextMissionId.isNullOrBlank()) {
+                            // You may want to trigger navigation here
+                            Toast.makeText(requireContext(), "Moving to next mission...", Toast.LENGTH_SHORT).show()
+                            // TODO: Replace with real navigation logic
+                        } else {
+                            Toast.makeText(requireContext(), "All missions complete!", Toast.LENGTH_SHORT).show()
+                        }
                     }
-                }
-            }
-        }, "Android")
+                }.start()
+        }
 
-        viewModel.currentMission.observe(viewLifecycleOwner, Observer { mission ->
-            if (mission != null) {
-                titleView.text = mission.title
-                descView.text = mission.description
-                // Load Blockly WebView for this mission
-                blocklyWebView.loadUrl("file:///android_asset/blockly_mission.html")
-                blocklyWebView.post {
-                    val toolboxXml = loadToolboxXml(context, mission.id)
-                    blocklyWebView.evaluateJavascript("loadBlockly(`$toolboxXml`, null);") { }
-                }
-                markDoneBtn.isEnabled = true
-                markDoneBtn.setOnClickListener {
-                    blocklyWebView.evaluateJavascript("window.markMissionDone();") { }
-                }
-            } else {
-                titleView.text = "All Missions Complete!"
-                descView.text = "Great job, Dino Coder!"
-                markDoneBtn.isEnabled = false
+        // Run button
+        val runBtn = view.findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.runButton)
+        runBtn.setOnClickListener {
+            blocklyWebView.evaluateJavascript("window.getCode();") { code ->
+                // For now, just show the code in a Toast (or handle as needed)
+                Toast.makeText(requireContext(), "Generated code:\n" + code, Toast.LENGTH_LONG).show()
+                Log.d("MissionCodeBuilder", "Run button code: $code")
+                // TODO: Send code to robot/LED/etc.
             }
-        })
+        }
+
+        // Blockly FABs (updated)
+        val locateBtn = view.findViewById<View>(R.id.locateButton)
+        val clearAllBtn = view.findViewById<View>(R.id.clearAllButton)
+        locateBtn.setOnClickListener {
+            blocklyWebView.evaluateJavascript("window.blocklyCenterOnBlocks();", null)
+        }
+        clearAllBtn.setOnClickListener {
+            blocklyWebView.evaluateJavascript("if(window.workspace){window.workspace.clear();}", null)
+        }
     }
 
-    private fun loadToolboxXml(context: android.content.Context, missionId: String): String {
-        val assetName = when (missionId) {
-            "led_1" -> "blockly/toolbox_led_1.xml"
-            "led_2" -> "blockly/toolbox_led_2.xml"
-            "bot_1" -> "blockly/toolbox_bot_1.xml"
-            else -> "blockly/toolbox_all.xml"
-        }
-        return context.assets.open(assetName).bufferedReader().use { it.readText().replace("\n", "") }
+    // Helper to build Blockly toolbox XML for allowed blocks
+    private fun buildToolboxXml(allowedBlocks: List<String>): String {
+        // Always provide at least a dummy block if empty
+        if (allowedBlocks.isEmpty()) return "<xml><block type=\"text\"></block></xml>"
+        // Example: <xml><block type="controls_repeat"></block><block type="math_number"></block></xml>
+        val blocks = allowedBlocks.joinToString("\n") { "<block type=\"$it\"></block>" }
+        return "<xml>$blocks</xml>"
     }
 }

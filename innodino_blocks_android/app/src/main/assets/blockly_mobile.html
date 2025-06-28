@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InnoDino Blockly</title>
+  <script src="blockly/blockly.min.js"></script>
+  <script>
+    // Wait for Blockly to be loaded before running any Blockly code
+    function onBlocklyReady(callback) {
+      if (window.Blockly) {
+        callback();
+      } else {
+        var check = setInterval(function () {
+          if (window.Blockly) {
+            clearInterval(check);
+            callback();
+          }
+        }, 50);
+        // Timeout after 3 seconds
+        setTimeout(function () {
+          clearInterval(check);
+          if (!window.Blockly) {
+            document.body.innerHTML += '<div style="color:#EB5757;font-size:20px;text-align:center;margin-top:40px;">Blockly library failed to load.<br>Check your internet connection or asset path.</div>';
+            console.error('Blockly library failed to load.');
+          }
+        }, 3000);
+      }
+    }
+  </script>
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      background: #F5F6FA;
+      /* Slightly grayish background */
+    }
+
+    #blocklyDiv {
+      height: 100vh;
+      width: 100vw;
+      min-height: 350px;
+      background: #F5F6FA;
+    }
+
+    .blocklyToolbox {
+      font-size: 1.2em;
+      background: #FFFFFF;
+      box-shadow: 0 2px 12px 0 rgba(45, 156, 219, 0.10);
+      border: 1.5px solid #E0E0E0;
+      margin-top: 0;
+      margin-bottom: 0;
+      margin-left: 0;
+      margin-right: 0;
+      padding: 12px;
+    }
+
+    .blocklyMainBackground {
+      stroke: #6FCF97;
+    }
+
+    .blocklyTreeLabel {
+      font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+      color: #2D9CDB;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+
+    .blocklySvg {
+      border-radius: 18px;
+      background-color: #f3f3f3;
+    }
+
+    .blocklyFlyoutBackground {
+      fill: #FFFFFF;
+      fill-opacity: 0.98;
+      stroke: #E0E0E0;
+      stroke-width: 2px;
+      rx: 18px;
+      filter: drop-shadow(0 2px 8px #2D9CDB22);
+    }
+
+    .blocklyFlyoutLabelText {
+      font-size: 1.1em;
+      fill: #2D9CDB;
+      font-weight: bold;
+    }
+
+    .blocklyScrollbarHandle {
+      fill: #2D9CDB;
+    }
+
+    /* Sleek Material block style */
+    .blocklyBlockBackground {
+      stroke: #E0E0E0;
+      stroke-width: 2px;
+      rx: 20px;
+      filter: drop-shadow(0 4px 16px #2D9CDB22);
+      /* Material color will be set below */
+    }
+
+    .blocklyDraggable .blocklyBlockBackground {
+      stroke: #2D9CDB;
+      stroke-width: 3px;
+      filter: drop-shadow(0 8px 24px #2D9CDB33);
+    }
+
+    .blocklySelected .blocklyBlockBackground {
+      stroke: #FFCE55;
+      stroke-width: 4px;
+      filter: drop-shadow(0 0 20px #FFCE5522);
+    }
+
+    .blocklyText {
+      font-family: 'Google Sans', 'Roboto', 'Arial', sans-serif;
+      fill: #263238;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.1px;
+    }
+
+    /* InnoDino THEME BLOCK COLORS */
+    /* Logic: Tech Teal */
+    .blocklyBlockBackground[fill="#5C81A6"] {
+      fill: #2D9CDB !important;
+    }
+
+    /* Loops: Dino Green */
+    .blocklyBlockBackground[fill="#5CA65C"] {
+      fill: #6FCF97 !important;
+    }
+
+    /* Math: Tech Teal */
+    .blocklyBlockBackground[fill="#5C68A6"] {
+      fill: #2D9CDB !important;
+    }
+
+    /* Text: Slate Gray */
+    .blocklyBlockBackground[fill="#5CA68D"] {
+      fill: #4F4F4F !important;
+    }
+
+    /* Lists: Tech Teal */
+    .blocklyBlockBackground[fill="#745CA6"] {
+      fill: #2D9CDB !important;
+    }
+
+    /* Color: Sun Yellow */
+    .blocklyBlockBackground[fill="#A6745C"] {
+      fill: #FFCE55 !important;
+    }
+
+    /* Variables: Dino Green */
+    .blocklyBlockBackground[fill="#A65C81"] {
+      fill: #6FCF97 !important;
+    }
+
+    /* Functions: Tech Teal */
+    .blocklyBlockBackground[fill="#9A5CA6"] {
+      fill: #2D9CDB !important;
+    }
+
+    /* Accent/Alert: Soft Coral */
+    .blocklyBlockBackground[fill="#FF6680"],
+    .blocklyBlockBackground[fill="#E53935"] {
+      fill: #EB5757 !important;
+    }
+
+    /* Math/Yellow: Sun Yellow */
+    .blocklyBlockBackground[fill="#FFAB19"],
+    .blocklyBlockBackground[fill="#FFCF00"],
+    .blocklyBlockBackground[fill="#FFC107"] {
+      fill: #FFCE55 !important;
+    }
+
+    /* Text: Slate Gray for text blocks */
+    .blocklyText {
+      fill: #4F4F4F;
+    }
+
+    /* Block input fields */
+    .blocklyEditableText {
+      background: #FAFAFA;
+      border-radius: 10px;
+      padding: 3px 8px;
+      box-shadow: 0 2px 8px #2D9CDB11;
+      font-size: 17px;
+    }
+
+    .blocklyDragging .blocklyBlockBackground {
+      stroke: #FFCE55;
+      stroke-width: 4px;
+      filter: drop-shadow(0 0 20px #FFCE5522);
+    }
+
+    /* Hide Blockly zoom and center controls */
+    .blocklyZoom,
+    .blocklyZoomControls,
+    .blocklyTrash,
+    .blocklyMainWorkspaceScrollbar,
+    .blocklyFlyoutButton {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="blocklyDiv"></div>
+  <xml id="toolbox" style="display:none">
+    <category name="Logic" colour="#5C81A6">
+      <block type="controls_if"></block>
+      <block type="logic_compare"></block>
+      <block type="logic_operation"></block>
+      <block type="logic_negate"></block>
+      <block type="logic_boolean"></block>
+      <block type="logic_null"></block>
+      <block type="logic_ternary"></block>
+    </category>
+    <category name="Loops" colour="#5CA65C">
+      <block type="controls_repeat_ext">
+        <value name="TIMES">
+          <shadow type="math_number">
+            <field name="NUM">10</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="controls_whileUntil"></block>
+      <block type="controls_for">
+        <value name="FROM">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+        <value name="TO">
+          <shadow type="math_number">
+            <field name="NUM">10</field>
+          </shadow>
+        </value>
+        <value name="BY">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="controls_forEach"></block>
+      <block type="controls_flow_statements"></block>
+    </category>
+    <category name="Math" colour="#5C68A6">
+      <block type="math_number"></block>
+      <block type="math_arithmetic"></block>
+      <block type="math_single"></block>
+      <block type="math_trig"></block>
+      <block type="math_constant"></block>
+      <block type="math_number_property"></block>
+      <block type="math_round"></block>
+      <block type="math_on_list"></block>
+      <block type="math_modulo"></block>
+      <block type="math_constrain">
+        <value name="LOW">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+        <value name="HIGH">
+          <shadow type="math_number">
+            <field name="NUM">100</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="math_random_int">
+        <value name="FROM">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+        <value name="TO">
+          <shadow type="math_number">
+            <field name="NUM">100</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="math_random_float"></block>
+      <block type="math_atan2"></block>
+    </category>
+    <category name="Text" colour="#5CA68D">
+      <block type="text"></block>
+      <block type="text_join"></block>
+      <block type="text_append">
+        <value name="TEXT">
+          <shadow type="text"></shadow>
+        </value>
+      </block>
+      <block type="text_length"></block>
+      <block type="text_isEmpty"></block>
+      <block type="text_indexOf">
+        <value name="VALUE">
+          <block type="variables_get">
+            <field name="VAR">text</field>
+          </block>
+        </value>
+      </block>
+      <block type="text_charAt">
+        <value name="VALUE">
+          <block type="variables_get">
+            <field name="VAR">text</field>
+          </block>
+        </value>
+      </block>
+      <block type="text_getSubstring">
+        <value name="STRING">
+          <block type="variables_get">
+            <field name="VAR">text</field>
+          </block>
+        </value>
+      </block>
+      <block type="text_changeCase"></block>
+      <block type="text_trim"></block>
+      <block type="text_print"></block>
+      <block type="text_prompt_ext"></block>
+    </category>
+    <category name="Lists" colour="#745CA6">
+      <block type="lists_create_with">
+        <mutation items="3"></mutation>
+      </block>
+      <block type="lists_create_with"></block>
+      <block type="lists_repeat">
+        <value name="NUM">
+          <shadow type="math_number">
+            <field name="NUM">5</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="lists_length"></block>
+      <block type="lists_isEmpty"></block>
+      <block type="lists_indexOf"></block>
+      <block type="lists_getIndex"></block>
+      <block type="lists_setIndex"></block>
+      <block type="lists_getSublist"></block>
+      <block type="lists_split"></block>
+      <block type="lists_sort"></block>
+    </category>
+    <category name="Color" colour="#A6745C">
+      <block type="colour_picker"></block>
+      <block type="colour_random"></block>
+      <block type="colour_rgb"></block>
+      <block type="colour_blend"></block>
+    </category>
+    <category name="Variables" colour="#A65C81" custom="VARIABLE"></category>
+    <category name="Functions" colour="#9A5CA6" custom="PROCEDURE"></category>
+  </xml>
+  <script>
+    let workspace = null;
+    function loadBlockly() {
+      try {
+        if (workspace) {
+          workspace.dispose();
+        }
+        workspace = Blockly.inject('blocklyDiv', {
+          toolbox: document.getElementById('toolbox'),
+          scrollbars: false,
+          zoom: { controls: false, wheel: true, pinch: true, startScale: 1.1, maxScale: 2.5, minScale: 0.5 },
+          trashcan: true,
+          renderer: 'zelos',
+          grid: { spacing: 32, length: 3, colour: '#E0E0E0', snap: true },
+          horizontalLayout: true, // Toolbox on top
+          toolboxPosition: 'top',
+          move: { scrollbars: false, drag: true, wheel: true }
+        });
+        // Re-apply block style after every workspace update
+        workspace.addChangeListener(function () {
+          setTimeout(addMaterialGradient, 100);
+        });
+        setTimeout(addMaterialGradient, 500);
+      } catch (e) {
+        document.body.innerHTML += '<div style="color:#EB5757;font-size:20px;text-align:center;margin-top:40px;">Blockly failed to load toolbox.<br>' + e + '</div>';
+        console.error('Blockly load error', e);
+      }
+    }
+    // Load Blockly with standard blocks on page load
+    window.onload = loadBlockly;
+    window.getCode = function () {
+      if (!workspace) return '';
+      return Blockly.JavaScript.workspaceToCode(workspace);
+    };
+    window.getXml = function () {
+      if (!workspace) return '';
+      return Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(workspace));
+    };
+  </script>
+  <script>
+    // Add a Material gradient to blocks after Blockly loads
+    function addMaterialGradient() {
+      var svg = document.querySelector('svg');
+      if (svg && !svg.querySelector('#blocklyMaterialGradient')) {
+        var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+        var grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+        grad.setAttribute('id', 'blocklyMaterialGradient');
+        grad.setAttribute('x1', '0%');
+        grad.setAttribute('y1', '0%');
+        grad.setAttribute('x2', '0%');
+        grad.setAttribute('y2', '100%');
+        var stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+        stop1.setAttribute('offset', '0%');
+        stop1.setAttribute('stop-color', '#FFFFFF');
+        stop1.setAttribute('stop-opacity', '0.25');
+        var stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+        stop2.setAttribute('offset', '100%');
+        stop2.setAttribute('stop-color', '#000000');
+        stop2.setAttribute('stop-opacity', '0.07');
+        grad.appendChild(stop1);
+        grad.appendChild(stop2);
+        defs.appendChild(grad);
+        svg.insertBefore(defs, svg.firstChild);
+      }
+      // Set all blocks to use the gradient
+      var blocks = document.querySelectorAll('.blocklyBlockBackground');
+      blocks.forEach(function (b) {
+        b.setAttribute('fill', 'url(#blocklyMaterialGradient)');
+      });
+    }
+    // Call after Blockly inject
+    window.addEventListener('load', function () {
+      setTimeout(addMaterialGradient, 500);
+    });
+  </script>
+  <script>
+    // InnoDino color palette
+    const INNODINO_COLORS = {
+      '#5C81A6': '#2D9CDB', // Logic: Tech Teal
+      '#5CA65C': '#6FCF97', // Loops: Dino Green
+      '#5C68A6': '#2D9CDB', // Math: Tech Teal
+      '#5CA68D': '#4F4F4F', // Text: Slate Gray
+      '#745CA6': '#2D9CDB', // Lists: Tech Teal
+      '#A6745C': '#FFCE55', // Color: Sun Yellow
+      '#A65C81': '#6FCF97', // Variables: Dino Green
+      '#9A5CA6': '#2D9CDB', // Functions: Tech Teal
+      '#FF6680': '#EB5757', // Alert: Soft Coral
+      '#E53935': '#EB5757', // Alert: Soft Coral
+      '#FFAB19': '#FFCE55', // Math/Yellow: Sun Yellow
+      '#FFCF00': '#FFCE55', // Math/Yellow: Sun Yellow
+      '#FFC107': '#FFCE55', // Math/Yellow: Sun Yellow
+    };
+    function applyInnoDinoBlockColors() {
+      document.querySelectorAll('.blocklyBlockBackground').forEach(function (block) {
+        const orig = block.getAttribute('fill');
+        if (INNODINO_COLORS[orig]) {
+          block.setAttribute('fill', INNODINO_COLORS[orig]);
+        }
+      });
+    }
+    window.addEventListener('load', function () {
+      setTimeout(applyInnoDinoBlockColors, 500);
+    });
+    // Also re-apply after workspace changes
+    function setupColorListener(workspace) {
+      workspace.addChangeListener(function () {
+        setTimeout(applyInnoDinoBlockColors, 100);
+      });
+    }
+    // Patch Blockly inject to always set up color listener
+    const origInject = Blockly.inject;
+    Blockly.inject = function () {
+      const ws = origInject.apply(this, arguments);
+      setupColorListener(ws);
+      setTimeout(applyInnoDinoBlockColors, 500);
+      return ws;
+    };
+  </script>
+  <script>
+    // Expose JS functions for zoom in, zoom out, and center on blocks
+    window.blocklyCenterOnBlocks = function () {
+      if (window.workspace) {
+        window.workspace.scrollCenter();
+      }
+    };
+    window.blocklyClearAll = function () {
+      if (window.workspace) {
+        window.workspace.clear();
+      }
+    };
+    // Patch Blockly inject to expose workspace globally
+    const origInject = Blockly.inject;
+    Blockly.inject = function () {
+      const ws = origInject.apply(this, arguments);
+      window.workspace = ws;
+      setupColorListener(ws);
+      setTimeout(applyInnoDinoBlockColors, 500);
+      return ws;
+    };
+  </script>
+</body>
+
+</html>

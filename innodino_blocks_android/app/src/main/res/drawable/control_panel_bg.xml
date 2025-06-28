@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FFFFFF" />
+    <corners android:radius="10dp" />
+    <padding android:left="2dp" android:top="2dp" android:right="2dp" android:bottom="2dp" />
+    <size android:height="48dp" />
+    <!-- Modern drop shadow for the bar -->
+    <layer-list>
+        <item>
+            <shape>
+                <solid android:color="#FFFFFF" />
+                <corners android:radius="10dp" />
+            </shape>
+        </item>
+        <item android:bottom="0dp">
+            <shape>
+                <solid android:color="#22000000" />
+                <corners android:radius="10dp" />
+            </shape>
+        </item>
+    </layer-list>
+</shape>
