@@ -3,40 +3,40 @@
 		{
 			"id": "led_1",
 			"title": "Mission 1: Awakening the First Crystal",
-			"description": "Learn the ancient art of Light Magic by mastering basic LED commands",
-			"allowedBlocks": ["controls_repeat_ext", "math_number", "text"],
+			"description": "Learn the ancient art of Light Magic by controlling your first LED crystal",
+			"allowedBlocks": ["set_led"],
 			"icon": "💡",
 			"nextMissionId": "led_2"
 		},
 		{
 			"id": "led_2",
 			"title": "Mission 2: Memory Crystals of Elder Triceratops",
-			"description": "Master the secrets of Memory Magic using Variables",
-			"allowedBlocks": ["variables_set", "set_led"],
+			"description": "Master the secrets of Memory Magic using Variables to store crystal colors",
+			"allowedBlocks": ["variables_set", "set_led", "variables_get"],
 			"icon": "🦕",
 			"nextMissionId": "led_3"
 		},
 		{
 			"id": "led_3",
 			"title": "Mission 3: The Guardian's Challenge",
-			"description": "Learn Sensing Magic with the Ultrasonic Sensor",
-			"allowedBlocks": ["read_distance", "controls_if", "logic_compare"],
+			"description": "Learn Sensing Magic with the Ultrasonic Sensor to detect approaching guardians",
+			"allowedBlocks": ["read_distance", "controls_if", "logic_compare", "set_led"],
 			"icon": "🛡️",
 			"nextMissionId": "led_4"
 		},
 		{
 			"id": "led_4",
 			"title": "Mission 4: Rhythm of the Ancient Pterodactyl",
-			"description": "Master Rhythm Magic through loop patterns",
-			"allowedBlocks": ["repeat", "set_led", "controls_repeat_ext"],
+			"description": "Master Rhythm Magic through loop patterns and LED animations",
+			"allowedBlocks": ["repeat", "set_led", "wait_seconds", "controls_if"],
 			"icon": "🎵",
 			"nextMissionId": "led_5"
 		},
 		{
 			"id": "led_5",
 			"title": "FINALE: The Great Illumination Ceremony",
-			"description": "Combine all magic to restore Digital Dinosaur Valley!",
-			"allowedBlocks": ["set_led", "variables_set", "read_distance", "controls_if", "logic_compare", "repeat", "controls_repeat_ext", "map_function"],
+			"description": "Combine all magic to restore Digital Dinosaur Valley with the ultimate light show!",
+			"allowedBlocks": ["read_distance", "controls_if", "logic_compare", "set_led", "variables_set", "repeat"],
 			"icon": "🌟",
 			"nextMissionId": null
 		}

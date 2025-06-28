@@ -201,10 +201,106 @@ class MissionCodeBuilderFragment : Fragment() {
 
     // Helper to build Blockly toolbox XML for allowed blocks
     private fun buildToolboxXml(allowedBlocks: List<String>): String {
-        // Always provide at least a dummy block if empty
         if (allowedBlocks.isEmpty()) return "<xml><block type=\"text\"></block></xml>"
-        // Example: <xml><block type="controls_repeat"></block><block type="math_number"></block></xml>
-        val blocks = allowedBlocks.joinToString("\n") { "<block type=\"$it\"></block>" }
-        return "<xml>$blocks</xml>"
+        
+        // Create categories based on allowed blocks
+        val sb = StringBuilder("<xml>")
+        
+        // LED blocks
+        val ledBlocks = allowedBlocks.filter { it.startsWith("set_led") || it == "led_pattern" || it == "colour_picker" }
+        if (ledBlocks.isNotEmpty()) {
+            sb.append("<category name=\"💡 LED\" colour=\"#6FCF97\">")
+            ledBlocks.forEach { block ->
+                when (block) {
+                    "set_led" -> sb.append("<block type=\"set_led\"><value name=\"COLOR\"><shadow type=\"colour_picker\"><field name=\"COLOUR\">#ff0000</field></shadow></value></block>")
+                    "set_led_brightness" -> sb.append("<block type=\"set_led_brightness\"><value name=\"BRIGHTNESS\"><shadow type=\"math_number\"><field name=\"NUM\">50</field></shadow></value></block>")
+                    "led_pattern" -> sb.append("<block type=\"led_pattern\"></block>")
+                    "colour_picker" -> sb.append("<block type=\"colour_picker\"></block>")
+                }
+            }
+            sb.append("</category>")
+        }
+        
+        // Sensor blocks
+        val sensorBlocks = allowedBlocks.filter { it.startsWith("read_") }
+        if (sensorBlocks.isNotEmpty()) {
+            sb.append("<category name=\"📏 Sensor\" colour=\"#2D9CDB\">")
+            sensorBlocks.forEach { block ->
+                sb.append("<block type=\"$block\"></block>")
+            }
+            sb.append("</category>")
+        }
+        
+        // Robot blocks
+        val robotBlocks = allowedBlocks.filter { it.startsWith("move_") || it.startsWith("turn_") || it == "stop_robot" }
+        if (robotBlocks.isNotEmpty()) {
+            sb.append("<category name=\"🦕 Robot\" colour=\"#FFCE55\">")
+            robotBlocks.forEach { block ->
+                when (block) {
+                    "move_forward" -> sb.append("<block type=\"move_forward\"><value name=\"STEPS\"><shadow type=\"math_number\"><field name=\"NUM\">5</field></shadow></value></block>")
+                    "turn_left" -> sb.append("<block type=\"turn_left\"><value name=\"DEGREES\"><shadow type=\"math_number\"><field name=\"NUM\">90</field></shadow></value></block>")
+                    "turn_right" -> sb.append("<block type=\"turn_right\"><value name=\"DEGREES\"><shadow type=\"math_number\"><field name=\"NUM\">90</field></shadow></value></block>")
+                    "stop_robot" -> sb.append("<block type=\"stop_robot\"></block>")
+                }
+            }
+            sb.append("</category>")
+        }
+        
+        // Control/Repeat blocks
+        val controlBlocks = allowedBlocks.filter { it == "repeat" || it.startsWith("controls_") || it == "wait_seconds" }
+        if (controlBlocks.isNotEmpty()) {
+            sb.append("<category name=\"🔄 Repeat\" colour=\"#6FCF97\">")
+            controlBlocks.forEach { block ->
+                when (block) {
+                    "repeat" -> sb.append("<block type=\"repeat\"><value name=\"TIMES\"><shadow type=\"math_number\"><field name=\"NUM\">5</field></shadow></value></block>")
+                    "controls_repeat_ext" -> sb.append("<block type=\"controls_repeat_ext\"><value name=\"TIMES\"><shadow type=\"math_number\"><field name=\"NUM\">10</field></shadow></value></block>")
+                    "controls_if" -> sb.append("<block type=\"controls_if\"></block>")
+                    "wait_seconds" -> sb.append("<block type=\"wait_seconds\"><value name=\"SECONDS\"><shadow type=\"math_number\"><field name=\"NUM\">1</field></shadow></value></block>")
+                }
+            }
+            sb.append("</category>")
+        }
+        
+        // Logic blocks
+        val logicBlocks = allowedBlocks.filter { it.startsWith("logic_") || it.startsWith("math_") }
+        if (logicBlocks.isNotEmpty()) {
+            sb.append("<category name=\"🧠 Logic\" colour=\"#2D9CDB\">")
+            logicBlocks.forEach { block ->
+                sb.append("<block type=\"$block\"></block>")
+            }
+            sb.append("</category>")
+        }
+        
+        // Variable blocks
+        val variableBlocks = allowedBlocks.filter { it.startsWith("variables_") || it == "text" || it == "display_message" }
+        if (variableBlocks.isNotEmpty()) {
+            sb.append("<category name=\"📦 Variable\" colour=\"#6FCF97\">")
+            variableBlocks.forEach { block ->
+                when (block) {
+                    "variables_set" -> sb.append("<block type=\"variables_set\"><value name=\"VALUE\"><shadow type=\"math_number\"><field name=\"NUM\">0</field></shadow></value></block>")
+                    "variables_get" -> sb.append("<block type=\"variables_get\"><field name=\"VAR\">item</field></block>")
+                    "text" -> sb.append("<block type=\"text\"></block>")
+                    "display_message" -> sb.append("<block type=\"display_message\"><value name=\"MESSAGE\"><shadow type=\"text\"><field name=\"TEXT\">Hello Dino!</field></shadow></value></block>")
+                }
+            }
+            sb.append("</category>")
+        }
+        
+        // Add any remaining blocks in a general category
+        val remainingBlocks = allowedBlocks.filter { block ->
+            !ledBlocks.contains(block) && !sensorBlocks.contains(block) && 
+            !robotBlocks.contains(block) && !controlBlocks.contains(block) && 
+            !logicBlocks.contains(block) && !variableBlocks.contains(block)
+        }
+        if (remainingBlocks.isNotEmpty()) {
+            sb.append("<category name=\"Other\" colour=\"#4F4F4F\">")
+            remainingBlocks.forEach { block ->
+                sb.append("<block type=\"$block\"></block>")
+            }
+            sb.append("</category>")
+        }
+        
+        sb.append("</xml>")
+        return sb.toString()
     }
 }
