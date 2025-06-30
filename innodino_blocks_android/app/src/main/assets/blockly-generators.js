@@ -1,25 +1,23 @@
 'use strict';
 
-// Ensure Blockly.JavaScript is defined.
-goog.require('Blockly.JavaScript');
-
 // --- LED Blocks ---
 
-Blockly.JavaScript['turn_on_led'] = function(block) {
+Blockly.JavaScript.forBlock['turn_on_led'] = function(block) {
   var value_x = Blockly.JavaScript.valueToCode(block, 'X', Blockly.JavaScript.ORDER_ATOMIC) || '0';
   var value_y = Blockly.JavaScript.valueToCode(block, 'Y', Blockly.JavaScript.ORDER_ATOMIC) || '0';
-  return `led_on(${value_x}, ${value_y});\n`;
+  return `LED_TURN_ON(${value_x},${value_y})\n`;
 };
 
-Blockly.JavaScript['turn_off_led'] = function(block) {
+
+Blockly.JavaScript.forBlock['turn_off_led'] = function(block) {
   var value_x = Blockly.JavaScript.valueToCode(block, 'X', Blockly.JavaScript.ORDER_ATOMIC) || '0';
   var value_y = Blockly.JavaScript.valueToCode(block, 'Y', Blockly.JavaScript.ORDER_ATOMIC) || '0';
-  return `led_off(${value_x}, ${value_y});\n`;
+  return `LED_TURN_OFF(${value_x},${value_y})\n`;
 };
 
 Blockly.JavaScript['set_led_brightness'] = function(block) {
   var value_brightness = Blockly.JavaScript.valueToCode(block, 'BRIGHTNESS', Blockly.JavaScript.ORDER_ATOMIC) || '50';
-  return `led_brightness(${value_brightness});\n`;
+  return `LED_SET_BRIGHTNESS(${value_brightness});\n`;
 };
 
 Blockly.JavaScript['led_pattern'] = function(block) {

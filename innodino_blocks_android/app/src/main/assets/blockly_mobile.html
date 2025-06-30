@@ -15,6 +15,12 @@
 
 <body>
   <div id="blocklyDiv"></div>
+
+  <!-- Generation/Test Button for Browser -->
+  <button id="generateCodeBtn" style="position:fixed;bottom:24px;left:24px;z-index:1000;padding:16px 28px;font-size:1.2em;background:#6FCF97;color:#fff;border:none;border-radius:12px;box-shadow:0 2px 8px #0002;cursor:pointer;">
+    Generate Code
+  </button>
+
   <!-- Blockly Toolbox Configuration -->
   <xml id="toolbox" style="display:none">
     <!-- Simplified InnoDino Categories -->
@@ -149,10 +155,12 @@
         window.AndroidInterface.sendCodeToArduino(code);
       }
     }
-    // Optionally, expose getCode for legacy use
-    window.getCode = function () {
-      return Blockly.JavaScript.workspaceToCode(Blockly.getMainWorkspace());
-    }
+
+    // Browser-only: Show generated code in an alert for testing
+    document.getElementById('generateCodeBtn').onclick = function () {
+      var code = Blockly.JavaScript.workspaceToCode(Blockly.getMainWorkspace());
+      console.log("Generated code:\n" + code);
+    };
   </script>
 </body>
 

@@ -92,7 +92,10 @@ dependencies {
     
     // JSON handling for block configurations
     implementation 'com.google.code.gson:gson:2.10.1'
-    
+
+    // USB Serial Communication
+    implementation 'com.github.mik3y:usb-serial-for-android:3.8.1'
+
     // Testing
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

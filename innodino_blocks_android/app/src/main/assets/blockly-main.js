@@ -130,7 +130,6 @@ window.onload = function () {
   onBlocklyReady(function () {
     try {
       defineCustomBlocks();
-      defineCodeGenerators();
       loadBlockly();
     } catch (e) {
       console.error('Error during initialization:', e);

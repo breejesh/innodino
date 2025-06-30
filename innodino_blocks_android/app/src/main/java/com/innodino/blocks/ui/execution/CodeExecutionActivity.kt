@@ -1,14 +1,26 @@
 package com.innodino.blocks.ui.execution
 
 import android.animation.ObjectAnimator
+import android.app.Activity
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.hardware.usb.UsbDevice
+import android.hardware.usb.UsbManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.animation.LinearInterpolator
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.hoho.android.usbserial.driver.UsbSerialDriver
+import com.hoho.android.usbserial.driver.UsbSerialPort
+import com.hoho.android.usbserial.driver.UsbSerialProber
 import com.innodino.blocks.R
 import java.util.LinkedList
 import java.util.Queue
@@ -23,9 +35,17 @@ class CodeExecutionActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private var isExecuting = false
 
+    private val usbPermissionAction = "com.innodino.blocks.USB_PERMISSION"
+    private var usbPermissionReceiver: BroadcastReceiver? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_code_execution)
+
+        // Register USB permission receiver
+        registerUsbPermissionReceiver()
+        // Connect to Dino USB Serial on activity start
+        connectToDinoUsbSerial(this)
 
         val stopButton = findViewById<Button>(R.id.stopButton)
         val statusText = findViewById<TextView>(R.id.executionStatus)
@@ -55,10 +75,80 @@ class CodeExecutionActivity : AppCompatActivity() {
         startExecution(statusText, commandText)
     }
 
+    private fun registerUsbPermissionReceiver() {
+        usbPermissionReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                if (intent.action == usbPermissionAction) {
+                    synchronized(this) {
+                        val device: UsbDevice? = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE)
+                        if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                            // Permission granted, try to connect again
+                            connectToDinoUsbSerial(this@CodeExecutionActivity, device)
+                        }
+                    }
+                }
+            }
+        }
+        registerReceiver(usbPermissionReceiver, IntentFilter(usbPermissionAction))
+    }
+
+    private fun connectToDinoUsbSerial(activity: Activity, specificDevice: UsbDevice? = null) {
+        val usbManager = activity.getSystemService(UsbManager::class.java)
+        val availableDrivers = UsbSerialProber.getDefaultProber().findAllDrivers(usbManager)
+        if (availableDrivers.isEmpty()) {
+            // No USB serial device found
+            return
+        }
+        val driver = if (specificDevice != null) {
+            availableDrivers.find { it.device.deviceId == specificDevice.deviceId } ?: availableDrivers[0]
+        } else {
+            availableDrivers[0]
+        }
+        val device = driver.device
+        val connection = usbManager.openDevice(device)
+        if (connection == null) {
+            // Request permission
+            val permissionIntent = PendingIntent.getBroadcast(
+                activity, 0, Intent(usbPermissionAction), PendingIntent.FLAG_IMMUTABLE
+            )
+            usbManager.requestPermission(device, permissionIntent)
+            return
+        }
+        val port: UsbSerialPort = driver.ports[0]
+        port.open(connection)
+        com.innodino.blocks.util.DinoSerialHelper.configureSerialPort(port)
+    }
+
     private fun startExecution(statusText: TextView, commandText: TextView) {
         isExecuting = true
         statusText.text = "Executing..."
         executeNextCommand(statusText, commandText)
+    }
+
+    // Utility to parse a single line of generated code and send as protocol command
+    private fun sendGeneratedLedLine(line: String) {
+        // Example generated code: LED_TURN_ON(2,3)
+        val regexOn = Regex("LED_TURN_ON\\((\\d+),(\\d+)\\)")
+        val regexOff = Regex("LED_TURN_OFF\\((\\d+),(\\d+)\\)")
+        val regexBrightness = Regex("LED_SET_BRIGHTNESS\\((\\d+),(\\d+),(\\d+)\\)")
+        when {
+            regexOn.matches(line) -> {
+                val (row, col) = regexOn.find(line)!!.destructured
+                com.innodino.blocks.util.DinoSerialHelper.sendLedCommand("TURN_ON", row.toInt(), col.toInt())
+            }
+            regexOff.matches(line) -> {
+                val (row, col) = regexOff.find(line)!!.destructured
+                com.innodino.blocks.util.DinoSerialHelper.sendLedCommand("TURN_OFF", row.toInt(), col.toInt())
+            }
+            regexBrightness.matches(line) -> {
+                val (row, col, brightness) = regexBrightness.find(line)!!.destructured
+                com.innodino.blocks.util.DinoSerialHelper.sendLedCommand("SET_BRIGHTNESS", row.toInt(), col.toInt(), brightness.toInt())
+            }
+            else -> {
+                Log.d("sendGeneratedLedLine", line) // Log the command for debugging
+                // Unknown or non-LED command, ignore or handle as needed
+            }
+        }
     }
 
     private fun executeNextCommand(statusText: TextView, commandText: TextView) {
@@ -73,7 +163,8 @@ class CodeExecutionActivity : AppCompatActivity() {
 
         val command = commandQueue.poll()
         commandText.text = command
-        // TODO: Send the 'command' string to Arduino via USB serial here.
+        // Send the command to Arduino if it's an LED command
+        sendGeneratedLedLine(command)
 
         // Simulate execution time and move to the next command
         handler.postDelayed({
@@ -83,6 +174,7 @@ class CodeExecutionActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        usbPermissionReceiver?.let { unregisterReceiver(it) }
         isExecuting = false
         handler.removeCallbacksAndMessages(null)
     }
