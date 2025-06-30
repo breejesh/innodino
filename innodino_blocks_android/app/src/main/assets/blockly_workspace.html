@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>InnoDino Blockly Workspace</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #FAFAFA;
+        }
+
+        #blocklyDiv {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+    <!-- Core Blockly library -->
+    <script src="blockly/blockly.min.js"></script>
+    <!-- Language files -->
+    <script src="blockly/msg/en.js"></script>
+    <!-- Custom block definitions -->
+    <script src="custom_blocks.js"></script>
+    <!-- Custom block code generators -->
+    <script src="blockly-generators.js"></script>
+</head>
+
+<body>
+
+    <div id="blocklyDiv"></div>
+
+    <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
+        <!-- Toolbox XML will be injected here from Android -->
+    </xml>
+
+    <script>
+        var workspace;
+
+        function init(toolboxXml) {
+            // Inject the Blockly workspace
+            workspace = Blockly.inject('blocklyDiv', {
+                toolbox: toolboxXml,
+                grid: {
+                    spacing: 20,
+                    length: 3,
+                    colour: '#ccc',
+                    snap: true
+                },
+                trashcan: true,
+                zoom: {
+                    controls: true,
+                    wheel: true,
+                    startScale: 1.0,
+                    maxScale: 3,
+                    minScale: 0.3,
+                    scaleSpeed: 1.2
+                },
+                renderer: 'geras' // Modern look and feel
+            });
+        }
+
+        function getGeneratedCode() {
+            // Generate JavaScript code from the workspace
+            var code = Blockly.JavaScript.workspaceToCode(workspace);
+            // Send the code to the Android app via the JS bridge
+            if (window.Android && typeof window.Android.sendCodeToArduino === 'function') {
+                window.Android.sendCodeToArduino(code);
+            } else {
+                console.error("BlocklyJsBridge is not available.");
+            }
+        }
+
+        function clearWorkspace() {
+            if (workspace) {
+                workspace.clear();
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

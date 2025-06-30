@@ -1,0 +1,52 @@
+/* InnoDino Blockly Styles */
+
+html,
+body {
+	height: 100%;
+	margin: 0;
+	background: #fafafa;
+	/* Cloud white background */
+}
+
+#blocklyDiv {
+	height: 100vh;
+	width: 100vw;
+	min-height: 350px;
+	overflow: hidden !important;
+}
+
+.blocklyScrollbarHandle,
+.blocklyScrollbarBackground {
+	display: none !important;
+}
+
+.blocklyMainBackground {
+	background-color: #eee !important;
+}
+
+.blocklyFlyout {
+	border: 1px solid #eee;
+	transform: translate(0, 34px) !important;
+}
+
+.blocklyFlyoutBackground {
+	fill: #ffffff !important;
+}
+
+.blocklyToolbox {
+	background-color: #ffffff !important;
+	border: 1px solid #eee;
+	height: auto !important;
+}
+
+.blocklyToolboxCategoryGroup {
+	flex-direction: row !important;
+}
+
+.blocklyToolboxCategory {
+	border: none !important;
+}
+
+.blocklyToolboxCategoryIcon {
+	display: none !important;
+}

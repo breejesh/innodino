@@ -1,17 +1,12 @@
 package com.innodino.blocks.ui.main
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,13 +29,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import com.innodino.blocks.R
 import com.innodino.blocks.ui.led.LEDCrystalActivity
 import com.innodino.blocks.ui.dinobot.DinobotExpeditionActivity
 import com.innodino.blocks.ui.theme.InodinoBlocksTheme
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.core.view.WindowCompat
+import com.innodino.blocks.ui.codebuilder.MissionCodeBuilderHostActivity
 
 /**
  * 🏠 Main Activity - Home Screen
@@ -61,7 +56,9 @@ class MainActivity : ComponentActivity() {
                 }
                 HomeScreen(
                     onLEDAdventureClick = { startLEDAdventure() },
-                    onRobotAdventureClick = { startRobotAdventure() }
+                    onRobotAdventureClick = { startRobotAdventure() },
+                    onLEDFreePlayClick = { startLEDFreePlay() },
+                    onRobotFreePlayClick = { startRobotFreePlay() }
                 )
             }
         }
@@ -74,12 +71,28 @@ class MainActivity : ComponentActivity() {
     private fun startRobotAdventure() {
         startActivity(Intent(this, DinobotExpeditionActivity::class.java))
     }
+
+    private fun startLEDFreePlay() {
+        val intent = Intent(this, MissionCodeBuilderHostActivity::class.java)
+        intent.putExtra("FREE_PLAY", true)
+        intent.putExtra("MISSION_MODULE", "led")
+        startActivity(intent)
+    }
+
+    private fun startRobotFreePlay() {
+        val intent = Intent(this, MissionCodeBuilderHostActivity::class.java)
+        intent.putExtra("FREE_PLAY", true)
+        intent.putExtra("MISSION_MODULE", "robot")
+        startActivity(intent)
+    }
 }
 
 @Composable
 fun HomeScreen(
     onLEDAdventureClick: () -> Unit,
-    onRobotAdventureClick: () -> Unit
+    onRobotAdventureClick: () -> Unit,
+    onLEDFreePlayClick: () -> Unit,
+    onRobotFreePlayClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -151,7 +164,7 @@ fun HomeScreen(
                         adventureText = stringResource(R.string.led_adventures),
                         freePlayText = stringResource(R.string.led_free_play),
                         onAdventureClick = onLEDAdventureClick,
-                        onFreePlayClick = { /* TODO: Implement free play */ }
+                        onFreePlayClick = onLEDFreePlayClick
                     )
                     Spacer(modifier = Modifier.height(28.dp))
                     AdventureCard(
@@ -165,7 +178,7 @@ fun HomeScreen(
                         adventureText = stringResource(R.string.robot_adventures),
                         freePlayText = stringResource(R.string.robot_free_play),
                         onAdventureClick = onRobotAdventureClick,
-                        onFreePlayClick = { /* TODO: Implement free play */ }
+                        onFreePlayClick = onRobotFreePlayClick
                     )
                     Spacer(modifier = Modifier.height(28.dp))
                     // Coming Soon Card
@@ -405,7 +418,9 @@ fun HomeScreenPreview() {
     InodinoBlocksTheme {
         HomeScreen(
             onLEDAdventureClick = {},
-            onRobotAdventureClick = {}
+            onRobotAdventureClick = {},
+            onLEDFreePlayClick = {},
+            onRobotFreePlayClick = {}
         )
     }
 }

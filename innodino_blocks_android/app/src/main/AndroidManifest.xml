@@ -35,7 +35,7 @@
             android:parentActivityName=".ui.main.MainActivity" />
             
         <activity
-            android:name=".ui.MissionCodeBuilderHostActivity"
+            android:name=".ui.codebuilder.MissionCodeBuilderHostActivity"
             android:exported="false"
             android:parentActivityName=".ui.main.MainActivity" />
             

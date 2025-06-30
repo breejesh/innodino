@@ -42,6 +42,23 @@
             android:gravity="center_vertical"
             android:maxLines="4"
             android:ellipsize="end"/>
+        <Button
+            android:id="@+id/missionDemoButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Demo"
+            android:textColor="#FFF"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="0dp"
+            android:layout_gravity="center_vertical"
+            android:clickable="true"
+            android:focusable="true"/>
     </LinearLayout>
 
     <!-- Blockly WebView (max real estate) -->
@@ -102,9 +119,9 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_marginBottom="18dp"
-        android:src="@android:drawable/ic_menu_mylocation"
+        android:src="@drawable/location_search"
         android:contentDescription="Locate Block"
-        app:backgroundTint="#2D9CDB"
+        app:backgroundTint="#FFCE55"
         app:tint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/markDoneButton"
@@ -116,7 +133,7 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_marginBottom="18dp"
-        android:src="@android:drawable/ic_menu_delete"
+        android:src="@drawable/delete"
         android:contentDescription="Clear All"
         app:backgroundTint="#EB5757"
         app:tint="#FFFFFF"

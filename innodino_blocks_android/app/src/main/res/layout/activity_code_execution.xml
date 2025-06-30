@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/cloud_white"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="32dp">
+
+    <TextView
+        android:id="@+id/executionStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Executing..."
+        android:textColor="@color/slate_gray"
+        android:textSize="22sp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="24dp"
+        android:textStyle="bold"/>
+
+    <LinearLayout
+        android:id="@+id/executionFlowLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="24dp">
+
+        <ImageView
+            android:id="@+id/phoneIcon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@android:drawable/ic_menu_call"
+            app:tint="@color/tech_teal" />
+
+        <ImageView
+            android:id="@+id/arrowIcon"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_media_play"
+            app:tint="@color/sun_yellow" />
+
+        <ImageView
+            android:id="@+id/arduinoIcon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@android:drawable/ic_menu_send"
+            app:tint="@color/dino_green" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/currentCommandText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/executionFlowLayout"
+        android:layout_marginTop="24dp"
+        android:background="@color/slate_gray_light"
+        android:padding="16dp"
+        android:text="Waiting for command..."
+        android:gravity="center"
+        android:textColor="@color/slate_gray"
+        android:textSize="18sp"
+        android:fontFamily="monospace" />
+
+    <Button
+        android:id="@+id/stopButton"
+        android:layout_width="250dp"
+        android:layout_height="70dp"
+        android:text="STOP"
+        android:textAllCaps="true"
+        android:textSize="28sp"
+        android:textColor="@color/cloud_white"
+        android:backgroundTint="@color/soft_coral"
+        android:elevation="8dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        />
+</RelativeLayout>

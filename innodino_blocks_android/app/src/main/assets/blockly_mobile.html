@@ -5,240 +5,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>InnoDino Blockly</title>
+
+  <!-- External Dependencies -->
   <script src="blockly/blockly.min.js"></script>
-  <script>
-    // Wait for Blockly to be loaded before running any Blockly code
-    function onBlocklyReady(callback) {
-      if (window.Blockly) {
-        callback();
-      } else {
-        var check = setInterval(function () {
-          if (window.Blockly) {
-            clearInterval(check);
-            callback();
-          }
-        }, 50);
-        // Timeout after 3 seconds
-        setTimeout(function () {
-          clearInterval(check);
-          if (!window.Blockly) {
-            document.body.innerHTML += '<div style="color:#EB5757;font-size:20px;text-align:center;margin-top:40px;">Blockly library failed to load.<br>Check your internet connection or asset path.</div>';
-            console.error('Blockly library failed to load.');
-          }
-        }, 3000);
-      }
-    }
-  </script>
-  <style>
-    html,
-    body {
-      height: 100%;
-      margin: 0;
-      background: #FAFAFA;
-      /* Cloud white background */
-    }
 
-    #blocklyDiv {
-      height: 100vh;
-      width: 100vw;
-      min-height: 350px;
-      background: #FAFAFA;
-    }
-
-    .blocklyToolbox {
-      font-size: 1.2em;
-      background: #FFFFFF;
-      box-shadow: 0 2px 12px 0 rgba(45, 156, 219, 0.10);
-      border: 1.5px solid #E0E0E0;
-      margin-top: 0;
-      margin-bottom: 0;
-      margin-left: 0;
-      margin-right: 0;
-      padding: 12px;
-    }
-
-    .blocklyMainBackground {
-      stroke: #6FCF97;
-      fill: #FAFAFA;
-    }
-
-    .blocklyTreeLabel {
-      font-family: 'Comic Sans MS', 'Comic Sans', cursive;
-      color: #2D9CDB;
-      font-weight: bold;
-      letter-spacing: 0.5px;
-    }
-
-    .blocklySvg {
-      border-radius: 18px;
-      background-color: #FAFAFA;
-    }
-
-    .blocklyFlyoutBackground {
-      fill: #FFFFFF;
-      fill-opacity: 0.98;
-      stroke: #E0E0E0;
-      stroke-width: 2px;
-      rx: 18px;
-      filter: drop-shadow(0 2px 8px #2D9CDB22);
-    }
-
-    .blocklyFlyoutLabelText {
-      font-size: 1.1em;
-      fill: #2D9CDB;
-      font-weight: bold;
-    }
-
-    .blocklyScrollbarHandle {
-      fill: #2D9CDB;
-    }
-
-    /* Enhanced Material block style for jigsaw puzzle effect */
-    .blocklyBlockBackground {
-      stroke: #E0E0E0;
-      stroke-width: 2px;
-      rx: 6px;
-      ry: 6px;
-      filter: drop-shadow(0 4px 16px rgba(45, 156, 219, 0.15));
-    }
-
-    .blocklyDraggable .blocklyBlockBackground {
-      stroke: #2D9CDB;
-      stroke-width: 3px;
-      filter: drop-shadow(0 8px 24px rgba(45, 156, 219, 0.25));
-    }
-
-    .blocklySelected .blocklyBlockBackground {
-      stroke: #FFCE55;
-      stroke-width: 4px;
-      filter: drop-shadow(0 0 20px rgba(255, 206, 85, 0.4));
-    }
-
-    /* Enhanced puzzle connection styles */
-    .blocklyPath {
-      stroke-width: 2px;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .blocklyText {
-      font-family: 'Google Sans', 'Roboto', 'Arial', sans-serif;
-      fill: #263238;
-      font-size: 16px;
-      font-weight: 600;
-      letter-spacing: 0.1px;
-    }
-
-    /* InnoDino THEME BLOCK COLORS */
-    /* Logic: Tech Teal */
-    .blocklyBlockBackground[fill="#5C81A6"] {
-      fill: #2D9CDB !important;
-    }
-
-    /* Loops: Dino Green */
-    .blocklyBlockBackground[fill="#5CA65C"] {
-      fill: #6FCF97 !important;
-    }
-
-    /* Math: Tech Teal */
-    .blocklyBlockBackground[fill="#5C68A6"] {
-      fill: #2D9CDB !important;
-    }
-
-    /* Text: Slate Gray */
-    .blocklyBlockBackground[fill="#5CA68D"] {
-      fill: #4F4F4F !important;
-    }
-
-    /* Lists: Tech Teal */
-    .blocklyBlockBackground[fill="#745CA6"] {
-      fill: #2D9CDB !important;
-    }
-
-    /* Color: Sun Yellow */
-    .blocklyBlockBackground[fill="#A6745C"] {
-      fill: #FFCE55 !important;
-    }
-
-    /* Variables: Dino Green */
-    .blocklyBlockBackground[fill="#A65C81"] {
-      fill: #6FCF97 !important;
-    }
-
-    /* Functions: Tech Teal */
-    .blocklyBlockBackground[fill="#9A5CA6"] {
-      fill: #2D9CDB !important;
-    }
-
-    /* Accent/Alert: Soft Coral */
-    .blocklyBlockBackground[fill="#FF6680"],
-    .blocklyBlockBackground[fill="#E53935"] {
-      fill: #EB5757 !important;
-    }
-
-    /* Math/Yellow: Sun Yellow */
-    .blocklyBlockBackground[fill="#FFAB19"],
-    .blocklyBlockBackground[fill="#FFCF00"],
-    .blocklyBlockBackground[fill="#FFC107"] {
-      fill: #FFCE55 !important;
-    }
-
-    /* Text: Slate Gray for text blocks */
-    .blocklyText {
-      fill: #4F4F4F;
-    }
-
-    /* Block input fields */
-    .blocklyEditableText {
-      background: #FAFAFA;
-      border-radius: 10px;
-      padding: 3px 8px;
-      box-shadow: 0 2px 8px #2D9CDB11;
-      font-size: 17px;
-    }
-
-    .blocklyDragging .blocklyBlockBackground {
-      stroke: #FFCE55;
-      stroke-width: 4px;
-      filter: drop-shadow(0 0 20px #FFCE5522);
-    }
-
-    /* Hide Blockly zoom and center controls */
-    .blocklyZoom,
-    .blocklyZoomControls,
-    .blocklyTrash,
-    .blocklyMainWorkspaceScrollbar,
-    .blocklyFlyoutButton {
-      display: none !important;
-    }
-
-    /* Force flyout to be vertical even with horizontal toolbox */
-    .blocklyFlyout {
-      direction: ltr;
-    }
-
-    .blocklyFlyout.blocklyFlyoutVertical {
-      width: 250px !important;
-      height: auto !important;
-    }
-
-    .blocklyFlyout .blocklyBlockCanvas {
-      transform: none !important;
-    }
-
-    /* Make flyout blocks stack vertically */
-    .blocklyFlyout .blocklyBlockCanvas > g {
-      display: block;
-    }
-  </style>
+  <!-- InnoDino Styles -->
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
   <div id="blocklyDiv"></div>
+  <!-- Blockly Toolbox Configuration -->
   <xml id="toolbox" style="display:none">
     <!-- Simplified InnoDino Categories -->
     <category name="💡 LED" colour="#6FCF97">
-      <block type="set_led">
+      <block type="turn_on_led">
         <value name="X">
           <shadow type="math_number">
             <field name="NUM">1</field>
@@ -250,19 +31,28 @@
           </shadow>
         </value>
       </block>
-      <block type="set_led_brightness">
-        <value name="BRIGHTNESS">
+      <block type="turn_off_led">
+        <value name="X">
           <shadow type="math_number">
-            <field name="NUM">50</field>
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+        <value name="Y">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
           </shadow>
         </value>
       </block>
+      <block type="set_led_brightness"></block>
+      <block type="led_pattern"></block>
     </category>
+
     <category name="📏 Sensor" colour="#2D9CDB">
       <block type="read_distance"></block>
       <block type="read_light"></block>
       <block type="read_temperature"></block>
     </category>
+
     <category name="🦕 Robot" colour="#FFCE55">
       <block type="move_forward">
         <value name="STEPS">
@@ -287,6 +77,7 @@
       </block>
       <block type="stop_robot"></block>
     </category>
+
     <category name="🔄 Repeat" colour="#6FCF97">
       <block type="repeat">
         <value name="TIMES">
@@ -302,6 +93,9 @@
           </shadow>
         </value>
       </block>
+    </category>
+
+    <category name="⏱️ Time" colour="#2D9CDB">
       <block type="wait_seconds">
         <value name="SECONDS">
           <shadow type="math_number">
@@ -310,6 +104,7 @@
         </value>
       </block>
     </category>
+
     <category name="🧠 Logic" colour="#2D9CDB">
       <block type="controls_if"></block>
       <block type="logic_compare"></block>
@@ -318,6 +113,7 @@
       <block type="math_number"></block>
       <block type="math_arithmetic"></block>
     </category>
+
     <category name="📦 Variable" colour="#6FCF97">
       <block type="variables_set">
         <value name="VALUE">
@@ -339,632 +135,24 @@
       </block>
     </category>
   </xml>
+
+  <!-- InnoDino JavaScript Files -->
+  <script src="blockly-blocks.js"></script>
+  <script src="blockly-generators.js"></script>
+  <script src="blockly-theme.js"></script>
+  <script src="blockly-main.js"></script>
   <script>
-    let workspace = null;
-
-    function loadBlockly() {
-      try {
-        if (workspace) {
-          workspace.dispose();
-        }
-        workspace = Blockly.inject('blocklyDiv', {
-          toolbox: document.getElementById('toolbox'),
-          scrollbars: true,
-          zoom: { controls: false, wheel: true, pinch: true, startScale: 1.1, maxScale: 2.5, minScale: 0.5 },
-          trashcan: true,
-          renderer: 'zelos',
-          grid: { spacing: 32, length: 3, colour: '#E0E0E0', snap: true },
-          horizontalLayout: true, // Toolbox on top
-          toolboxPosition: 'top',
-          move: { scrollbars: true, drag: true, wheel: true },
-          sounds: false, // Disable sounds to prevent media errors
-          media: '', // Disable media path to prevent loading issues
-          oneBasedIndex: false, // Use zero-based indexing
-          theme: Blockly.Themes.Classic
-        });
-
-        // Force flyout to be vertical after workspace creation
-        if (workspace.flyout_) {
-          workspace.flyout_.horizontalLayout = false;
-        }
-        // Re-apply block style after every workspace update
-        workspace.addChangeListener(function () {
-          setTimeout(addMaterialGradient, 100);
-        });
-        setTimeout(addMaterialGradient, 500);
-      } catch (e) {
-        document.body.innerHTML += '<div style="color:#EB5757;font-size:20px;text-align:center;margin-top:40px;">Blockly failed to load toolbox.<br>' + e + '</div>';
-        console.error('Blockly load error', e);
+    // Called from Android to get the generated code and send to Android interface
+    function generateAndSendCodeToAndroid() {
+      var code = Blockly.JavaScript.workspaceToCode(Blockly.getMainWorkspace());
+      if (window.AndroidInterface && window.AndroidInterface.sendCodeToArduino) {
+        window.AndroidInterface.sendCodeToArduino(code);
       }
     }
-
-    // Function to set custom toolbox (called from Android)
-    window.setToolbox = function (toolboxXml) {
-      console.log('Setting custom toolbox:', toolboxXml);
-      if (!workspace) {
-        console.error('Workspace not initialized');
-        return;
-      }
-      try {
-        // Parse the XML string and update toolbox
-        const parser = new DOMParser();
-        const toolboxDoc = parser.parseFromString(toolboxXml, 'text/xml');
-        const toolboxElement = toolboxDoc.documentElement;
-
-        // Update the workspace toolbox
-        workspace.updateToolbox(toolboxElement);
-        console.log('Toolbox updated successfully');
-      } catch (e) {
-        console.error('Error setting toolbox:', e);
-      }
-    };
-
-    // Load Blockly with standard blocks on page load
-    window.onload = function () {
-      // Suppress media-related errors
-      window.addEventListener('error', function(e) {
-        if (e.message && e.message.includes('NotSupportedError')) {
-          console.log('Suppressed media error:', e.message);
-          e.preventDefault();
-          return false;
-        }
-      });
-      
-      // Wait for Blockly to be fully loaded, then define custom blocks, then initialize workspace
-      onBlocklyReady(function () {
-        try {
-          defineCustomBlocks();
-          defineCodeGenerators();
-          loadBlockly();
-        } catch (e) {
-          console.error('Error during initialization:', e);
-          loadBlockly(); // Try to load anyway
-        }
-      });
-    };
-
+    // Optionally, expose getCode for legacy use
     window.getCode = function () {
-      if (!workspace) return '';
-      return Blockly.JavaScript.workspaceToCode(workspace);
-    };
-
-    window.getXml = function () {
-      if (!workspace) return '';
-      return Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(workspace));
-    };
-  </script>
-  <script>
-    // Add a Material gradient to blocks after Blockly loads
-    function addMaterialGradient() {
-      var svg = document.querySelector('svg');
-      if (svg && !svg.querySelector('#blocklyMaterialGradient')) {
-        var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-        var grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
-        grad.setAttribute('id', 'blocklyMaterialGradient');
-        grad.setAttribute('x1', '0%');
-        grad.setAttribute('y1', '0%');
-        grad.setAttribute('x2', '0%');
-        grad.setAttribute('y2', '100%');
-        var stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-        stop1.setAttribute('offset', '0%');
-        stop1.setAttribute('stop-color', '#FFFFFF');
-        stop1.setAttribute('stop-opacity', '0.25');
-        var stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-        stop2.setAttribute('offset', '100%');
-        stop2.setAttribute('stop-color', '#000000');
-        stop2.setAttribute('stop-opacity', '0.07');
-        grad.appendChild(stop1);
-        grad.appendChild(stop2);
-        defs.appendChild(grad);
-        svg.insertBefore(defs, svg.firstChild);
-      }
-      // Set all blocks to use the gradient
-      var blocks = document.querySelectorAll('.blocklyBlockBackground');
-      blocks.forEach(function (b) {
-        b.setAttribute('fill', 'url(#blocklyMaterialGradient)');
-      });
+      return Blockly.JavaScript.workspaceToCode(Blockly.getMainWorkspace());
     }
-    // Call after Blockly inject
-    window.addEventListener('load', function () {
-      setTimeout(addMaterialGradient, 500);
-    });
-  </script>
-  <script>
-    // InnoDino color palette
-    const INNODINO_COLORS = {
-      '#5C81A6': '#2D9CDB', // Logic: Tech Teal
-      '#5CA65C': '#6FCF97', // Loops: Dino Green
-      '#5C68A6': '#2D9CDB', // Math: Tech Teal
-      '#5CA68D': '#4F4F4F', // Text: Slate Gray
-      '#745CA6': '#2D9CDB', // Lists: Tech Teal
-      '#A6745C': '#FFCE55', // Color: Sun Yellow
-      '#A65C81': '#6FCF97', // Variables: Dino Green
-      '#9A5CA6': '#2D9CDB', // Functions: Tech Teal
-      '#FF6680': '#EB5757', // Alert: Soft Coral
-      '#E53935': '#EB5757', // Alert: Soft Coral
-      '#FFAB19': '#FFCE55', // Math/Yellow: Sun Yellow
-      '#FFCF00': '#FFCE55', // Math/Yellow: Sun Yellow
-      '#FFC107': '#FFCE55', // Math/Yellow: Sun Yellow
-    };
-    function applyInnoDinoBlockColors() {
-      document.querySelectorAll('.blocklyBlockBackground').forEach(function (block) {
-        const orig = block.getAttribute('fill');
-        if (INNODINO_COLORS[orig]) {
-          block.setAttribute('fill', INNODINO_COLORS[orig]);
-        }
-      });
-    }
-    window.addEventListener('load', function () {
-      setTimeout(applyInnoDinoBlockColors, 500);
-    });
-    // Also re-apply after workspace changes
-    function setupColorListener(workspace) {
-      workspace.addChangeListener(function () {
-        setTimeout(applyInnoDinoBlockColors, 100);
-      });
-    }
-    // Patch Blockly inject to always set up color listener
-    if (!window.originalBlocklyInject) {
-      window.originalBlocklyInject = Blockly.inject;
-      Blockly.inject = function () {
-        const ws = window.originalBlocklyInject.apply(this, arguments);
-        setupColorListener(ws);
-        setTimeout(applyInnoDinoBlockColors, 500);
-        return ws;
-      };
-    }
-  </script>
-  <script>
-    // Expose JS functions for zoom in, zoom out, and center on blocks
-    window.blocklyCenterOnBlocks = function () {
-      if (window.workspace) {
-        window.workspace.scrollCenter();
-      }
-    };
-    window.blocklyClearAll = function () {
-      if (window.workspace) {
-        window.workspace.clear();
-      }
-    };
-    // Patch Blockly inject to expose workspace globally
-    if (!window.originalBlocklyInject2) {
-      window.originalBlocklyInject2 = Blockly.inject;
-      Blockly.inject = function () {
-        const ws = window.originalBlocklyInject2.apply(this, arguments);
-        window.workspace = ws;
-        if (window.setupColorListener) {
-          setupColorListener(ws);
-          setTimeout(applyInnoDinoBlockColors, 500);
-        }
-        return ws;
-      };
-    }
-  </script>
-  <script>
-    // Define custom blocks function
-    function defineCustomBlocks() {
-      console.log('Defining custom InnoDino blocks...');
-
-      // LED Control Blocks - All with jigsaw connections
-      Blockly.defineBlocksWithJsonArray([
-        {
-          "type": "set_led",
-          "message0": "💡 Set LED x: %1 y: %2",
-          "args0": [
-            {
-              "type": "input_value",
-              "name": "X",
-              "check": "Number"
-            },
-            {
-              "type": "input_value",
-              "name": "Y",
-              "check": "Number"
-            }
-          ],
-          "inputsInline": true,
-          "previousStatement": null,
-          "nextStatement": null,
-          "colour": "#6FCF97",
-          "tooltip": "Set LED at position (x,y)",
-          "helpUrl": ""
-        },
-        {
-          "type": "set_led_brightness",
-          "message0": "🔆 Set LED brightness to %1 %",
-          "args0": [
-            {
-              "type": "field_dropdown",
-              "name": "LED_NUM",
-              "options": [
-                ["1"],
-                ["2"],
-                ["3"],
-                ["4"],
-                ["5"]
-              ]
-            },
-            {
-              "type": "input_value",
-              "name": "BRIGHTNESS",
-              "check": "Number"
-            }
-          ],
-          "previousStatement": null,
-          "nextStatement": null,
-          "colour": "#6FCF97",
-          "tooltip": "Set LED brightness (0-100%)",
-          "helpUrl": ""
-        },
-        {
-          "type": "led_pattern",
-          "message0": "✨ Create LED pattern %1",
-          "args0": [
-            {
-              "type": "field_dropdown",
-              "name": "PATTERN",
-              "options": [
-                ["Rainbow", "rainbow"],
-                ["Blink", "blink"],
-                ["Wave", "wave"],
-                ["Sparkle", "sparkle"],
-                ["Fade", "fade"]
-              ]
-            }
-          ],
-          "previousStatement": null,
-          "nextStatement": null,
-          "colour": "#6FCF97",
-          "tooltip": "Create animated LED patterns",
-          "helpUrl": ""
-        }
-      ]);
-
-      // Sensor Blocks - Output only (no jigsaw connections)
-      Blockly.defineBlocksWithJsonArray([
-        {
-          "type": "read_distance",
-          "message0": "📏 Distance sensor reading",
-          "output": "Number",
-          "colour": "#2D9CDB",
-          "tooltip": "Get distance reading from ultrasonic sensor (cm)",
-          "helpUrl": ""
-        },
-        {
-          "type": "read_light",
-          "message0": "☀️ Light sensor reading",
-          "output": "Number",
-          "colour": "#2D9CDB",
-          "tooltip": "Get light level reading (0-100%)",
-          "helpUrl": ""
-        },
-        {
-          "type": "read_temperature",
-          "message0": "🌡️ Temperature sensor reading",
-          "output": "Number",
-          "colour": "#2D9CDB",
-          "tooltip": "Get temperature reading (°C)",
-          "helpUrl": ""
-        }
-      ]);
-
-      // Robot Movement Blocks - All with jigsaw connections
-      Blockly.defineBlocksWithJsonArray([
-        {
-          "type": "move_forward",
-          "message0": "🦕 Move forward %1 steps",
-          "args0": [
-            {
-              "type": "input_value",
-              "name": "STEPS",
-              "check": "Number"
-            }
-          ],
-          "previousStatement": null,
-          "nextStatement": null,
-          "colour": "#FFCE55",
-          "tooltip": "Move the DinoBot forward",
-          "helpUrl": ""
-        },
-        {
-          "type": "turn_left",
-          "message0": "↺ Turn left %1 degrees",
-          "args0": [
-            {
-              "type": "input_value",
-              "name": "DEGREES",
-              "check": "Number"
-            }
-          ],
-          "previousStatement": null,
-          "nextStatement": null,
-          "colour": "#FFCE55",
-          "tooltip": "Turn the DinoBot left",
-          "helpUrl": ""
-        },
-        {
-          "type": "turn_right",
-          "message0": "↻ Turn right %1 degrees",
-          "args0": [
-            {
-              "type": "input_value",
-              "name": "DEGREES",
-              "check": "Number"
-            }
-          ],
-          "previousStatement": null,
-          "nextStatement": null,
-          "colour": "#FFCE55",
-          "tooltip": "Turn the DinoBot right",
-          "helpUrl": ""
-        },
-        {
-          "type": "stop_robot",
-          "message0": "🛑 Stop DinoBot",
-          "previousStatement": null,
-          "nextStatement": null,
-          "colour": "#EB5757",
-          "tooltip": "Stop all robot movement",
-          "helpUrl": ""
-        }
-      ]);
-
-      // Control and Logic Blocks - With proper jigsaw connections
-      Blockly.defineBlocksWithJsonArray([
-        {
-          "type": "variables_set",
-          "message0": "📦 Set %1 to %2",
-          "args0": [
-            {
-              "type": "field_variable",
-              "name": "VAR",
-              "variable": "item"
-            },
-            {
-              "type": "input_value",
-              "name": "VALUE"
-            }
-          ],
-          "previousStatement": null,
-          "nextStatement": null,
-          "colour": "#6FCF97",
-          "tooltip": "Set a variable to a value",
-          "helpUrl": ""
-        },
-        {
-          "type": "repeat",
-          "message0": "🔄 Repeat %1 times %2 %3",
-          "args0": [
-            {
-              "type": "input_value",
-              "name": "TIMES",
-              "check": "Number"
-            },
-            {
-              "type": "input_dummy"
-            },
-            {
-              "type": "input_statement",
-              "name": "DO"
-            }
-          ],
-          "previousStatement": null,
-          "nextStatement": null,
-          "colour": "#6FCF97",
-          "tooltip": "Repeat the enclosed blocks",
-          "helpUrl": ""
-        },
-        {
-          "type": "wait_seconds",
-          "message0": "⏰ Wait %1 seconds",
-          "args0": [
-            {
-              "type": "input_value",
-              "name": "SECONDS",
-              "check": "Number"
-            }
-          ],
-          "previousStatement": null,
-          "nextStatement": null,
-          "colour": "#2D9CDB",
-          "tooltip": "Wait for a specific number of seconds",
-          "helpUrl": ""
-        }
-      ]);
-    } // End defineCustomBlocks function
-
-  </script>
-  <script>
-    // Define code generators function
-    function defineCodeGenerators() {
-      console.log('Defining code generators...');
-
-      // JavaScript Code Generators for InnoDino Custom Blocks
-
-      // LED Control Code Generators
-      Blockly.JavaScript['set_led'] = function (block) {
-        var x = Blockly.JavaScript.valueToCode(block, 'X', Blockly.JavaScript.ORDER_ATOMIC);
-        var y = Blockly.JavaScript.valueToCode(block, 'Y', Blockly.JavaScript.ORDER_ATOMIC);
-        var code = `setLed(${x}, ${y});\n`;
-        return code;
-      };
-
-      Blockly.JavaScript['set_led'] = function (block) {
-        var ledNum = block.getFieldValue('LED_NUM');
-        var color = block.getFieldValue('COLOR');
-        var code = `setLED(${ledNum}, '${color}');\n`;
-        return code;
-      };
-
-      Blockly.JavaScript['set_led_brightness'] = function (block) {
-        var ledNum = block.getFieldValue('LED_NUM');
-        var brightness = Blockly.JavaScript.valueToCode(block, 'BRIGHTNESS', Blockly.JavaScript.ORDER_ATOMIC);
-        var code = `setLEDBrightness(${ledNum}, ${brightness});\n`;
-        return code;
-      };
-
-      Blockly.JavaScript['led_pattern'] = function (block) {
-        var pattern = block.getFieldValue('PATTERN');
-        var code = `playLEDPattern('${pattern}');\n`;
-        return code;
-      };
-
-      // Sensor Code Generators
-      Blockly.JavaScript['read_distance'] = function (block) {
-        var code = 'readDistance()';
-        return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
-      };
-
-      Blockly.JavaScript['read_light'] = function (block) {
-        var code = 'readLight()';
-        return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
-      };
-
-      Blockly.JavaScript['read_temperature'] = function (block) {
-        var code = 'readTemperature()';
-        return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
-      };
-
-      // Robot Movement Code Generators
-      Blockly.JavaScript['move_forward'] = function (block) {
-        var steps = Blockly.JavaScript.valueToCode(block, 'STEPS', Blockly.JavaScript.ORDER_ATOMIC);
-        var code = `moveForward(${steps});\n`;
-        return code;
-      };
-
-      Blockly.JavaScript['turn_left'] = function (block) {
-        var degrees = Blockly.JavaScript.valueToCode(block, 'DEGREES', Blockly.JavaScript.ORDER_ATOMIC);
-        var code = `turnLeft(${degrees});\n`;
-        return code;
-      };
-
-      Blockly.JavaScript['turn_right'] = function (block) {
-        var degrees = Blockly.JavaScript.valueToCode(block, 'DEGREES', Blockly.JavaScript.ORDER_ATOMIC);
-        var code = `turnRight(${degrees});\n`;
-        return code;
-      };
-
-      Blockly.JavaScript['stop_robot'] = function (block) {
-        var code = 'stopRobot();\n';
-        return code;
-      };
-
-      // Control and Logic Code Generators
-      Blockly.JavaScript['variables_set'] = function (block) {
-        var varName = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
-        var value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_ASSIGNMENT);
-        var code = `${varName} = ${value};\n`;
-        return code;
-      };
-
-      Blockly.JavaScript['repeat'] = function (block) {
-        var times = Blockly.JavaScript.valueToCode(block, 'TIMES', Blockly.JavaScript.ORDER_ATOMIC);
-        var statements = Blockly.JavaScript.statementToCode(block, 'DO');
-        var code = `for (var i = 0; i < ${times}; i++) {\n${statements}}\n`;
-        return code;
-      };
-
-      // Sound and Communication Code Generators
-      Blockly.JavaScript['play_sound'] = function (block) {
-        var sound = block.getFieldValue('SOUND');
-        var code = `playSound('${sound}');\n`;
-        return code;
-      };
-
-      Blockly.JavaScript['display_message'] = function (block) {
-        var message = Blockly.JavaScript.valueToCode(block, 'MESSAGE', Blockly.JavaScript.ORDER_ATOMIC);
-        var code = `displayMessage(${message});\n`;
-        return code;
-      };
-
-      // Utility Code Generators
-      Blockly.JavaScript['wait_seconds'] = function (block) {
-        var seconds = Blockly.JavaScript.valueToCode(block, 'SECONDS', Blockly.JavaScript.ORDER_ATOMIC);
-        var code = `await wait(${seconds} * 1000);\n`;
-        return code;
-      };
-
-      Blockly.JavaScript['map_function'] = function (block) {
-        var value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_ATOMIC);
-        var fromMin = Blockly.JavaScript.valueToCode(block, 'FROM_MIN', Blockly.JavaScript.ORDER_ATOMIC);
-        var fromMax = Blockly.JavaScript.valueToCode(block, 'FROM_MAX', Blockly.JavaScript.ORDER_ATOMIC);
-        var toMin = Blockly.JavaScript.valueToCode(block, 'TO_MIN', Blockly.JavaScript.ORDER_ATOMIC);
-        var toMax = Blockly.JavaScript.valueToCode(block, 'TO_MAX', Blockly.JavaScript.ORDER_ATOMIC);
-        var code = `map(${value}, ${fromMin}, ${fromMax}, ${toMin}, ${toMax})`;
-        return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
-      };
-
-      // Helper function for map
-      window.map = function (value, fromMin, fromMax, toMin, toMax) {
-        return (value - fromMin) * (toMax - toMin) / (fromMax - fromMin) + toMin;
-      };
-
-      // Simulation functions for the generated code (these would connect to actual hardware)
-      window.setLed = function (x, y) {
-        console.log(`🔥 Setting LED at position (${x}, ${y})`);
-        // TODO: Send command to actual hardware
-      };
-
-      window.setLED = function (ledNum, color) {
-        console.log(`🔥 Setting LED ${ledNum} to color ${color}`);
-        // TODO: Send command to actual hardware
-      };
-
-      window.setLEDBrightness = function (ledNum, brightness) {
-        console.log(`🔆 Setting LED ${ledNum} brightness to ${brightness}%`);
-      };
-
-      window.playLEDPattern = function (pattern) {
-        console.log(`✨ Playing LED pattern: ${pattern}`);
-      };
-
-      window.readDistance = function () {
-        var distance = Math.floor(Math.random() * 100) + 10; // Simulate 10-110 cm
-        console.log(`📏 Distance sensor reading: ${distance} cm`);
-        return distance;
-      };
-
-      window.readLight = function () {
-        var light = Math.floor(Math.random() * 100); // Simulate 0-100%
-        console.log(`☀️ Light sensor reading: ${light}%`);
-        return light;
-      };
-
-      window.readTemperature = function () {
-        var temp = Math.floor(Math.random() * 30) + 15; // Simulate 15-45°C
-        console.log(`🌡️ Temperature sensor reading: ${temp}°C`);
-        return temp;
-      };
-
-      window.moveForward = function (steps) {
-        console.log(`🦕 Moving DinoBot forward ${steps} steps`);
-      };
-
-      window.turnLeft = function (degrees) {
-        console.log(`↺ Turning DinoBot left ${degrees} degrees`);
-      };
-
-      window.turnRight = function (degrees) {
-        console.log(`↻ Turning DinoBot right ${degrees} degrees`);
-      };
-
-      window.stopRobot = function () {
-        console.log(`🛑 Stopping DinoBot`);
-      };
-
-      window.playSound = function (sound) {
-        console.log(`🔊 Playing sound: ${sound}`);
-      };
-
-      window.displayMessage = function (message) {
-        console.log(`📱 Displaying message: ${message}`);
-        alert(`DinoBot says: ${message}`);
-      };
-
-      window.wait = function (ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-      };
-    } // End defineCodeGenerators function
   </script>
 </body>
 
