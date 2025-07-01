@@ -20,6 +20,7 @@ import android.os.Looper
 import android.widget.ProgressBar
 import com.innodino.blocks.R
 import com.innodino.blocks.ui.execution.CodeExecutionActivity
+import com.innodino.blocks.util.SensorProvider
 import com.innodino.blocks.viewmodel.MissionCodeBuilderViewModel
 
 /**
@@ -39,20 +40,7 @@ class MissionCodeBuilderFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_mission_code_builder, container, false)
     }
 
-    // Add JS interface for receiving code from WebView
-    inner class BlocklyJsBridge {
-        @JavascriptInterface
-        fun sendCodeToArduino(code: String) {
-            // Launch the execution UI with the generated code
-            Handler(Looper.getMainLooper()).post {
-                Log.d("MissionCodeBuilder", "Received code from Blockly, launching execution screen.")
-                val intent = Intent(requireContext(), CodeExecutionActivity::class.java).apply {
-                    putExtra("GENERATED_CODE", code)
-                }
-                startActivity(intent)
-            }
-        }
-    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -185,7 +173,7 @@ class MissionCodeBuilderFragment : Fragment() {
         val runBtn = view.findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.runButton)
         runBtn.setOnClickListener {
             // Call the JS function to generate and send code to Android
-            blocklyWebView.evaluateJavascript("generateAndSendCodeToAndroid();", null)
+            blocklyWebView.evaluateJavascript("runCode();", null)
         }
 
         // Blockly FABs (updated)
@@ -211,7 +199,7 @@ class MissionCodeBuilderFragment : Fragment() {
             dialog.show()
         }
 
-        blocklyWebView.addJavascriptInterface(BlocklyJsBridge(), "AndroidInterface")
+        blocklyWebView.addJavascriptInterface(BlocklyJsOutputBridge(), "AndroidInterface")
     }
 
     // Helper to build Blockly toolbox XML for allowed blocks

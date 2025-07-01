@@ -63,17 +63,6 @@
             });
         }
 
-        function getGeneratedCode() {
-            // Generate JavaScript code from the workspace
-            var code = Blockly.JavaScript.workspaceToCode(workspace);
-            // Send the code to the Android app via the JS bridge
-            if (window.Android && typeof window.Android.sendCodeToArduino === 'function') {
-                window.Android.sendCodeToArduino(code);
-            } else {
-                console.error("BlocklyJsBridge is not available.");
-            }
-        }
-
         function clearWorkspace() {
             if (workspace) {
                 workspace.clear();

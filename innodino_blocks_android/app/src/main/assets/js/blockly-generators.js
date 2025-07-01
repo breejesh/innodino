@@ -28,17 +28,23 @@ Blockly.JavaScript.forBlock['led_pattern'] = function(block) {
 // --- Robot Blocks ---
 
 Blockly.JavaScript.forBlock['move_forward'] = function(block) {
-  var value_steps = Blockly.JavaScript.valueToCode(block, 'STEPS', Blockly.JavaScript.ORDER_ATOMIC) || '1';
-  return 'sendSerialCommand("@ROBOT|MOVE_FORWARD|" + ' + value_steps + ' + ";");\n';
+  var value_time = Blockly.JavaScript.valueToCode(block, 'SECONDS', Blockly.JavaScript.ORDER_ATOMIC) || '1';
+  return 'sendSerialCommand("@ROBOT|MOVE_FORWARD|" + ' + value_time + ' + ";");\n';
+};
+
+
+Blockly.JavaScript.forBlock['move_forward'] = function(block) {
+  var value_time = Blockly.JavaScript.valueToCode(block, 'SECONDS', Blockly.JavaScript.ORDER_ATOMIC) || '1';
+  return 'sendSerialCommand("@ROBOT|MOVE_BACKWARD|" + ' + value_time + ' + ";");\n';
 };
 
 Blockly.JavaScript.forBlock['turn_left'] = function(block) {
-  var value_degrees = Blockly.JavaScript.valueToCode(block, 'DEGREES', Blockly.JavaScript.ORDER_ATOMIC) || '90';
+  var value_degrees = Blockly.JavaScript.valueToCode(block, 'SECONDS', Blockly.JavaScript.ORDER_ATOMIC) || '90';
   return 'sendSerialCommand("@ROBOT|TURN_LEFT|" + ' + value_degrees + ' + ";");\n';
 };
 
 Blockly.JavaScript.forBlock['turn_right'] = function(block) {
-  var value_degrees = Blockly.JavaScript.valueToCode(block, 'DEGREES', Blockly.JavaScript.ORDER_ATOMIC) || '90';
+  var value_degrees = Blockly.JavaScript.valueToCode(block, 'SECONDS', Blockly.JavaScript.ORDER_ATOMIC) || '90';
   return 'sendSerialCommand("@ROBOT|TURN_RIGHT|" + ' + value_degrees + ' + ";");\n';
 };
 
@@ -55,17 +61,11 @@ Blockly.JavaScript.forBlock['wait_seconds'] = function(block) {
 
 // --- Sensor Blocks ---
 Blockly.JavaScript.forBlock['read_distance'] = function(block) {
-  return 'sendSerialCommand("@SENSOR|READ|DISTANCE;");\n';
+  return ['getSensorValue("DISTANCE")', Blockly.JavaScript.ORDER_FUNCTION_CALL];
 };
-Blockly.JavaScript.forBlock['read_light'] = function(block) {
-  return 'sendSerialCommand("@SENSOR|READ|LIGHT;");\n';
-};
-Blockly.JavaScript.forBlock['read_temperature'] = function(block) {
-  return 'sendSerialCommand("@SENSOR|READ|TEMPERATURE;");\n';
-};
+
 
 // --- Variable Blocks ---
-
 Blockly.JavaScript.forBlock['variables_set'] = function(block) {
   var varName = Blockly.JavaScript.nameDB_.getName(block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
   var value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_ASSIGNMENT) || '0';

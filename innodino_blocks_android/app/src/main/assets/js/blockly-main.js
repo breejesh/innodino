@@ -28,6 +28,18 @@ function onBlocklyReady(callback) {
   }
 }
 
+function getSensorValue(type) {
+  if (window.Android && typeof window.Android.getSensorValue === 'function') {
+    // Call Android interface
+    return window.Android.getSensorValue(type);
+  }
+  // Fallback: simulate in browser
+  if (type === "DISTANCE") return Math.floor(Math.random() * 100);
+  if (type === "LIGHT") return Math.floor(Math.random() * 1024);
+  if (type === "TEMPERATURE") return (20 + Math.random() * 10).toFixed(1);
+  return 0;
+}
+
 function loadBlockly() {
   try {
     if (workspace) {
@@ -117,7 +129,11 @@ window.blocklyClearAll = function () {
 
 // Simulate sendSerialCommand in browser
 window.sendSerialCommand = function(cmd) {
-  alert('Simulated sendSerialCommand: ' + cmd);
+  if (window.AndroidInterface && typeof window.AndroidInterface.sendCommandToArduino === 'function') {
+      window.AndroidInterface.sendCommandToArduino(cmd);
+  } else {
+      console.error("BlocklyJsBridge is not available.");
+  }
   console.log('Simulated sendSerialCommand:', cmd);
 };
 
@@ -145,14 +161,18 @@ window.onload = function () {
     var runBtn = document.getElementById('runCodeBtn');
     if (runBtn) {
       runBtn.onclick = function () {
-        console.log('turn_on_led generator:', Blockly.JavaScript['turn_on_led']);
+        runCode();
+      };
+    }
+  });
+
+  window.runCode = function () {
+     console.log('turn_on_led generator:', Blockly.JavaScript['turn_on_led']);
         var code = Blockly.JavaScript.workspaceToCode(Blockly.getMainWorkspace());
         try {
           eval(code);
         } catch (e) {
-          alert('Error running code: ' + e);
-        }
-      };
-    }
-  });
+          console.error('Error running code: ' + e);
+      }
+  }
 };
