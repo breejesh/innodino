@@ -15,6 +15,10 @@ body {
 	overflow: hidden !important;
 }
 
+.blocklyNotDeletable {
+	opacity: 0 !important;
+}
+
 .blocklyScrollbarHandle,
 .blocklyScrollbarBackground {
 	display: none !important;

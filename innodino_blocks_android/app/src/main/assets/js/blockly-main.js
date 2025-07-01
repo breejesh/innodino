@@ -71,13 +71,38 @@ function loadBlockly() {
     toolbox.id,
     Blockly.ComponentManager.Capability.DELETE_AREA
     );
+    
+    
+    // After workspace is initialized
+    // Add a hidden block far to the left to expand workspace bounds
+    var xmlText = '<xml><block type="math_number" x="-1000" y="40" deletable="false" movable="false" collapsed="true" /></xml>';
+    var xml;
+    if (Blockly.Xml && Blockly.Xml.textToDom) {
+      xml = Blockly.Xml.textToDom(xmlText);
+    } else if (Blockly.utils && Blockly.utils.xml && Blockly.utils.xml.textToDom) {
+      xml = Blockly.utils.xml.textToDom(xmlText);
+    } else {
+      var parser = new DOMParser();
+      xml = parser.parseFromString(xmlText, "text/xml");
+    }
+    if (Blockly.Xml && Blockly.Xml.domToWorkspace) {
+      Blockly.Xml.domToWorkspace(xml, workspace);
+    }
 
-
-    // Re-apply block style after every workspace update
-    workspace.addChangeListener(function () {
-      setTimeout(addMaterialGradient, 100);
+    workspace.addChangeListener(function(event) {
+      if (event.type === Blockly.Events.BLOCK_CREATE) {
+        console.log('Block created:', event.blockId || (event.ids && event.ids[0]));
+        // Get the block by ID
+        var block = workspace.getBlockById(event.blockId || (event.ids && event.ids[0]));
+        console.log('block details:', block);
+        if (block) {
+          // Move the block to the left (e.g., x = -500)
+          console.log('Moving block to the left:', block.id, 'Current x:', block.xy.x);
+          block.moveBy(block.xy.x - 300, block.xy.y + 100); // or set to a fixed negative x: block.moveBy(-500, 0);
+        console.log('block details:', block);
+        }
+      }
     });
-    setTimeout(addMaterialGradient, 500);
 
   } catch (e) {
     document.body.innerHTML += '<div style="color:#EB5757;font-size:20px;text-align:center;margin-top:40px;">Blockly failed to load toolbox.<br>' + e + '</div>';
@@ -169,7 +194,6 @@ window.onload = function () {
   });
 
   window.runCode = function () {
-     console.log('turn_on_led generator:', Blockly.JavaScript['turn_on_led']);
         var code = Blockly.JavaScript.workspaceToCode(Blockly.getMainWorkspace());
         try {
           eval(code);
