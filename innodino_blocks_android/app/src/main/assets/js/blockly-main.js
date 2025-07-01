@@ -29,9 +29,11 @@ function onBlocklyReady(callback) {
 }
 
 function getSensorValue(type) {
-  if (window.Android && typeof window.Android.getSensorValue === 'function') {
+  console.log('getSensorValue called with type:', type);
+  if (window.AndroidInputInterface && typeof window.AndroidInputInterface.getSensorValue === 'function') {
+    console.log('Calling Android interface for sensor value:', type);
     // Call Android interface
-    return window.Android.getSensorValue(type);
+    return window.AndroidInputInterface.getSensorValue(type);
   }
   // Fallback: simulate in browser
   if (type === "DISTANCE") return Math.floor(Math.random() * 100);
@@ -129,8 +131,8 @@ window.blocklyClearAll = function () {
 
 // Simulate sendSerialCommand in browser
 window.sendSerialCommand = function(cmd) {
-  if (window.AndroidInterface && typeof window.AndroidInterface.sendCommandToArduino === 'function') {
-      window.AndroidInterface.sendCommandToArduino(cmd);
+  if (window.AndroidOutputInterface && typeof window.AndroidOutputInterface.sendCommandToArduino === 'function') {
+      window.AndroidOutputInterface.sendCommandToArduino(cmd);
   } else {
       console.error("BlocklyJsBridge is not available.");
   }

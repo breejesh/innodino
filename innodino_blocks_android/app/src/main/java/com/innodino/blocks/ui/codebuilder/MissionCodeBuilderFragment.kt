@@ -198,8 +198,8 @@ class MissionCodeBuilderFragment : Fragment() {
             okBtn.setOnClickListener { dialog.dismiss() }
             dialog.show()
         }
-
-        blocklyWebView.addJavascriptInterface(BlocklyJsOutputBridge(), "AndroidInterface")
+        blocklyWebView.addJavascriptInterface(BlocklyJsInputBridge(), "AndroidInputInterface")
+        blocklyWebView.addJavascriptInterface(BlocklyJsOutputBridge(), "AndroidOutputInterface")
     }
 
     // Helper to build Blockly toolbox XML for allowed blocks
