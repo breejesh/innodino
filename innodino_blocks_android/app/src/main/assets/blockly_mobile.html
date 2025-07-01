@@ -8,17 +8,18 @@
 
   <!-- External Dependencies -->
   <script src="blockly/blockly.min.js"></script>
+  <script src="blockly/javascript.js"></script>
 
   <!-- InnoDino Styles -->
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
   <div id="blocklyDiv"></div>
 
   <!-- Generation/Test Button for Browser -->
-  <button id="generateCodeBtn" style="position:fixed;bottom:24px;left:24px;z-index:1000;padding:16px 28px;font-size:1.2em;background:#6FCF97;color:#fff;border:none;border-radius:12px;box-shadow:0 2px 8px #0002;cursor:pointer;">
-    Generate Code
+  <button id="runCodeBtn" style="position:fixed;bottom:24px;left:24px;z-index:1000;padding:16px 28px;font-size:1.2em;background:#6FCF97;color:#fff;border:none;border-radius:12px;box-shadow:0 2px 8px #0002;cursor:pointer;">
+    ▶ Run
   </button>
 
   <!-- Blockly Toolbox Configuration -->
@@ -143,23 +144,27 @@
   </xml>
 
   <!-- InnoDino JavaScript Files -->
-  <script src="blockly-blocks.js"></script>
-  <script src="blockly-generators.js"></script>
-  <script src="blockly-theme.js"></script>
-  <script src="blockly-main.js"></script>
+  <script src="js/blockly-blocks.js"></script>
+  <script src="js/blockly-generators.js"></script>
+  <script src="js/blockly-theme.js"></script>
+  <script src="js/blockly-main.js"></script>
   <script>
-    // Called from Android to get the generated code and send to Android interface
-    function generateAndSendCodeToAndroid() {
+ 
+     // Browser: Run generated code directly
+    document.getElementById('runCodeBtn').onclick = function () {
+      console.log('turn_on_led generator:', Blockly.JavaScript['turn_on_led']);
       var code = Blockly.JavaScript.workspaceToCode(Blockly.getMainWorkspace());
-      if (window.AndroidInterface && window.AndroidInterface.sendCodeToArduino) {
-        window.AndroidInterface.sendCodeToArduino(code);
+      try {
+        eval(code);
+      } catch (e) {
+        alert('Error running code: ' + e);
       }
-    }
+    };
 
-    // Browser-only: Show generated code in an alert for testing
-    document.getElementById('generateCodeBtn').onclick = function () {
-      var code = Blockly.JavaScript.workspaceToCode(Blockly.getMainWorkspace());
-      console.log("Generated code:\n" + code);
+    // Simulate sendSerialCommand in browser
+    window.sendSerialCommand = function(cmd) {
+      alert('Simulated sendSerialCommand: ' + cmd);
+      console.log('Simulated sendSerialCommand:', cmd);
     };
   </script>
 </body>

@@ -21,7 +21,7 @@ class MissionCodeBuilderViewModel(app: Application) : AndroidViewModel(app) {
     private val _completedMissions = MutableLiveData<Set<String>>()
     val completedMissions: LiveData<Set<String>> = _completedMissions
 
-    fun loadMissions(context: Context, assetFile: String = "missions_led.json", forceMissionId: String? = null) {
+    fun loadMissions(context: Context, assetFile: String = "missions.json", forceMissionId: String? = null) {
         val loaded = MissionLoader.loadMissions(context, assetFile)
         _missions.value = loaded
         val completed = prefs.getStringSet("completed", emptySet()) ?: emptySet()

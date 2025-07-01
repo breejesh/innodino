@@ -125,32 +125,6 @@ class CodeExecutionActivity : AppCompatActivity() {
         executeNextCommand(statusText, commandText)
     }
 
-    // Utility to parse a single line of generated code and send as protocol command
-    private fun sendGeneratedLedLine(line: String) {
-        // Example generated code: LED_TURN_ON(2,3)
-        val regexOn = Regex("LED_TURN_ON\\((\\d+),(\\d+)\\)")
-        val regexOff = Regex("LED_TURN_OFF\\((\\d+),(\\d+)\\)")
-        val regexBrightness = Regex("LED_SET_BRIGHTNESS\\((\\d+),(\\d+),(\\d+)\\)")
-        when {
-            regexOn.matches(line) -> {
-                val (row, col) = regexOn.find(line)!!.destructured
-                com.innodino.blocks.util.DinoSerialHelper.sendLedCommand("TURN_ON", row.toInt(), col.toInt())
-            }
-            regexOff.matches(line) -> {
-                val (row, col) = regexOff.find(line)!!.destructured
-                com.innodino.blocks.util.DinoSerialHelper.sendLedCommand("TURN_OFF", row.toInt(), col.toInt())
-            }
-            regexBrightness.matches(line) -> {
-                val (row, col, brightness) = regexBrightness.find(line)!!.destructured
-                com.innodino.blocks.util.DinoSerialHelper.sendLedCommand("SET_BRIGHTNESS", row.toInt(), col.toInt(), brightness.toInt())
-            }
-            else -> {
-                Log.d("sendGeneratedLedLine", line) // Log the command for debugging
-                // Unknown or non-LED command, ignore or handle as needed
-            }
-        }
-    }
-
     private fun executeNextCommand(statusText: TextView, commandText: TextView) {
         if (!isExecuting || commandQueue.isEmpty()) {
             statusText.text = "Execution Finished!"
@@ -164,7 +138,7 @@ class CodeExecutionActivity : AppCompatActivity() {
         val command = commandQueue.poll()
         commandText.text = command
         // Send the command to Arduino if it's an LED command
-        sendGeneratedLedLine(command)
+        com.innodino.blocks.util.DinoSerialHelper.sendCommand((command))
 
         // Simulate execution time and move to the next command
         handler.postDelayed({

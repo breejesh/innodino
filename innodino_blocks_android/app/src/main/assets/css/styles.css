@@ -50,3 +50,12 @@ body {
 .blocklyToolboxCategoryIcon {
 	display: none !important;
 }
+
+#generateCodeBtn {
+	display: none;
+}
+@media (min-width: 1025px) {
+	#generateCodeBtn {
+		display: inline-block;
+	}
+}

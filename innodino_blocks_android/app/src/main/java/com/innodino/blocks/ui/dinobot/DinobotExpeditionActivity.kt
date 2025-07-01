@@ -39,7 +39,7 @@ class DinobotExpeditionActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val missions = remember { MissionLoader.loadMissions(this, "missions_robot.json") }
+            val missions = remember { MissionLoader.loadMissions(this, "missions/missions_robot.json") }
             val completed = remember { getCompletedMissions(this) }
             DinobotExpeditionScreen(
                 missions = missions,

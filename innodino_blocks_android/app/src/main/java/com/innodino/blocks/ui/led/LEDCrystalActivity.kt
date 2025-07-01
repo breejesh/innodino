@@ -39,7 +39,7 @@ class LEDCrystalActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val missions = remember { MissionLoader.loadMissions(this) }
+            val missions = remember { MissionLoader.loadMissions(this, "missions/missions_led.json") }
             val completed = remember { getCompletedMissions(this) }
             LEDCrystalScreen(
                 missions = missions,
