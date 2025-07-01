@@ -115,6 +115,12 @@ window.blocklyClearAll = function () {
   }
 };
 
+// Simulate sendSerialCommand in browser
+window.sendSerialCommand = function(cmd) {
+  alert('Simulated sendSerialCommand: ' + cmd);
+  console.log('Simulated sendSerialCommand:', cmd);
+};
+
 // Initialize on page load
 window.onload = function () {
   // Suppress media-related errors
@@ -134,6 +140,19 @@ window.onload = function () {
     } catch (e) {
       console.error('Error during initialization:', e);
       loadBlockly(); // Try to load anyway
+    }
+    // Browser: Run generated code directly
+    var runBtn = document.getElementById('runCodeBtn');
+    if (runBtn) {
+      runBtn.onclick = function () {
+        console.log('turn_on_led generator:', Blockly.JavaScript['turn_on_led']);
+        var code = Blockly.JavaScript.workspaceToCode(Blockly.getMainWorkspace());
+        try {
+          eval(code);
+        } catch (e) {
+          alert('Error running code: ' + e);
+        }
+      };
     }
   });
 };

@@ -8,7 +8,6 @@
 
   <!-- External Dependencies -->
   <script src="blockly/blockly.min.js"></script>
-  <script src="blockly/javascript.js"></script>
 
   <!-- InnoDino Styles -->
   <link rel="stylesheet" href="css/styles.css">
@@ -148,25 +147,6 @@
   <script src="js/blockly-generators.js"></script>
   <script src="js/blockly-theme.js"></script>
   <script src="js/blockly-main.js"></script>
-  <script>
- 
-     // Browser: Run generated code directly
-    document.getElementById('runCodeBtn').onclick = function () {
-      console.log('turn_on_led generator:', Blockly.JavaScript['turn_on_led']);
-      var code = Blockly.JavaScript.workspaceToCode(Blockly.getMainWorkspace());
-      try {
-        eval(code);
-      } catch (e) {
-        alert('Error running code: ' + e);
-      }
-    };
-
-    // Simulate sendSerialCommand in browser
-    window.sendSerialCommand = function(cmd) {
-      alert('Simulated sendSerialCommand: ' + cmd);
-      console.log('Simulated sendSerialCommand:', cmd);
-    };
-  </script>
 </body>
 
 </html>
