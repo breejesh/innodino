@@ -7,7 +7,7 @@ function defineCustomBlocks() {
   Blockly.defineBlocksWithJsonArray([
     {
       "type": "turn_on_led",
-      "message0": "🔴 Turn ON LED x: %1 y: %2",
+      "message0": "💡 Turn ON LED x: %1 y: %2",
       "args0": [
         {
           "type": "input_value",
@@ -23,7 +23,7 @@ function defineCustomBlocks() {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
-      "colour": "#6FCF97",
+      "colour": "#EB5757",
       "tooltip": "Turn on LED at position (x,y)",
       "helpUrl": ""
     },
@@ -45,7 +45,7 @@ function defineCustomBlocks() {
       "inputsInline": true,
       "previousStatement": null,
       "nextStatement": null,
-      "colour": "#6FCF97",
+      "colour": "#EB5757",
       "tooltip": "Turn off LED at position (x,y)",
       "helpUrl": ""
     },
@@ -68,7 +68,7 @@ function defineCustomBlocks() {
       ],
       "previousStatement": null,
       "nextStatement": null,
-      "colour": "#6FCF97",
+      "colour": "#EB5757",
       "tooltip": "Set LED brightness (0-5)",
       "helpUrl": ""
     },
@@ -90,7 +90,7 @@ function defineCustomBlocks() {
       ],
       "previousStatement": null,
       "nextStatement": null,
-      "colour": "#6FCF97",
+      "colour": "#EB5757",
       "tooltip": "Create animated LED patterns",
       "helpUrl": ""
     }
@@ -102,24 +102,8 @@ function defineCustomBlocks() {
       "type": "read_distance",
       "message0": "📏 Distance sensor reading",
       "output": "Number",
-      "colour": "#2D9CDB",
+      "colour": "#FFCE55",
       "tooltip": "Get distance reading from ultrasonic sensor (cm)",
-      "helpUrl": ""
-    },
-    {
-      "type": "read_light",
-      "message0": "☀️ Light sensor reading",
-      "output": "Number",
-      "colour": "#2D9CDB",
-      "tooltip": "Get light level reading (0-100%)",
-      "helpUrl": ""
-    },
-    {
-      "type": "read_temperature",
-      "message0": "🌡️ Temperature sensor reading",
-      "output": "Number",
-      "colour": "#2D9CDB",
-      "tooltip": "Get temperature reading (°C)",
       "helpUrl": ""
     }
   ]);
@@ -138,7 +122,7 @@ function defineCustomBlocks() {
       ],
       "previousStatement": null,
       "nextStatement": null,
-      "colour": "#FFCE55",
+      "colour": "#2D9CDB",
       "tooltip": "Move the DinoBot forward",
       "helpUrl": ""
     },
@@ -154,7 +138,7 @@ function defineCustomBlocks() {
       ],
       "previousStatement": null,
       "nextStatement": null,
-      "colour": "#FFCE55",
+      "colour": "#2D9CDB",
       "tooltip": "Turn the DinoBot left",
       "helpUrl": ""
     },
@@ -170,7 +154,7 @@ function defineCustomBlocks() {
       ],
       "previousStatement": null,
       "nextStatement": null,
-      "colour": "#FFCE55",
+      "colour": "#2D9CDB",
       "tooltip": "Turn the DinoBot right",
       "helpUrl": ""
     },
@@ -179,7 +163,7 @@ function defineCustomBlocks() {
       "message0": "🛑 Stop DinoBot",
       "previousStatement": null,
       "nextStatement": null,
-      "colour": "#EB5757",
+      "colour": "#2D9CDB",
       "tooltip": "Stop all robot movement",
       "helpUrl": ""
     }
@@ -203,31 +187,8 @@ function defineCustomBlocks() {
       ],
       "previousStatement": null,
       "nextStatement": null,
-      "colour": "#6FCF97",
+      "colour": "#4F4F4F",
       "tooltip": "Set a variable to a value",
-      "helpUrl": ""
-    },
-    {
-      "type": "repeat",
-      "message0": "🔄 Repeat %1 times %2 %3",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "TIMES",
-          "check": "Number"
-        },
-        {
-          "type": "input_dummy"
-        },
-        {
-          "type": "input_statement",
-          "name": "DO"
-        }
-      ],
-      "previousStatement": null,
-      "nextStatement": null,
-      "colour": "#6FCF97",
-      "tooltip": "Repeat the enclosed blocks",
       "helpUrl": ""
     },
     {
@@ -242,24 +203,8 @@ function defineCustomBlocks() {
       ],
       "previousStatement": null,
       "nextStatement": null,
-      "colour": "#2D9CDB",
+      "colour": "#4F4F4F",
       "tooltip": "Wait for a specific number of seconds",
-      "helpUrl": ""
-    },
-    {
-      "type": "display_message",
-      "message0": "📱 Display message %1",
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "MESSAGE",
-          "check": "String"
-        }
-      ],
-      "previousStatement": null,
-      "nextStatement": null,
-      "colour": "#6FCF97",
-      "tooltip": "Display a message on the screen",
       "helpUrl": ""
     }
   ]);

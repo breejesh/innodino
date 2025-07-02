@@ -53,13 +53,11 @@
       <block type="led_pattern"></block>
     </category>
 
-    <category name="📏 Sensor" colour="#2D9CDB">
+    <category name="📡 Sensor" colour="#FFCE55">
       <block type="read_distance"></block>
-      <block type="read_light"></block>
-      <block type="read_temperature"></block>
     </category>
 
-    <category name="🦕 Robot" colour="#FFCE55">
+    <category name="🤖 Robot" colour="#2D9CDB">
       <block type="move_forward">
         <value name="STEPS">
           <shadow type="math_number">
@@ -84,14 +82,7 @@
       <block type="stop_robot"></block>
     </category>
 
-    <category name="🔄 Repeat" colour="#6FCF97">
-      <block type="repeat">
-        <value name="TIMES">
-          <shadow type="math_number">
-            <field name="NUM">5</field>
-          </shadow>
-        </value>
-      </block>
+    <category name="🔁 Repeat" colour="#6FCF97">     
       <block type="controls_repeat_ext">
         <value name="TIMES">
           <shadow type="math_number">
@@ -101,7 +92,7 @@
       </block>
     </category>
 
-    <category name="⏱️ Time" colour="#2D9CDB">
+    <category name="⏱️ Time" colour="#4F4F4F">
       <block type="wait_seconds">
         <value name="SECONDS">
           <shadow type="math_number">
@@ -111,16 +102,15 @@
       </block>
     </category>
 
-    <category name="🧠 Logic" colour="#2D9CDB">
+    <category name="🧠 Logic" colour="#6FCF97">
       <block type="controls_if"></block>
+      <block type="controls_ifelse"></block>
       <block type="logic_compare"></block>
       <block type="logic_operation"></block>
       <block type="logic_boolean"></block>
-      <block type="math_number"></block>
-      <block type="math_arithmetic"></block>
     </category>
 
-    <category name="📦 Variable" colour="#6FCF97">
+    <category name="📦 Variable" colour="#4F4F4F">
       <block type="variables_set">
         <value name="VALUE">
           <shadow type="math_number">
@@ -131,22 +121,16 @@
       <block type="variables_get">
         <field name="VAR">item</field>
       </block>
-      <block type="text"></block>
-      <block type="display_message">
-        <value name="MESSAGE">
-          <shadow type="text">
-            <field name="TEXT">Hello Dino!</field>
-          </shadow>
-        </value>
-      </block>
+      <block type="math_number"></block>    
     </category>
   </xml>
 
-  <!-- InnoDino JavaScript Files -->
+    <!-- InnoDino JavaScript Files -->
   <script src="js/blockly-blocks.js"></script>
   <script src="js/blockly-generators.js"></script>
   <script src="js/blockly-theme.js"></script>
   <script src="js/blockly-main.js"></script>
+
 </body>
 
 </html>

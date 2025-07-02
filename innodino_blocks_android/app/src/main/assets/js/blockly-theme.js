@@ -31,48 +31,6 @@ function addMaterialGradient() {
   });
 }
 
-// InnoDino color palette
-const INNODINO_COLORS = {
-  '#5C81A6': '#2D9CDB', // Logic: Tech Teal
-  '#5CA65C': '#6FCF97', // Loops: Dino Green
-  '#5C68A6': '#2D9CDB', // Math: Tech Teal
-  '#5CA68D': '#4F4F4F', // Text: Slate Gray
-  '#745CA6': '#2D9CDB', // Lists: Tech Teal
-  '#A6745C': '#FFCE55', // Color: Sun Yellow
-  '#A65C81': '#6FCF97', // Variables: Dino Green
-  '#9A5CA6': '#2D9CDB', // Functions: Tech Teal
-  '#FF6680': '#EB5757', // Alert: Soft Coral
-  '#E53935': '#EB5757', // Alert: Soft Coral
-  '#FFAB19': '#FFCE55', // Math/Yellow: Sun Yellow
-  '#FFCF00': '#FFCE55', // Math/Yellow: Sun Yellow
-  '#FFC107': '#FFCE55', // Math/Yellow: Sun Yellow
-};
-
-function applyInnoDinoBlockColors() {
-  document.querySelectorAll('.blocklyBlockBackground').forEach(function (block) {
-    const orig = block.getAttribute('fill');
-    if (INNODINO_COLORS[orig]) {
-      block.setAttribute('fill', INNODINO_COLORS[orig]);
-    }
-  });
-}
-
-function setupColorListener(workspace) {
-  workspace.addChangeListener(function () {
-    setTimeout(applyInnoDinoBlockColors, 100);
-  });
-}
-
-// Patch Blockly inject to always set up color listener
-if (!window.originalBlocklyInject) {
-  window.originalBlocklyInject = Blockly.inject;
-  Blockly.inject = function () {
-    const ws = window.originalBlocklyInject.apply(this, arguments);
-    setupColorListener(ws);
-    setTimeout(applyInnoDinoBlockColors, 500);
-    return ws;
-  };
-}
 
 // Initialize theme effects on page load
 window.addEventListener('load', function () {
