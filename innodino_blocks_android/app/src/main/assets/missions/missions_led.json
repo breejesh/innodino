@@ -3,7 +3,7 @@
 		{
 			"id": "led_1",
 			"title": "Mission 1: Awakening the First Crystal",
-			"description": "Learn the ancient art of Light Magic by controlling your first LED crystal",
+			"description": "Turn the LED on and off at position 3,5 using blocks. Practice basic LED control.",
 			"allowedBlocks": ["turn_on_led", "turn_off_led", "wait_seconds"],
 			"icon": "💡",
 			"nextMissionId": "led_2",
@@ -12,8 +12,8 @@
 		{
 			"id": "led_2",
 			"title": "Mission 2: Memory Crystals of Elder Triceratops",
-			"description": "Master the secrets of Memory Magic using Variables to store crystal colors",
-			"allowedBlocks": ["variables_set", "set_led", "variables_get"],
+			"description": "Use variables to store value and turn the LED on at that value. Demonstrate variable usage.",
+			"allowedBlocks": ["turn_on_led", "turn_off_led", "wait_seconds", "variables_set", "variables_get"],
 			"icon": "🦕",
 			"nextMissionId": "led_3",
 			"expectedAnimation": "led_on.json"
@@ -21,8 +21,8 @@
 		{
 			"id": "led_3",
 			"title": "Mission 3: The Guardian's Challenge",
-			"description": "Learn Sensing Magic with the Ultrasonic Sensor to detect approaching guardians",
-			"allowedBlocks": ["read_distance", "controls_if", "logic_compare", "set_led"],
+			"description": "Use the ultrasonic sensor to detect distance and control the LED based on sensor input. Practice If-else logic.",
+			"allowedBlocks": ["turn_on_led", "turn_off_led", "wait_seconds", "read_distance", "controls_if", "logic_compare"],
 			"icon": "🛡️",
 			"nextMissionId": "led_4",
 			"expectedAnimation": "led_on.json"
@@ -30,8 +30,8 @@
 		{
 			"id": "led_4",
 			"title": "Mission 4: Rhythm of the Ancient Pterodactyl",
-			"description": "Master Rhythm Magic through loop patterns and LED animations",
-			"allowedBlocks": ["repeat", "set_led", "wait_seconds", "controls_if"],
+			"description": "Turn on all the LED on and off using repeat. Practice loops.",
+			"allowedBlocks": ["turn_on_led", "turn_off_led", "repeat", "wait_seconds", "controls_if"],
 			"icon": "🎵",
 			"nextMissionId": "led_5",
 			"expectedAnimation": "led_on.json"
@@ -39,8 +39,8 @@
 		{
 			"id": "led_5",
 			"title": "FINALE: The Great Illumination Ceremony",
-			"description": "Combine all magic to restore Digital Dinosaur Valley with the ultimate light show!",
-			"allowedBlocks": ["read_distance", "controls_if", "logic_compare", "set_led", "variables_set", "repeat"],
+			"description": "Combine sensors, variables, loops, and LED blocks to create a multi-step light show program.",
+			"allowedBlocks": ["read_distance", "controls_if", "wait_seconds", "logic_compare", "turn_on_led", "turn_off_led", "variables_set", "repeat"],
 			"icon": "🌟",
 			"nextMissionId": null,
 			"expectedAnimation": "led_on.json"

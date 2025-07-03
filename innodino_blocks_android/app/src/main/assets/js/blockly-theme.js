@@ -35,7 +35,6 @@ function addMaterialGradient() {
 // Initialize theme effects on page load
 window.addEventListener('load', function () {
   setTimeout(addMaterialGradient, 500);
-  setTimeout(applyInnoDinoBlockColors, 500);
 });
 
 // InnoDino Blockly theme configuration

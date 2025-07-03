@@ -41,6 +41,7 @@ body {
 	background-color: #ffffff !important;
 	border: 1px solid #eee;
 	height: auto !important;
+	padding: 4px !important;
 }
 
 .blocklyToolboxCategoryGroup {
@@ -48,6 +49,9 @@ body {
 }
 
 .blocklyToolboxCategory {
+	border-radius: 10px !important;
+	padding: 4px !important;
+	padding-bottom: 8px !important;
 	border: none !important;
 }
 
@@ -71,8 +75,7 @@ body {
 
 .blocklyToolboxSelected {
 	background-color: transparent !important;
-	padding-bottom: 8px;
-	border-bottom: 4px solid #333 !important;
+	background-color: #eee !important;
 }
 
 .blocklyToolboxCategoryLabel {
@@ -81,26 +84,26 @@ body {
 
 /* Custom Hybrid Flyout Styles for Vertical Block Layout */
 .blocklyFlyout .blocklyBlockCanvas {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: flex-start !important;
+	display: flex !important;
+	flex-direction: column !important;
+	align-items: flex-start !important;
 }
 
 .blocklyFlyout .blocklyBlockCanvas > g {
-  margin-bottom: 8px !important;
+	margin-bottom: 8px !important;
 }
 
 /* Ensure flyout has proper width for vertical layout */
 .blocklyFlyout[data-hybrid="true"] {
-  width: 200px !important;
-  max-width: 300px !important;
+	width: 200px !important;
+	max-width: 300px !important;
 }
 
 /* Custom scrollbar for vertical flyout */
 .blocklyFlyout .blocklyScrollbarVertical {
-  display: block !important;
+	display: block !important;
 }
 
 .blocklyFlyout .blocklyScrollbarHorizontal {
-  display: none !important;
+	display: none !important;
 }

@@ -118,19 +118,18 @@ fun LEDCrystalScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(missions) { mission ->
-                val isFirst = missions.indexOf(mission) == 0
-                val prevCompleted = missions.getOrNull(missions.indexOf(mission) - 1)?.id in completedMissions
-                val isUnlocked = isFirst || prevCompleted || mission.id in completedMissions
                 val activity = LocalContext.current as? android.app.Activity
                 MissionCard(
                     mission = mission,
-                    isUnlocked = isUnlocked,
-                    onClick = { if (isUnlocked && activity != null) {
-                        val intent = Intent(activity, MissionCodeBuilderHostActivity::class.java)
-                        intent.putExtra("MISSION_ID", mission.id)
-                        intent.putExtra("MISSION_MODULE", "led")
-                        activity.startActivity(intent)
-                    }}
+                    isCompleted = mission.id in completedMissions,
+                    onClick = {
+                        if (activity != null) {
+                            val intent = Intent(activity, MissionCodeBuilderHostActivity::class.java)
+                            intent.putExtra("MISSION_ID", mission.id)
+                            intent.putExtra("MISSION_MODULE", "led")
+                            activity.startActivity(intent)
+                        }
+                    }
                 )
             }
         }
@@ -140,17 +139,17 @@ fun LEDCrystalScreen(
 @Composable
 fun MissionCard(
     mission: MissionData,
-    isUnlocked: Boolean,
+    isCompleted: Boolean,
     onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(enabled = isUnlocked) { onClick() },
+            .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (!isUnlocked) Color(0xFFF5F5F5) else Color.White
+            containerColor = Color.White
         )
     ) {
         Row(
@@ -163,18 +162,14 @@ fun MissionCard(
                     .size(60.dp)
                     .background(
                         brush = Brush.radialGradient(
-                            colors = if (!isUnlocked) {
-                                listOf(Color.Gray, Color.LightGray)
-                            } else {
-                                listOf(Color(0xFFEB5757), Color(0xFFFF8A65))
-                            }
+                            colors = listOf(Color(0xFFEB5757), Color(0xFFFF8A65))
                         ),
                         shape = RoundedCornerShape(30.dp)
                     ),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = if (!isUnlocked) "🔒" else mission.icon,
+                    text = mission.icon,
                     fontSize = 24.sp
                 )
             }
@@ -182,14 +177,12 @@ fun MissionCard(
             Spacer(modifier = Modifier.width(16.dp))
             
             // Mission Info
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
+            Column {
                 Text(
                     text = mission.title,
-                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = if (!isUnlocked) Color.Gray else Color(0xFF4F4F4F)
+                    fontSize = 18.sp,
+                    color = Color(0xFF4F4F4F)
                 )
                 
                 Spacer(modifier = Modifier.height(4.dp))
@@ -197,41 +190,17 @@ fun MissionCard(
                 Text(
                     text = mission.description,
                     fontSize = 14.sp,
-                    color = if (!isUnlocked) Color.Gray else Color(0xFF4F4F4F).copy(alpha = 0.7f),
-                    lineHeight = 18.sp
+                    color = Color(0xFF7A7A7A)
                 )
                 
-                Spacer(modifier = Modifier.height(8.dp))
-                
-                // Concept chips
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    // If you want to show concepts, add a 'concepts' field to MissionData and JSON, otherwise remove this block or use allowedBlocks as chips
-                    mission.allowedBlocks.take(2).forEach { block ->
-                        Box(
-                            modifier = Modifier
-                                .background(
-                                    color = if (!isUnlocked) Color.LightGray else Color(0xFFEB5757).copy(alpha = 0.1f),
-                                    shape = RoundedCornerShape(8.dp)
-                                )
-                                .padding(horizontal = 8.dp, vertical = 4.dp)
-                        ) {
-                            Text(
-                                text = block,
-                                fontSize = 10.sp,
-                                color = if (!isUnlocked) Color.Gray else Color(0xFFEB5757),
-                                fontWeight = FontWeight.Medium
-                            )
-                        }
-                    }
-                    if (mission.allowedBlocks.size > 2) {
-                        Text(
-                            text = "+${mission.allowedBlocks.size - 2}",
-                            fontSize = 10.sp,
-                            color = if (!isUnlocked) Color.Gray else Color(0xFF4F4F4F).copy(alpha = 0.6f)
-                        )
-                    }
+                if (isCompleted) {
+                    Text(
+                        text = "✓ Completed",
+                        color = Color(0xFF6FCF97),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
                 }
             }
         }

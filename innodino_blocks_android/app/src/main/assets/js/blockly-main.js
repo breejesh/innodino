@@ -151,7 +151,6 @@ function loadBlockly() {
     
     // Setup vertical flyout layout
     setTimeout(() => {
-      setupFlyoutLayoutObserver();
       forceVerticalFlyoutLayout();
     }, 200);
 
@@ -319,42 +318,8 @@ Blockly.registry.register(
   HybridFlyout
 );
 
-// Alternative Solution 2: Registry Override Method
-function setupCustomFlyout() {
-  // Store the original registry method
-  const originalGetClassFromOptions = Blockly.registry.getClassFromOptions;
-  
-  // Override the registry to return our custom flyout for horizontal toolboxes
-  Blockly.registry.getClassFromOptions = function(type, options, opt_throwIfMissing) {
-    if (type === Blockly.registry.Type.FLYOUTS_HORIZONTAL_TOOLBOX) {
-      return HybridFlyout;
-    }
-    return originalGetClassFromOptions.call(this, type, options, opt_throwIfMissing);
-  };
-}
 
-// Alternative Solution 3: Runtime Flyout Replacement
-function replaceWithVerticalFlyout(workspace) {
-  if (workspace && workspace.getToolbox()) {
-    const toolbox = workspace.getToolbox();
-    const oldFlyout = toolbox.getFlyout();
-    
-    if (oldFlyout && oldFlyout instanceof Blockly.HorizontalFlyout) {
-      // Create new hybrid flyout
-      const workspaceOptions = workspace.copyOptionsForFlyout();
-      const newFlyout = new HybridFlyout(workspaceOptions);
-      
-      // Replace the flyout in the toolbox
-      if (toolbox.flyout_) {
-        toolbox.flyout_.dispose();
-        toolbox.flyout_ = newFlyout;
-        newFlyout.init(workspace);
-      }
-    }
-  }
-}
-
-// Solution 4: DOM Manipulation Approach (Most Reliable)
+// DOM Manipulation Approach (Most Reliable)
 function forceVerticalFlyoutLayout() {
   const flyout = workspace?.getFlyout?.();
   if (!flyout || !flyout.isVisible()) return;
@@ -392,27 +357,6 @@ function forceVerticalFlyoutLayout() {
   }
 }
 
-// Apply the layout whenever flyout content changes
-function setupFlyoutLayoutObserver() {
-  if (!workspace) return;
-  
-  const toolbox = workspace.getToolbox();
-  if (toolbox && toolbox.getFlyout) {
-    const originalShow = toolbox.flyout_.show;
-    
-    toolbox.flyout_.show = function(flyoutDef) {
-      const result = originalShow.call(this, flyoutDef);
-      
-      // Apply vertical layout after content is shown
-      setTimeout(() => {
-        forceVerticalFlyoutLayout();
-      }, 50);
-      
-      return result;
-    };
-  }
-}
-
 // Initialize on page load
 window.onload = function () {
   // Suppress media-related errors
@@ -428,13 +372,8 @@ window.onload = function () {
   onBlocklyReady(function () {
     try {
       // Setup custom flyout before defining blocks
-      setupCustomFlyout();
       defineCustomBlocks();
-      configureDefaultBlockStyles();
       loadBlockly();
-      
-      // Alternative: Try runtime replacement if plugin approach doesn't work
-      // setTimeout(() => replaceWithVerticalFlyout(workspace), 100);
     } catch (e) {
       console.error('Error during initialization:', e);
       loadBlockly(); // Try to load anyway

@@ -10,7 +10,7 @@ import com.innodino.blocks.util.MissionLoader
 
 /**
  * ViewModel for mission code builder screen.
- * Handles mission data, progress, and block filtering.
+ * Handles mission data and progress tracking only. No mission locking.
  */
 class MissionCodeBuilderViewModel(app: Application) : AndroidViewModel(app) {
     private val prefs = app.getSharedPreferences("mission_progress", Context.MODE_PRIVATE)
@@ -26,9 +26,10 @@ class MissionCodeBuilderViewModel(app: Application) : AndroidViewModel(app) {
         _missions.value = loaded
         val completed = prefs.getStringSet("completed", emptySet()) ?: emptySet()
         _completedMissions.value = completed
+        // Always show the first mission or forced mission
         _currentMission.value = when {
             forceMissionId != null -> loaded.firstOrNull { it.id == forceMissionId }
-            else -> loaded.firstOrNull { it.id !in completed }
+            else -> loaded.firstOrNull()
         }
     }
 
@@ -36,9 +37,6 @@ class MissionCodeBuilderViewModel(app: Application) : AndroidViewModel(app) {
         val updated = (_completedMissions.value ?: emptySet()).toMutableSet().apply { add(missionId) }
         _completedMissions.value = updated
         prefs.edit().putStringSet("completed", updated).apply()
-        // Move to next incomplete mission
-        val next = _missions.value?.firstOrNull { it.id !in updated }
-        _currentMission.value = next
     }
 
     fun setCurrentMission(mission: MissionData?) {
@@ -48,7 +46,6 @@ class MissionCodeBuilderViewModel(app: Application) : AndroidViewModel(app) {
     fun clearCompletedMissions() {
         prefs.edit().remove("completed").apply()
         _completedMissions.value = emptySet()
-        // Reset current mission to first
         _currentMission.value = _missions.value?.firstOrNull()
     }
 }

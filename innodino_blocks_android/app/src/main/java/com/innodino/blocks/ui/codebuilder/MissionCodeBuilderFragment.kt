@@ -30,7 +30,6 @@ import com.innodino.blocks.viewmodel.MissionCodeBuilderViewModel
 class MissionCodeBuilderFragment : Fragment() {
     private val viewModel: MissionCodeBuilderViewModel by viewModels()
     private var webViewLoaded = false
-    private var pendingToolboxXml: String? = null
     private var missionLoaded = false
     private var timeoutHandler: Handler? = null
 
@@ -47,7 +46,7 @@ class MissionCodeBuilderFragment : Fragment() {
         val context = requireContext()
         val freePlay = arguments?.getBoolean("FREE_PLAY", false) == true
         val module = arguments?.getString("MISSION_MODULE") ?: "led"
-        val allowedBlocks = if (freePlay) {
+        var allowedBlocks = if (freePlay) {
             // Free Play: Only LED, sensor, logic, repeat, variable blocks
             val led = listOf("turn_on_led", "turn_off_led", "set_led_brightness", "led_pattern")
             val sensor = listOf("read_distance")
@@ -75,9 +74,10 @@ class MissionCodeBuilderFragment : Fragment() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 Log.d("MissionCodeBuilder", "WebView loaded: $url")
                 webViewLoaded = true
-                val toolboxXml = buildToolboxXml(allowedBlocks)
-                Log.d("MissionCodeBuilder", "Injecting toolbox: $toolboxXml")
-                blocklyWebView.evaluateJavascript("setToolbox(`$toolboxXml`);", null)
+                // Pass allowed block names to JS instead of toolbox XML
+                val allowedBlockNamesJson = com.google.gson.Gson().toJson(allowedBlocks)
+                Log.d("MissionCodeBuilder", "Allowed blocks JSON: $allowedBlockNamesJson")
+                blocklyWebView.evaluateJavascript("setAllowedBlocks($allowedBlockNamesJson);", null)
                 progressBar.visibility = View.GONE
             }
             override fun onReceivedError(view: WebView?, errorCode: Int, description: String?, failingUrl: String?) {
@@ -106,15 +106,13 @@ class MissionCodeBuilderFragment : Fragment() {
         if (!freePlay) {
             viewModel.loadMissions(context, assetFile, forceMissionId = missionId)
             viewModel.currentMission.observe(viewLifecycleOwner) { mission ->
-                val blocks = mission?.allowedBlocks ?: allowedBlocks
+                allowedBlocks = mission?.allowedBlocks ?: allowedBlocks
                 val num = mission?.id?.substringAfterLast('_')?.toIntOrNull()?.let { "#$it" } ?: ""
                 missionNumberView.text = num
                 descView.text = mission?.description ?: ""
                 Log.d("MissionCodeBuilder", "Mission observer triggered: $mission")
                 if (mission == null) {
                     Log.e("MissionCodeBuilder", "Mission is null! Using Free Play allowedBlocks.")
-                    val toolboxXml = buildToolboxXml(blocks)
-                    blocklyWebView.evaluateJavascript("setToolbox(`$toolboxXml`);", null)
                     descView.text = "Please return and try again."
                     blocklyWebView.visibility = View.GONE
                     markDoneBtn.visibility = View.GONE
@@ -123,22 +121,6 @@ class MissionCodeBuilderFragment : Fragment() {
                 }
                 missionLoaded = true
                 Log.d("MissionCodeBuilder", "Mission loaded: ${mission.title}, allowedBlocks: ${mission.allowedBlocks}")
-                val toolboxXml = buildToolboxXml(blocks)
-                Log.d("MissionCodeBuilder", "Toolbox XML: $toolboxXml")
-                if (toolboxXml.isBlank()) {
-                    Log.e("MissionCodeBuilder", "Toolbox XML is blank! Mission: ${mission.title}, allowedBlocks: ${mission.allowedBlocks}")
-                    descView.text = "No blocks available for this mission!"
-                    blocklyWebView.visibility = View.GONE
-                    markDoneBtn.visibility = View.GONE
-                    progressBar.visibility = View.GONE
-                    Toast.makeText(requireContext(), "No blocks available for this mission!", Toast.LENGTH_LONG).show()
-                    return@observe
-                }
-                if (webViewLoaded) {
-                    blocklyWebView.evaluateJavascript("setToolbox(`$toolboxXml`);", null)
-                } else {
-                    pendingToolboxXml = toolboxXml
-                }
                 descView.text = mission.description
             }
         } else {
@@ -146,6 +128,15 @@ class MissionCodeBuilderFragment : Fragment() {
             view.findViewById<View>(R.id.missionHeader).visibility = View.GONE
             view.findViewById<View>(R.id.markDoneButton).visibility = View.GONE
         }
+
+        // Set mission header background color based on category/module
+        val missionHeader = view.findViewById<View>(R.id.missionHeader)
+        val headerColor = when (module) {
+            "led" -> ContextCompat.getColor(context, R.color.soft_coral) // #6FCF97
+            "robot" -> ContextCompat.getColor(context, R.color.tech_teal) // #2D9CDB
+            else -> ContextCompat.getColor(context, R.color.dino_green)
+        }
+        missionHeader.setBackgroundColor(headerColor)
 
         // Mark as Done button
         markDoneBtn.setOnClickListener {
@@ -200,120 +191,5 @@ class MissionCodeBuilderFragment : Fragment() {
         }
         blocklyWebView.addJavascriptInterface(BlocklyJsInputBridge(), "AndroidInputInterface")
         blocklyWebView.addJavascriptInterface(BlocklyJsOutputBridge(), "AndroidOutputInterface")
-    }
-
-    // Helper to build Blockly toolbox XML for allowed blocks
-    private fun buildToolboxXml(allowedBlocks: List<String>): String {
-        if (allowedBlocks.isEmpty()) return "<xml><block type=\"text\"></block></xml>"
-        
-        // Create categories based on allowed blocks
-        val sb = StringBuilder("<xml>")
-        
-        // LED blocks
-        val ledBlocks = allowedBlocks.filter { it.startsWith("turn_") || it == "led_pattern" || it == "set_led_brightness" }
-        if (ledBlocks.isNotEmpty()) {
-            sb.append("<category name=\"💡 LED\" colour=\"#6FCF97\">")
-            ledBlocks.forEach { block ->
-                when (block) {
-                    "turn_on_led" -> sb.append("<block type=\"turn_on_led\"><value name=\"X\"><shadow type=\"math_number\"><field name=\"NUM\">1</field></shadow></value><value name=\"Y\"><shadow type=\"math_number\"><field name=\"NUM\">1</field></shadow></value></block>")
-                    "turn_off_led" -> sb.append("<block type=\"turn_off_led\"><value name=\"X\"><shadow type=\"math_number\"><field name=\"NUM\">1</field></shadow></value><value name=\"Y\"><shadow type=\"math_number\"><field name=\"NUM\">1</field></shadow></value></block>")
-                    "set_led_brightness" -> sb.append("<block type=\"set_led_brightness\"><value name=\"BRIGHTNESS\"><shadow type=\"math_number\"><field name=\"NUM\">50</field></shadow></value></block>")
-                    "led_pattern" -> sb.append("<block type=\"led_pattern\"></block>")
-                }
-            }
-            sb.append("</category>")
-        }
-        
-        // Sensor blocks
-        val sensorBlocks = allowedBlocks.filter { it.startsWith("read_") }
-        if (sensorBlocks.isNotEmpty()) {
-            sb.append("<category name=\"📏 Sensor\" colour=\"#2D9CDB\">")
-            sensorBlocks.forEach { block ->
-                sb.append("<block type=\"$block\"></block>")
-            }
-            sb.append("</category>")
-        }
-        
-        // Robot blocks
-        val robotBlocks = allowedBlocks.filter { it.startsWith("move_") || it == "stop_robot" }
-        if (robotBlocks.isNotEmpty()) {
-            sb.append("<category name=\"🦕 Robot\" colour=\"#FFCE55\">")
-            robotBlocks.forEach { block ->
-                when (block) {
-                    "move_forward" -> sb.append("<block type=\"move_forward\"><value name=\"STEPS\"><shadow type=\"math_number\"><field name=\"NUM\">5</field></shadow></value></block>")
-                    "turn_left" -> sb.append("<block type=\"turn_left\"><value name=\"DEGREES\"><shadow type=\"math_number\"><field name=\"NUM\">90</field></shadow></value></block>")
-                    "turn_right" -> sb.append("<block type=\"turn_right\"><value name=\"DEGREES\"><shadow type=\"math_number\"><field name=\"NUM\">90</field></shadow></value></block>")
-                    "stop_robot" -> sb.append("<block type=\"stop_robot\"></block>")
-                }
-            }
-            sb.append("</category>")
-        }
-        
-        // Control/Repeat blocks
-        val controlBlocks = allowedBlocks.filter { it == "repeat" || it.startsWith("controls_") || it == "wait_seconds" }
-        if (controlBlocks.isNotEmpty()) {
-            sb.append("<category name=\"🔄 Repeat\" colour=\"#6FCF97\">")
-            controlBlocks.forEach { block ->
-                when (block) {
-                    "repeat" -> sb.append("<block type=\"repeat\"><value name=\"TIMES\"><shadow type=\"math_number\"><field name=\"NUM\">5</field></shadow></value></block>")
-                    "controls_repeat_ext" -> sb.append("<block type=\"controls_repeat_ext\"><value name=\"TIMES\"><shadow type=\"math_number\"><field name=\"NUM\">10</field></shadow></value></block>")
-                    "controls_if" -> sb.append("<block type=\"controls_if\"></block>")
-                    "wait_seconds" -> sb.append("<block type=\"wait_seconds\"><value name=\"SECONDS\"><shadow type=\"math_number\"><field name=\"NUM\">1</field></shadow></value></block>")
-                }
-            }
-            sb.append("</category>")
-        }
-        
-        // Logic blocks
-        val logicBlocks = allowedBlocks.filter { it.startsWith("logic_") || it.startsWith("math_") }
-        if (logicBlocks.isNotEmpty()) {
-            sb.append("<category name=\"🧠 Logic\" colour=\"#2D9CDB\">")
-            logicBlocks.forEach { block ->
-                sb.append("<block type=\"$block\"></block>")
-            }
-            sb.append("</category>")
-        }
-        
-        // Variable blocks
-        val variableBlocks = allowedBlocks.filter { it.startsWith("variables_") || it == "text" || it == "display_message" }
-        if (variableBlocks.isNotEmpty()) {
-            sb.append("<category name=\"📦 Variable\" colour=\"#6FCF97\">")
-            variableBlocks.forEach { block ->
-                when (block) {
-                    "variables_set" -> sb.append("<block type=\"variables_set\"><value name=\"VALUE\"><shadow type=\"math_number\"><field name=\"NUM\">0</field></shadow></value></block>")
-                    "variables_get" -> sb.append("<block type=\"variables_get\"><field name=\"VAR\">item</field></block>")
-                    "text" -> sb.append("<block type=\"text\"></block>")
-                    "display_message" -> sb.append("<block type=\"display_message\"><value name=\"MESSAGE\"><shadow type=\"text\"><field name=\"TEXT\">Hello Dino!</field></shadow></value></block>")
-                }
-            }
-            sb.append("</category>")
-        }
-        
-        // Timing blocks
-        val timingBlocks = allowedBlocks.filter { it == "wait_seconds" }
-        if (timingBlocks.isNotEmpty()) {
-            sb.append("<category name=\"⏱️ Time\" colour=\"#FFCE55\">")
-            timingBlocks.forEach { block ->
-                sb.append("<block type=\"wait_seconds\"><value name=\"SECONDS\"><shadow type=\"math_number\"><field name=\"NUM\">1</field></shadow></value></block>")
-            }
-            sb.append("</category>")
-        }
-        
-        // Add any remaining blocks in a general category
-        val remainingBlocks = allowedBlocks.filter { block ->
-            !ledBlocks.contains(block) && !sensorBlocks.contains(block) && 
-            !robotBlocks.contains(block) && !controlBlocks.contains(block) && 
-            !logicBlocks.contains(block) && !variableBlocks.contains(block)
-        }
-        if (remainingBlocks.isNotEmpty()) {
-            sb.append("<category name=\"Other\" colour=\"#4F4F4F\">")
-            remainingBlocks.forEach { block ->
-                sb.append("<block type=\"$block\"></block>")
-            }
-            sb.append("</category>")
-        }
-        
-        sb.append("</xml>")
-        return sb.toString()
     }
 }

@@ -17,8 +17,8 @@
   <div id="blocklyDiv"></div>
 
   <!-- Generation/Test Button for Browser -->
-  <button id="runCodeBtn" style="position:fixed;bottom:24px;left:24px;z-index:1000;padding:16px 28px;font-size:1.2em;background:#6FCF97;color:#fff;border:none;border-radius:12px;box-shadow:0 2px 8px #0002;cursor:pointer;">
-    ▶ Run
+  <button id="generateCodeBtn" style="display:none;position:fixed;bottom:24px;left:24px;z-index:1000;padding:16px 28px;font-size:1.2em;background:#6FCF97;color:#fff;border:none;border-radius:12px;box-shadow:0 2px 8px #0002;cursor:pointer;">
+    Generate Code
   </button>
 
   <!-- Blockly Toolbox Configuration -->
@@ -53,36 +53,43 @@
       <block type="led_pattern"></block>
     </category>
 
-    <category name="📡 Sensor" colour="#FFCE55">
+    <category name="📏 Sensor" colour="#FFCE55">
       <block type="read_distance"></block>
     </category>
 
     <category name="🤖 Robot" colour="#2D9CDB">
       <block type="move_forward">
-        <value name="STEPS">
+        <value name="SECONDS">
+          <shadow type="math_number">
+            <field name="NUM">5</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="move_backward">
+        <value name="SECONDS">
           <shadow type="math_number">
             <field name="NUM">5</field>
           </shadow>
         </value>
       </block>
       <block type="turn_left">
-        <value name="DEGREES">
+        <value name="SECONDS">
           <shadow type="math_number">
-            <field name="NUM">90</field>
+            <field name="NUM">2</field>
           </shadow>
         </value>
       </block>
       <block type="turn_right">
-        <value name="DEGREES">
+        <value name="SECONDS">
           <shadow type="math_number">
-            <field name="NUM">90</field>
+            <field name="NUM">2</field>
           </shadow>
         </value>
       </block>
       <block type="stop_robot"></block>
     </category>
 
-    <category name="🔁 Repeat" colour="#6FCF97">     
+    <category name="🔄 Repeat" colour="#6FCF97">
       <block type="controls_repeat_ext">
         <value name="TIMES">
           <shadow type="math_number">
@@ -92,7 +99,7 @@
       </block>
     </category>
 
-    <category name="⏱️ Time" colour="#4F4F4F">
+    <category name="⏱️ Time" colour="#6FCF97">
       <block type="wait_seconds">
         <value name="SECONDS">
           <shadow type="math_number">
@@ -104,13 +111,14 @@
 
     <category name="🧠 Logic" colour="#6FCF97">
       <block type="controls_if"></block>
-      <block type="controls_ifelse"></block>
       <block type="logic_compare"></block>
       <block type="logic_operation"></block>
       <block type="logic_boolean"></block>
+      <block type="math_number"></block>
+      <block type="math_arithmetic"></block>
     </category>
 
-    <category name="📦 Variable" colour="#4F4F4F">
+    <category name="📦 Variable" colour="#6FCF97">
       <block type="variables_set">
         <value name="VALUE">
           <shadow type="math_number">
@@ -121,16 +129,55 @@
       <block type="variables_get">
         <field name="VAR">item</field>
       </block>
-      <block type="math_number"></block>    
     </category>
   </xml>
 
-    <!-- InnoDino JavaScript Files -->
+  <!-- InnoDino JavaScript Files -->
   <script src="js/blockly-blocks.js"></script>
   <script src="js/blockly-generators.js"></script>
   <script src="js/blockly-theme.js"></script>
   <script src="js/blockly-main.js"></script>
+  <script>
+    // Called from Android to set allowed blocks (only block type names)
+    function setAllowedBlocks(allowedBlockNames) {
+      const originalToolbox = document.getElementById('toolbox');
+      // Clone the toolbox so we don't mutate the original
+      const newToolbox = document.createElement('xml');
+      Array.from(originalToolbox.children).forEach(category => {
+        if (category.tagName !== 'CATEGORY') return;
+        // Clone category
+        const newCategory = category.cloneNode(false);
+        let hasBlock = false;
+        Array.from(category.children).forEach(block => {
+          if (block.tagName === 'BLOCK' && allowedBlockNames.includes(block.getAttribute('type'))) {
+            newCategory.appendChild(block.cloneNode(true));
+            hasBlock = true;
+          }
+        });
+        if (hasBlock) {
+          newToolbox.appendChild(newCategory);
+        }
+      });
+      // Update the workspace toolbox
+      if (typeof Blockly !== 'undefined' && Blockly.getMainWorkspace()) {
+        Blockly.getMainWorkspace().updateToolbox(newToolbox);
+      }
+    }
 
+    // Called from Android to get the generated code and send to Android interface
+    function generateAndSendCodeToAndroid() {
+      var code = Blockly.JavaScript.workspaceToCode(Blockly.getMainWorkspace());
+      if (window.AndroidInterface && window.AndroidInterface.sendCodeToArduino) {
+        window.AndroidInterface.sendCodeToArduino(code);
+      }
+    }
+
+    // Browser-only: Show generated code in an alert for testing
+    document.getElementById('generateCodeBtn').onclick = function () {
+      var code = Blockly.JavaScript.workspaceToCode(Blockly.getMainWorkspace());
+      console.log("Generated code:\n" + code);
+    };
+  </script>
 </body>
 
 </html>

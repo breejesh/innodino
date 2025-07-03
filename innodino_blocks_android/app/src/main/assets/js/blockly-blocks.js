@@ -112,11 +112,11 @@ function defineCustomBlocks() {
   Blockly.defineBlocksWithJsonArray([
     {
       "type": "move_forward",
-      "message0": "🦕 Move forward %1 steps",
+      "message0": "🢁 Move forward %1 seconds",
       "args0": [
         {
           "type": "input_value",
-          "name": "STEPS",
+          "name": "SECONDS",
           "check": "Number"
         }
       ],
@@ -127,12 +127,28 @@ function defineCustomBlocks() {
       "helpUrl": ""
     },
     {
-      "type": "turn_left",
-      "message0": "↺ Turn left %1 degrees",
+      "type": "move_backward",
+      "message0": "🡻 Move backward %1 seconds",
       "args0": [
         {
           "type": "input_value",
-          "name": "DEGREES",
+          "name": "SECONDS",
+          "check": "Number"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#2D9CDB",
+      "tooltip": "Move the DinoBot backward",
+      "helpUrl": ""
+    },
+    {
+      "type": "turn_left",
+      "message0": "↺ Turn left %1 seconds",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "SECONDS",
           "check": "Number"
         }
       ],
@@ -144,11 +160,11 @@ function defineCustomBlocks() {
     },
     {
       "type": "turn_right",
-      "message0": "↻ Turn right %1 degrees",
+      "message0": "↻ Turn right %1 seconds",
       "args0": [
         {
           "type": "input_value",
-          "name": "DEGREES",
+          "name": "SECONDS",
           "check": "Number"
         }
       ],
