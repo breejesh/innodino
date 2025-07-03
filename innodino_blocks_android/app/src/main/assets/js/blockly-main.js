@@ -374,6 +374,7 @@ window.onload = function () {
       // Setup custom flyout before defining blocks
       defineCustomBlocks();
       loadBlockly();
+      setGlobalWorkspaceReference();
     } catch (e) {
       console.error('Error during initialization:', e);
       loadBlockly(); // Try to load anyway
@@ -396,3 +397,9 @@ window.onload = function () {
       }
   }
 };
+
+function setGlobalWorkspaceReference() {
+  if (window.Blockly && typeof Blockly.getMainWorkspace === 'function') {
+    window.workspace = Blockly.getMainWorkspace();
+  }
+}

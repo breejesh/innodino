@@ -171,10 +171,10 @@ class MissionCodeBuilderFragment : Fragment() {
         val locateBtn = view.findViewById<View>(R.id.locateButton)
         val clearAllBtn = view.findViewById<View>(R.id.clearAllButton)
         locateBtn.setOnClickListener {
-            blocklyWebView.evaluateJavascript("window.blocklyCenterOnBlocks();", null)
+            blocklyWebView.evaluateJavascript("if(window.blocklyCenterOnBlocks){window.blocklyCenterOnBlocks();}", null)
         }
         clearAllBtn.setOnClickListener {
-            blocklyWebView.evaluateJavascript("if(window.workspace){window.workspace.clear();}", null)
+            blocklyWebView.evaluateJavascript("if(window.workspace){window.workspace.clear();}else if(window.Blockly && Blockly.getMainWorkspace){Blockly.getMainWorkspace().clear();}", null)
         }
 
         // Demo button
