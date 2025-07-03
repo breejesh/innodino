@@ -3,12 +3,13 @@ package com.innodino.blocks.ui.codebuilder
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.innodino.blocks.R
+import com.innodino.blocks.ui.common.BaseActivity
 
 /**
  * Hosts the MissionCodeBuilderFragment for a specific mission.
  * Pass mission ID via Intent extra "MISSION_ID".
  */
-class MissionCodeBuilderHostActivity : AppCompatActivity() {
+class MissionCodeBuilderHostActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mission_code_builder_host)

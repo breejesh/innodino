@@ -3,7 +3,6 @@ package com.innodino.blocks.ui.led
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.innodino.blocks.model.MissionData
 import com.innodino.blocks.ui.codebuilder.MissionCodeBuilderHostActivity
+import com.innodino.blocks.ui.common.BaseActivity
 import com.innodino.blocks.ui.theme.InodinoBlocksTheme
 import com.innodino.blocks.util.MissionLoader
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,7 +35,7 @@ import dagger.hilt.android.AndroidEntryPoint
  * Rex's adventure through the mystical Digital Dinosaur Valley
  */
 @AndroidEntryPoint
-class LEDCrystalActivity : ComponentActivity() {
+class LEDCrystalActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

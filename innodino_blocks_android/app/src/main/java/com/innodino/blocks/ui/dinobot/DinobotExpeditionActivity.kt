@@ -3,7 +3,6 @@ package com.innodino.blocks.ui.dinobot
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,13 +28,14 @@ import com.innodino.blocks.ui.codebuilder.MissionCodeBuilderHostActivity
 import com.innodino.blocks.ui.theme.InodinoBlocksTheme
 import com.innodino.blocks.util.MissionLoader
 import dagger.hilt.android.AndroidEntryPoint
+import com.innodino.blocks.ui.common.BaseActivity
 
 /**
  * 🤖 DinoBot Expedition Activity
  * Zara's journey through the Lost Dino City
  */
 @AndroidEntryPoint
-class DinobotExpeditionActivity : ComponentActivity() {
+class DinobotExpeditionActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

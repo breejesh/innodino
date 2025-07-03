@@ -36,13 +36,14 @@ import com.innodino.blocks.ui.theme.InodinoBlocksTheme
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.core.view.WindowCompat
 import com.innodino.blocks.ui.codebuilder.MissionCodeBuilderHostActivity
+import com.innodino.blocks.ui.common.BaseActivity
 
 /**
  * 🏠 Main Activity - Home Screen
  * The entry point where young adventurers choose their coding quest!
  */
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : BaseActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

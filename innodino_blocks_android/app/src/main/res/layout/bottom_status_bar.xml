@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bottomStatusBar"
+    android:layout_width="match_parent"
+    android:layout_height="24dp"
+    android:background="#000000"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="4dp">
+
+    <TextView
+        android:id="@+id/statusLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="InnoDino Kit Status: "
+        android:textColor="#FFFFFF"
+        android:textSize="11sp" />
+
+    <TextView
+        android:id="@+id/statusValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Disconnected"
+        android:textColor="#EB5757"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+</LinearLayout>
