@@ -80,9 +80,9 @@ function loadBlockly() {
           },
           // Math blocks -> Sun Yellow
           "math_blocks": {
-            "colourPrimary": "#FFCE55",
-            "colourSecondary": "#FFD773",
-            "colourTertiary": "#FFE699"
+            "colourPrimary": "#4F4F4F",
+            "colourSecondary": "#7F7F7F",
+            "colourTertiary": "#BFBFBF"
           },
           // Variable blocks -> Dino Green
           "variable_blocks": {
@@ -111,7 +111,7 @@ function loadBlockly() {
             "colour": "#6FCF97"
           },
           "math_category": {
-            "colour": "#FFCE55"
+            "colour": "#4F4F4F"
           },
           "variable_category": {
             "colour": "#4F4F4F"

@@ -89,7 +89,9 @@
       <block type="stop_robot"></block>
     </category>
 
-    <category name="🔄 Repeat" colour="#6FCF97">
+    <category name="🔄 Control" colour="#6FCF97">
+      <block type="controls_if"></block>
+      <block type="controls_ifelse"></block>
       <block type="controls_repeat_ext">
         <value name="TIMES">
           <shadow type="math_number">
@@ -97,9 +99,6 @@
           </shadow>
         </value>
       </block>
-    </category>
-
-    <category name="⏱️ Time" colour="#6FCF97">
       <block type="wait_seconds">
         <value name="SECONDS">
           <shadow type="math_number">
@@ -110,7 +109,6 @@
     </category>
 
     <category name="🧠 Logic" colour="#6FCF97">
-      <block type="controls_if"></block>
       <block type="logic_compare"></block>
       <block type="logic_operation"></block>
       <block type="logic_boolean"></block>

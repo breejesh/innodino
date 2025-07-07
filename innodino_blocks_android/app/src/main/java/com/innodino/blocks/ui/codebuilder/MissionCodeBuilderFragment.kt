@@ -19,6 +19,7 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.ProgressBar
 import com.innodino.blocks.R
+import com.innodino.blocks.model.MissionData
 import com.innodino.blocks.ui.execution.CodeExecutionActivity
 import com.innodino.blocks.util.SensorProvider
 import com.innodino.blocks.viewmodel.MissionCodeBuilderViewModel
@@ -39,22 +40,37 @@ class MissionCodeBuilderFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_mission_code_builder, container, false)
     }
 
-
+    fun getAllowedBlocks(freePlay: Boolean, module: String, mission: MissionData?): List<String> {
+        val led = listOf("turn_on_led", "turn_off_led", "set_led_brightness", "led_pattern")
+        val robot = listOf("move_forward", "move_backward", "turn_left", "turn_right", "stop_robot")
+        val sensor = listOf("read_distance")
+        val logic = listOf("logic_compare", "logic_operation", "logic_negate", "logic_boolean", "math_number", "math_arithmetic")
+        val control = listOf("controls_repeat_ext","controls_if","controls_ifelse", "wait_seconds")
+        val variable = listOf("variables_set", "variables_get")
+        if(freePlay) {
+            if(module == "led") {
+                return led + sensor + logic + control + variable
+            } else if(module == "robot") {
+                return robot + sensor + logic + control + variable
+            } else {
+                return listOf() // Default empty for unknown modules
+            }
+        } else {
+            if (mission != null) {
+                return mission.allowedBlocks
+            } else {
+                Log.e("MissionCodeBuilder", "Mission is null, returning empty allowed blocks")
+                return listOf() // Return empty if no mission data available
+            }
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val context = requireContext()
         val freePlay = arguments?.getBoolean("FREE_PLAY", false) == true
         val module = arguments?.getString("MISSION_MODULE") ?: "led"
-        var allowedBlocks = if (freePlay) {
-            // Free Play: Only LED, sensor, logic, repeat, variable blocks
-            val led = listOf("turn_on_led", "turn_off_led", "set_led_brightness", "led_pattern")
-            val sensor = listOf("read_distance")
-            val logic = listOf("logic_compare", "logic_operation", "logic_negate", "logic_boolean", "math_number", "math_arithmetic")
-            val repeat = listOf("repeat", "controls_repeat_ext", "controls_if", "wait_seconds")
-            val variable = listOf("variables_set", "variables_get", "text", "display_message")
-            (led + sensor + logic + repeat + variable)
-        } else listOf()
+        var allowedBlocks = getAllowedBlocks(freePlay, module, null) // Default empty mission for free play
         val missionId = arguments?.getString("MISSION_ID")
         val assetFile = if (module == "robot") "missions/missions_robot.json" else "missions/missions_led.json"
         val missionNumberView = view.findViewById<TextView>(R.id.missionNumber)
@@ -106,7 +122,7 @@ class MissionCodeBuilderFragment : Fragment() {
         if (!freePlay) {
             viewModel.loadMissions(context, assetFile, forceMissionId = missionId)
             viewModel.currentMission.observe(viewLifecycleOwner) { mission ->
-                allowedBlocks = mission?.allowedBlocks ?: allowedBlocks
+                allowedBlocks = getAllowedBlocks(freePlay, module, mission)
                 val num = mission?.id?.substringAfterLast('_')?.toIntOrNull()?.let { "#$it" } ?: ""
                 missionNumberView.text = num
                 descView.text = mission?.description ?: ""
