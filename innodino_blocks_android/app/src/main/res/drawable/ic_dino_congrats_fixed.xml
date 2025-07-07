@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    
+    <!-- Dino Body -->
+    <path
+        android:fillColor="#6FCF97"
+        android:pathData="M60,20 C80,20 95,35 95,55 L95,75 C95,85 85,95 75,95 L45,95 C35,95 25,85 25,75 L25,55 C25,35 40,20 60,20 Z" />
+    
+    <!-- Dino Head -->
+    <path
+        android:fillColor="#6FCF97"
+        android:pathData="M60,10 C75,10 85,20 85,35 C85,50 75,60 60,60 C45,60 35,50 35,35 C35,20 45,10 60,10 Z" />
+    
+    <!-- Left Eye -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M44,30 C44,26.69 46.69,24 50,24 C53.31,24 56,26.69 56,30 C56,33.31 53.31,36 50,36 C46.69,36 44,33.31 44,30 Z" />
+    
+    <!-- Right Eye -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M64,30 C64,26.69 66.69,24 70,24 C73.31,24 76,26.69 76,30 C76,33.31 73.31,36 70,36 C66.69,36 64,33.31 64,30 Z" />
+    
+    <!-- Left Pupil -->
+    <path
+        android:fillColor="#4F4F4F"
+        android:pathData="M48,29 C48,27.34 49.34,26 51,26 C52.66,26 54,27.34 54,29 C54,30.66 52.66,32 51,32 C49.34,32 48,30.66 48,29 Z" />
+    
+    <!-- Right Pupil -->
+    <path
+        android:fillColor="#4F4F4F"
+        android:pathData="M68,29 C68,27.34 69.34,26 71,26 C72.66,26 74,27.34 74,29 C74,30.66 72.66,32 71,32 C69.34,32 68,30.66 68,29 Z" />
+    
+    <!-- Happy Mouth -->
+    <path
+        android:strokeColor="#4F4F4F"
+        android:strokeWidth="2"
+        android:pathData="M45,40 Q60,50 75,40" />
+    
+    <!-- Left Arm -->
+    <path
+        android:fillColor="#6FCF97"
+        android:pathData="M17,65 C17,60.58 20.58,57 25,57 C29.42,57 33,60.58 33,65 C33,69.42 29.42,73 25,73 C20.58,73 17,69.42 17,65 Z" />
+    
+    <!-- Right Arm -->
+    <path
+        android:fillColor="#6FCF97"
+        android:pathData="M87,65 C87,60.58 90.58,57 95,57 C99.42,57 103,60.58 103,65 C103,69.42 99.42,73 95,73 C90.58,73 87,69.42 87,65 Z" />
+    
+    <!-- Left Leg -->
+    <path
+        android:fillColor="#6FCF97"
+        android:pathData="M37,100 C37,95.58 40.58,92 45,92 C49.42,92 53,95.58 53,100 C53,104.42 49.42,108 45,108 C40.58,108 37,104.42 37,100 Z" />
+    
+    <!-- Right Leg -->
+    <path
+        android:fillColor="#6FCF97"
+        android:pathData="M67,100 C67,95.58 70.58,92 75,92 C79.42,92 83,95.58 83,100 C83,104.42 79.42,108 75,108 C70.58,108 67,104.42 67,100 Z" />
+    
+</vector>

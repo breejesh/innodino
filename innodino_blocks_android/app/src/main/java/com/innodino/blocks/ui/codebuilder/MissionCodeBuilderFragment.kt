@@ -18,6 +18,11 @@ import android.webkit.WebChromeClient
 import android.os.Handler
 import android.os.Looper
 import android.widget.ProgressBar
+import android.app.Dialog
+import android.view.animation.AnimationUtils
+import android.widget.Button
+import android.widget.ImageView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.innodino.blocks.R
 import com.innodino.blocks.model.MissionData
 import com.innodino.blocks.ui.execution.CodeExecutionActivity
@@ -163,15 +168,7 @@ class MissionCodeBuilderFragment : Fragment() {
                 .withEndAction {
                     markDoneBtn.animate().scaleX(1f).scaleY(1f).setDuration(150).start()
                     viewModel.currentMission.value?.let { mission ->
-                        viewModel.markMissionDone(mission.id)
-                        // Move to next mission if available
-                        if (!mission.nextMissionId.isNullOrBlank()) {
-                            // You may want to trigger navigation here
-                            Toast.makeText(requireContext(), "Moving to next mission...", Toast.LENGTH_SHORT).show()
-                            // TODO: Replace with real navigation logic
-                        } else {
-                            Toast.makeText(requireContext(), "All missions complete!", Toast.LENGTH_SHORT).show()
-                        }
+                        showMissionCompleteDialog(mission)
                     }
                 }.start()
         }
@@ -208,4 +205,101 @@ class MissionCodeBuilderFragment : Fragment() {
         blocklyWebView.addJavascriptInterface(BlocklyJsInputBridge(), "AndroidInputInterface")
         blocklyWebView.addJavascriptInterface(BlocklyJsOutputBridge(), "AndroidOutputInterface")
     }
+
+    /**
+     * Shows the mission complete congratulations dialog with dino-themed animations.
+     * Automatically advances to next mission after 5 seconds or on button click.
+     */
+    private fun showMissionCompleteDialog(mission: MissionData) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_mission_complete, null)
+        val dialog = Dialog(requireContext(), R.style.Theme_InodinoBlocks_Dialog)
+        dialog.setContentView(dialogView)
+        dialog.setCancelable(false)
+        dialog.window?.setWindowAnimations(R.style.DialogAnimation)
+
+        // Get views
+        val dinoIcon = dialogView.findViewById<ImageView>(R.id.dinoIcon)
+        val congratsTitle = dialogView.findViewById<TextView>(R.id.congratsTitle)
+        val completeMessage = dialogView.findViewById<TextView>(R.id.completeMessage)
+        val progressText = dialogView.findViewById<TextView>(R.id.progressText)
+        val nextMissionButton = dialogView.findViewById<Button>(R.id.nextMissionButton)
+        val autoAdvanceText = dialogView.findViewById<TextView>(R.id.autoAdvanceText)
+
+        // Set up content
+        congratsTitle.text = getString(R.string.congratinos_title)
+        completeMessage.text = getString(R.string.mission_complete_message)
+        
+        // Calculate mission progress
+        val allMissions = viewModel.missions.value ?: emptyList()
+        val currentIndex = allMissions.indexOfFirst { it.id == mission.id }
+        val totalMissions = allMissions.size
+        progressText.text = getString(R.string.mission_progress_format, currentIndex + 1, totalMissions)
+
+        // Start dino celebration animation
+        val celebrationAnim = AnimationUtils.loadAnimation(requireContext(), R.anim.dino_celebration)
+        dinoIcon.startAnimation(celebrationAnim)
+
+        // Set up auto-advance timer
+        var timeLeft = 5
+        val autoAdvanceHandler = Handler(Looper.getMainLooper())
+        val autoAdvanceRunnable = object : Runnable {
+            override fun run() {
+                if (timeLeft > 0) {
+                    autoAdvanceText.text = getString(R.string.auto_advance_format, timeLeft)
+                    timeLeft--
+                    autoAdvanceHandler.postDelayed(this, 1000)
+                } else {
+                    // Auto-advance to next mission
+                    dialog.dismiss()
+                    advanceToNextMission(mission)
+                }
+            }
+        }
+
+        // Handle next mission availability
+        if (!mission.nextMissionId.isNullOrBlank()) {
+            nextMissionButton.text = getString(R.string.next_mission)
+            nextMissionButton.setOnClickListener {
+                autoAdvanceHandler.removeCallbacks(autoAdvanceRunnable)
+                dialog.dismiss()
+                advanceToNextMission(mission)
+            }
+            autoAdvanceHandler.post(autoAdvanceRunnable)
+        } else {
+            // Last mission completed
+            nextMissionButton.text = "Finish"
+            autoAdvanceText.text = getString(R.string.all_missions_complete)
+            nextMissionButton.setOnClickListener {
+                dialog.dismiss()
+                // Navigate back to mission selection or home
+                requireActivity().finish()
+            }
+        }
+        dialog.show()
+    }
+
+    /**
+     * Advances to the next mission in the sequence.
+     */
+    private fun advanceToNextMission(currentMission: MissionData) {
+        // Mark current mission as complete
+        viewModel.markMissionDone(currentMission.id)
+        
+        // Find and navigate to next mission
+        if (!currentMission.nextMissionId.isNullOrBlank()) {
+            val allMissions = viewModel.missions.value ?: emptyList()
+            val nextMission = allMissions.firstOrNull { it.id == currentMission.nextMissionId }
+            
+            if (nextMission != null) {
+                // Set the next mission as current
+                viewModel.setCurrentMission(nextMission)
+                
+                // The mission UI will be updated automatically through the observer
+                
+                // Show success toast
+                Toast.makeText(requireContext(), "Welcome to ${nextMission.title}!", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 }

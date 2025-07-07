@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    
+    <!-- Simple dino shape using only path elements -->
+    <path
+        android:fillColor="#6FCF97"
+        android:pathData="M60,20 C80,20 95,35 95,55 L95,75 C95,85 85,95 75,95 L45,95 C35,95 25,85 25,75 L25,55 C25,35 40,20 60,20 Z" />
+    
+    <!-- Head -->
+    <path
+        android:fillColor="#6FCF97"
+        android:pathData="M60,10 C75,10 85,20 85,35 C85,50 75,60 60,60 C45,60 35,50 35,35 C35,20 45,10 60,10 Z" />
+    
+    <!-- Simple eyes -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M48,28 L52,28 L52,32 L48,32 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M68,28 L72,28 L72,32 L68,32 Z" />
+    
+    <!-- Simple mouth -->
+    <path
+        android:strokeColor="#4F4F4F"
+        android:strokeWidth="2"
+        android:pathData="M50,40 Q60,45 70,40" />
+    
+</vector>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    
+    <!-- Simple celebration star -->
+    <path
+        android:fillColor="#6FCF97"
+        android:pathData="M60,10 L65,45 L100,50 L65,55 L60,90 L55,55 L20,50 L55,45 Z" />
+    
+</vector>

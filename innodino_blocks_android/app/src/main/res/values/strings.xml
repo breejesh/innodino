@@ -69,6 +69,14 @@
     <string name="blocks_connected">Blocks connected</string>
     <string name="victory_achieved">Victory Achieved! 🎉</string>
     
+    <!-- Mission Complete Dialog -->
+    <string name="congratinos_title">🎉 Congratulations!</string>
+    <string name="mission_complete_message">You\'ve successfully completed this mission! Rex is proud of your programming skills!</string>
+    <string name="mission_progress_format">Mission %1$d of %2$d Complete!</string>
+    <string name="next_mission">Next Mission</string>
+    <string name="auto_advance_format">Moving to next mission in %d seconds...</string>
+    <string name="all_missions_complete">All missions complete! You\'re a programming master!</string>
+    
     <!-- Navigation -->
     <string name="back">Back</string>
     <string name="next">Next</string>
