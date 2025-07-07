@@ -23,6 +23,7 @@ import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.gson.Gson
 import com.innodino.blocks.R
 import com.innodino.blocks.model.MissionData
 import com.innodino.blocks.ui.execution.CodeExecutionActivity
@@ -95,10 +96,8 @@ class MissionCodeBuilderFragment : Fragment() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 Log.d("MissionCodeBuilder", "WebView loaded: $url")
                 webViewLoaded = true
-                // Pass allowed block names to JS instead of toolbox XML
-                val allowedBlockNamesJson = com.google.gson.Gson().toJson(allowedBlocks)
-                Log.d("MissionCodeBuilder", "Allowed blocks JSON: $allowedBlockNamesJson")
-                blocklyWebView.evaluateJavascript("setAllowedBlocks($allowedBlockNamesJson);", null)
+                // Pass allowed block names to JS
+                updateBlocklyToolbox(allowedBlocks)
                 progressBar.visibility = View.GONE
             }
             override fun onReceivedError(view: WebView?, errorCode: Int, description: String?, failingUrl: String?) {
@@ -176,18 +175,17 @@ class MissionCodeBuilderFragment : Fragment() {
         // Run button
         val runBtn = view.findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.runButton)
         runBtn.setOnClickListener {
-            // Call the JS function to generate and send code to Android
-            blocklyWebView.evaluateJavascript("runCode();", null)
+            executeBlocklyFunction("runCode")
         }
 
-        // Blockly FABs (updated)
+        // Blockly FABs
         val locateBtn = view.findViewById<View>(R.id.locateButton)
         val clearAllBtn = view.findViewById<View>(R.id.clearAllButton)
         locateBtn.setOnClickListener {
-            blocklyWebView.evaluateJavascript("if(window.blocklyCenterOnBlocks){window.blocklyCenterOnBlocks();}", null)
+            executeBlocklyFunction("blocklyCenterOnBlocks")
         }
         clearAllBtn.setOnClickListener {
-            blocklyWebView.evaluateJavascript("if(window.workspace){window.workspace.clear();}else if(window.Blockly && Blockly.getMainWorkspace){Blockly.getMainWorkspace().clear();}", null)
+            executeBlocklyFunction("blocklyClearAll")
         }
 
         // Demo button
@@ -294,12 +292,38 @@ class MissionCodeBuilderFragment : Fragment() {
                 // Set the next mission as current
                 viewModel.setCurrentMission(nextMission)
                 
-                // The mission UI will be updated automatically through the observer
+                // Reset workspace and toolbox for the new mission
+                val freePlay = arguments?.getBoolean("FREE_PLAY", false) == true
+                val module = arguments?.getString("MISSION_MODULE") ?: "led"
+                val newAllowedBlocks = getAllowedBlocks(freePlay, module, nextMission)
+                resetWorkspaceForNewMission(newAllowedBlocks)
+                
+                Log.d("MissionCodeBuilder", "Advanced to mission: ${nextMission.title}, new blocks: ${newAllowedBlocks}")
                 
                 // Show success toast
                 Toast.makeText(requireContext(), "Welcome to ${nextMission.title}!", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    // Helper functions to reduce repetition
+    private fun executeBlocklyFunction(functionName: String) {
+        val blocklyWebView = view?.findViewById<WebView>(R.id.blocklyWebView)
+        blocklyWebView?.evaluateJavascript("if(window.$functionName){window.$functionName();}", null)
+    }
+
+    private fun updateBlocklyToolbox(allowedBlocks: List<String>) {
+        val allowedBlockNamesJson = Gson().toJson(allowedBlocks)
+        Log.d("MissionCodeBuilder", "Updating toolbox with blocks: $allowedBlockNamesJson")
+        val blocklyWebView = view?.findViewById<WebView>(R.id.blocklyWebView)
+        blocklyWebView?.evaluateJavascript("setAllowedBlocks($allowedBlockNamesJson);", null)
+    }
+
+    private fun resetWorkspaceForNewMission(allowedBlocks: List<String>) {
+        val allowedBlockNamesJson = Gson().toJson(allowedBlocks)
+        Log.d("MissionCodeBuilder", "Resetting workspace for new mission with blocks: $allowedBlockNamesJson")
+        val blocklyWebView = view?.findViewById<WebView>(R.id.blocklyWebView)
+        blocklyWebView?.evaluateJavascript("resetWorkspaceForNewMission($allowedBlockNamesJson);", null)
     }
 
 }

@@ -222,6 +222,26 @@ window.blocklyClearAll = function () {
   }
 };
 
+// Comprehensive reset function for mission transitions
+window.resetWorkspaceForNewMission = function(allowedBlockNames) {
+  console.log('Resetting workspace for new mission with blocks:', allowedBlockNames);
+  
+  // Clear the workspace first
+  if (window.workspace) {
+    window.workspace.clear();
+  }
+  
+  // Update the toolbox with new allowed blocks
+  setAllowedBlocks(allowedBlockNames);
+  
+  // Center the workspace view
+  if (window.workspace) {
+    window.workspace.scrollCenter();
+  }
+  
+  console.log('Workspace reset complete');
+};
+
 // Simulate sendSerialCommand in browser
 window.sendSerialCommand = function(cmd) {
   if (window.AndroidOutputInterface && typeof window.AndroidOutputInterface.sendCommandToArduino === 'function') {
