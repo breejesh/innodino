@@ -1,11 +1,8 @@
 package com.innodino.blocks.ui.codebuilder
 
-import android.content.Intent
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.webkit.JavascriptInterface
-import com.innodino.blocks.ui.execution.CodeExecutionActivity
+import com.innodino.blocks.util.DinoSerialHelper
 
 // Add JS interface for receiving code from WebView
 class BlocklyJsOutputBridge {
@@ -13,5 +10,7 @@ class BlocklyJsOutputBridge {
     fun sendCommandToArduino(code: String) {
         // Launch the execution UI with the generated code
         Log.d("BlocklyJsOutputBridge", "Received code: $code")
+        val response = DinoSerialHelper.sendCommand(code)
+        Log.d("BlocklyJsOutputBridge", "Response from Arduino: $response")
     }
 }

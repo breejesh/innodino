@@ -47,7 +47,7 @@ class MissionCodeBuilderFragment : Fragment() {
     }
 
     fun getAllowedBlocks(freePlay: Boolean, module: String, mission: MissionData?): List<String> {
-        val led = listOf("turn_on_led", "turn_off_led", "set_led_brightness", "led_pattern")
+        val led = listOf("turn_on_led", "turn_off_led", "set_led_brightness", "led_pattern", "clear_led")
         val robot = listOf("move_forward", "move_backward", "turn_left", "turn_right", "stop_robot")
         val sensor = listOf("read_distance")
         val logic = listOf("logic_compare", "logic_operation", "logic_negate", "logic_boolean", "math_number", "math_arithmetic")

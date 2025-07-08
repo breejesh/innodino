@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.innodino.blocks.R
 import com.innodino.blocks.util.DinoKitConnectionChecker
 
@@ -15,6 +16,7 @@ import com.innodino.blocks.util.DinoKitConnectionChecker
 open class BaseActivity : AppCompatActivity() {
     
     private val handler = android.os.Handler()
+    private var hasShownUsbPermissionDialog = false
 
     // Added periodic connection status checks for real-time updates.
     private val connectionStatusRunnable = object : Runnable {
@@ -29,7 +31,30 @@ open class BaseActivity : AppCompatActivity() {
 
         DinoKitConnectionChecker.addConnectionStatusListener { isConnected ->
             updateStatusBar(isConnected)
+            
+            // Check if we need to show USB permission dialog
+            if (!isConnected && !hasShownUsbPermissionDialog && 
+                DinoKitConnectionChecker.isKitConnected(this@BaseActivity) && 
+                !DinoKitConnectionChecker.hasUsbPermission(this@BaseActivity)) {
+                showUsbPermissionDialog()
+                hasShownUsbPermissionDialog = true
+            }
         }
+    }
+
+    /**
+     * Shows a dialog to request USB permission for DinoKit
+     */
+    private fun showUsbPermissionDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("USB Permission Required")
+            .setMessage("InnoDino Blocks needs permission to access your DinoKit device. Please grant USB permission when prompted.")
+            .setPositiveButton("Grant Permission") { _, _ ->
+                DinoKitConnectionChecker.requestUsbPermission(this)
+            }
+            .setNegativeButton("Cancel", null)
+            .setCancelable(false)
+            .show()
     }
     
     override fun setContentView(layoutResID: Int) {

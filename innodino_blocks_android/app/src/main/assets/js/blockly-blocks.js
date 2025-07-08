@@ -80,11 +80,15 @@ function defineCustomBlocks() {
           "type": "field_dropdown",
           "name": "PATTERN",
           "options": [
-            ["Rainbow", "rainbow"],
-            ["Blink", "blink"],
-            ["Wave", "wave"],
-            ["Sparkle", "sparkle"],
-            ["Fade", "fade"]
+            ["SMILEY", "SMILEY"],
+            ["OUTLINE", "OUTLINE"],
+            ["FULL", "FULL"],
+            ["PLUS", "PLUS"],
+            ["DIAMOND", "DIAMOND"],
+            ["HEART", "HEART"],
+            ["ARROW", "ARROW"],
+            ["CHESSBOARD", "CHESSBOARD"],
+            ["CROSS", "CROSS"]
           ]
         }
       ],
@@ -92,6 +96,16 @@ function defineCustomBlocks() {
       "nextStatement": null,
       "colour": "#EB5757",
       "tooltip": "Create animated LED patterns",
+      "helpUrl": ""
+    }, 
+    {
+      "type": "clear_led",
+      "message0": "Clear Entire LED",
+      "args0": null,
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#EB5757",
+      "tooltip": "Clear Entire LED",
       "helpUrl": ""
     }
   ]);

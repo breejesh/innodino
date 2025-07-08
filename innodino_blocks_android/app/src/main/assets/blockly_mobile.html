@@ -16,10 +16,38 @@
 <body>
   <div id="blocklyDiv"></div>
 
+  <!-- Execution Modal Popup -->
+  <div id="executionModal" class="execution-modal" style="display: none;">
+    <div class="execution-modal-backdrop"></div>
+    <div class="execution-modal-content">
+
+      <div class="execution-modal-body">
+        <div class="execution-animation">
+          <div class="dino-running">
+            <img src="images/logo.png" style="height: 60px;" alt="Rex the Dino" />
+          </div>
+          <div class="code-blocks">
+            <div class="block-animation"></div>
+            <div class="block-animation"></div>
+            <div class="block-animation"></div>
+          </div>
+        </div>
+        <div>Executing Code in the DinoKit!</div>
+        <!-- <div class="execution-modal-footer">
+          <button class="stop-btn" id="stopBtn" class="btn btn-danger">Stop Execution</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+
   <!-- Generation/Test Button for Browser -->
-  <button id="generateCodeBtn" style="display:none;position:fixed;bottom:24px;left:24px;z-index:1000;padding:16px 28px;font-size:1.2em;background:#6FCF97;color:#fff;border:none;border-radius:12px;box-shadow:0 2px 8px #0002;cursor:pointer;">
-    Generate Code
+  <button id="runBtn" style="display:block;position:fixed;bottom:24px;left:24px;z-index:1000;padding:16px 28px;font-size:1.2em;background:#6FCF97;color:#fff;border:none;border-radius:12px;box-shadow:0 2px 8px #0002;cursor:pointer;">
+    Run Code
   </button>
+  <!-- Generation/Test Button for Browser -->
+  <!-- <button id="stopBtn" style="display:block;position:fixed;bottom:24px;left:224px;z-index:1000;padding:16px 28px;font-size:1.2em;background:#EB5757;color:#fff;border:none;border-radius:12px;box-shadow:0 2px 8px #0002;cursor:pointer;">
+    Stop Code
+  </button> -->
 
   <!-- Blockly Toolbox Configuration -->
   <xml id="toolbox" style="display:none">
@@ -51,6 +79,7 @@
       </block>
       <block type="set_led_brightness"></block>
       <block type="led_pattern"></block>
+      <block type="clear_led"></block>
     </category>
 
     <category name="📏 Sensor" colour="#FFCE55">
@@ -171,10 +200,19 @@
     }
 
     // Browser-only: Show generated code in an alert for testing
-    document.getElementById('generateCodeBtn').onclick = function () {
-      var code = Blockly.JavaScript.workspaceToCode(Blockly.getMainWorkspace());
-      console.log("Generated code:\n" + code);
+    // document.getElementById('generateCodeBtn').onclick = function () {
+    //   var code = Blockly.JavaScript.workspaceToCode(Blockly.getMainWorkspace());
+    //   console.log("Generated code:\n" + code);
+    // };
+
+    document.getElementById('runBtn').onclick = function () {
+      runCode();
     };
+    document.getElementById('stopBtn').onclick = function () {
+      stopCodeExecution();
+    };
+
+
   </script>
 </body>
 

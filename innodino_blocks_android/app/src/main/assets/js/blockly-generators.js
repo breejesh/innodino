@@ -1,5 +1,12 @@
 'use strict';
 
+// Helper function to check if execution should stop (for interruptible operations)
+function checkExecutionStop() {
+  if (window.shouldStop) {
+    throw new Error('Execution stopped by user');
+  }
+}
+
 // --- LED Blocks ---
 
 Blockly.JavaScript.forBlock['turn_on_led'] = function(block) {
@@ -15,37 +22,40 @@ Blockly.JavaScript.forBlock['turn_off_led'] = function(block) {
 };
 
 Blockly.JavaScript.forBlock['set_led_brightness'] = function(block) {
-  var value_brightness = Blockly.JavaScript.valueToCode(block, 'BRIGHTNESS', Blockly.JavaScript.ORDER_ATOMIC) || '50';
+  var value_brightness = block.getFieldValue('BRIGHTNESS') || '15';
   return 'sendSerialCommand("@LED|SET_BRIGHTNESS|" + ' + value_brightness + ' + ";");\n';
 };
 
 Blockly.JavaScript.forBlock['led_pattern'] = function(block) {
-  var value_pattern = Blockly.JavaScript.valueToCode(block, 'PATTERN', Blockly.JavaScript.ORDER_ATOMIC) || '0';
-  return 'sendSerialCommand("@LED|PATTERN|" + ' + value_pattern + ' + ";");\n';
+  var dropdown_pattern = block.getFieldValue('PATTERN') || 'ERROR';
+  return 'checkExecutionStop(); sendSerialCommand("@LED|PATTERN|" + "' + dropdown_pattern + '" + ";");\n';
 };
+
+Blockly.JavaScript.forBlock['clear_led'] = function(block) {
+  return 'sendSerialCommand("@LED|CLEAR|-;");\n';
+}
 
 
 // --- Robot Blocks ---
 
 Blockly.JavaScript.forBlock['move_forward'] = function(block) {
   var value_time = Blockly.JavaScript.valueToCode(block, 'SECONDS', Blockly.JavaScript.ORDER_ATOMIC) || '1';
-  return 'sendSerialCommand("@ROBOT|MOVE_FORWARD|" + ' + value_time + ' + ";");\n';
+  return 'checkExecutionStop(); sendSerialCommand("@ROBOT|MOVE_FORWARD|" + ' + value_time + ' + ";");\n';
 };
 
-
-Blockly.JavaScript.forBlock['move_forward'] = function(block) {
+Blockly.JavaScript.forBlock['move_backward'] = function(block) {
   var value_time = Blockly.JavaScript.valueToCode(block, 'SECONDS', Blockly.JavaScript.ORDER_ATOMIC) || '1';
-  return 'sendSerialCommand("@ROBOT|MOVE_BACKWARD|" + ' + value_time + ' + ";");\n';
+  return 'checkExecutionStop(); sendSerialCommand("@ROBOT|MOVE_BACKWARD|" + ' + value_time + ' + ";");\n';
 };
 
 Blockly.JavaScript.forBlock['turn_left'] = function(block) {
   var value_degrees = Blockly.JavaScript.valueToCode(block, 'SECONDS', Blockly.JavaScript.ORDER_ATOMIC) || '90';
-  return 'sendSerialCommand("@ROBOT|TURN_LEFT|" + ' + value_degrees + ' + ";");\n';
+  return 'checkExecutionStop(); sendSerialCommand("@ROBOT|TURN_LEFT|" + ' + value_degrees + ' + ";");\n';
 };
 
 Blockly.JavaScript.forBlock['turn_right'] = function(block) {
   var value_degrees = Blockly.JavaScript.valueToCode(block, 'SECONDS', Blockly.JavaScript.ORDER_ATOMIC) || '90';
-  return 'sendSerialCommand("@ROBOT|TURN_RIGHT|" + ' + value_degrees + ' + ";");\n';
+  return 'checkExecutionStop(); sendSerialCommand("@ROBOT|TURN_RIGHT|" + ' + value_degrees + ' + ";");\n';
 };
 
 Blockly.JavaScript.forBlock['stop_robot'] = function(block) {
@@ -56,7 +66,7 @@ Blockly.JavaScript.forBlock['stop_robot'] = function(block) {
 // --- Time Blocks ---
 Blockly.JavaScript.forBlock['wait_seconds'] = function(block) {
   var value_seconds = Blockly.JavaScript.valueToCode(block, 'SECONDS', Blockly.JavaScript.ORDER_ATOMIC) || '1';
-  return 'sendSerialCommand("@TIME|WAIT|" + ' + value_seconds + ' + ";");\n';
+  return 'checkExecutionStop(); sendSerialCommand("@TIME|WAIT|" + ' + value_seconds + ' + ";");\n';
 };
 
 // --- Sensor Blocks ---

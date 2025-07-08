@@ -99,8 +99,20 @@ void processMessage(String msg) {
 
   if (module == "LED") {
     handleLED(action, params);
+  } else if(module == "TIME") {
+    handleTime(action, params);
   } else {
     sendError("UNKNOWN_MODULE");
+  }
+}
+
+void handleTime(String action, String params) {
+  if(action == "WAIT") {
+    int waitTimeInSeconds = params.toInt();
+    delay(waitTimeInSeconds * 1000);
+    sendAck();
+  } else {
+    sendError("BAD_PARAM");
   }
 }
 
@@ -122,18 +134,16 @@ void handleLED(String action, String params) {
     }
     sendAck();
   } else if (action == "SET_BRIGHTNESS") {
-    // Params: row,col,brightness
-    int firstComma = params.indexOf(',');
-    int secondComma = params.indexOf(',', firstComma + 1);
-    if (firstComma == -1 || secondComma == -1) {
-      sendError("BAD_PARAM");
-      return;
-    }
-    int row = params.substring(0, firstComma).toInt();
-    int col = params.substring(firstComma + 1, secondComma).toInt();
-    int brightness = params.substring(secondComma + 1).toInt();
-    setLed(row, col);
+    int brightness = params.toInt();
     setIntensity(brightness);
+    sendAck();
+  } else if (action == "PATTERN") {
+    // Params: pattern_name
+    createLedPattern(params);
+    sendAck();
+  } else if (action == "CLEAR") {
+    // Clear all LEDs
+    clearAll();
     sendAck();
   } else {
     sendError("UNKNOWN_ACTION");
@@ -148,4 +158,99 @@ void sendError(String error) {
   Serial.print("@ERR|");
   Serial.print(error);
   Serial.println(";");
+}
+
+// Helper function to rotate coordinates 90 degrees clockwise
+// For 8x8 matrix: (row, col) -> (col, 7-row)
+void setLedRotated90(int row, int col) {
+  setLed(col, 7 - row);
+}
+
+void createLedPattern(String pattern) {
+  clearAll(); // Clear display before creating new pattern
+  
+  if (pattern == "SMILEY") {
+    // Smiley face pattern (rotated 90 degrees right)
+    // Eyes positioned correctly for upright smiley after rotation
+    setLedRotated90(1, 1); setLedRotated90(1, 6); // Eyes
+    setLedRotated90(4, 2); setLedRotated90(5, 3); setLedRotated90(5, 4); setLedRotated90(4, 5); // Smile
+  }
+  else if (pattern == "OUTLINE") {
+    // Border outline (rotated 90 degrees right)
+    for(int i = 0; i < 8; i++) {
+      setLedRotated90(0, i); // Top row
+      setLedRotated90(7, i); // Bottom row
+      setLedRotated90(i, 0); // Left column
+      setLedRotated90(i, 7); // Right column
+    }
+  }
+  else if (pattern == "FULL") {
+    // All LEDs on (rotation doesn't matter - same pattern)
+    for(int row = 0; row < 8; row++) {
+      for(int col = 0; col < 8; col++) {
+        setLed(row, col);
+      }
+    }
+  }
+  else if (pattern == "PLUS") {
+    // Cross pattern (rotated 90 degrees right)
+    for(int i = 0; i < 8; i++) {
+      setLedRotated90(i, 3); // Vertical line
+      setLedRotated90(i, 4); // Vertical line
+      setLedRotated90(3, i); // Horizontal line
+      setLedRotated90(4, i); // Horizontal line
+    }
+  }
+  else if (pattern == "DIAMOND") {
+    // Diamond shape (rotated 90 degrees right)
+    setLedRotated90(0, 3); setLedRotated90(0, 4);
+    setLedRotated90(1, 2); setLedRotated90(1, 5);
+    setLedRotated90(2, 1); setLedRotated90(2, 6);
+    setLedRotated90(3, 0); setLedRotated90(3, 7);
+    setLedRotated90(4, 0); setLedRotated90(4, 7);
+    setLedRotated90(5, 1); setLedRotated90(5, 6);
+    setLedRotated90(6, 2); setLedRotated90(6, 5);
+    setLedRotated90(7, 3); setLedRotated90(7, 4);
+  }
+  else if (pattern == "HEART") {
+    // Heart shape (rotated 90 degrees right)
+    setLedRotated90(1, 1); setLedRotated90(1, 2); setLedRotated90(1, 5); setLedRotated90(1, 6);
+    setLedRotated90(2, 0); setLedRotated90(2, 3); setLedRotated90(2, 4); setLedRotated90(2, 7);
+    setLedRotated90(3, 0); setLedRotated90(3, 7);
+    setLedRotated90(4, 1); setLedRotated90(4, 6);
+    setLedRotated90(5, 2); setLedRotated90(5, 5);
+    setLedRotated90(6, 3); setLedRotated90(6, 4);
+  }
+  else if (pattern == "ARROW") {
+    // Arrow pointing up (rotated 90 degrees right - now points right)
+    setLedRotated90(0, 3); setLedRotated90(0, 4);
+    setLedRotated90(1, 2); setLedRotated90(1, 5);
+    setLedRotated90(2, 1); setLedRotated90(2, 6);
+    setLedRotated90(3, 0); setLedRotated90(3, 7);
+    setLedRotated90(4, 3); setLedRotated90(4, 4);
+    setLedRotated90(5, 3); setLedRotated90(5, 4);
+    setLedRotated90(6, 3); setLedRotated90(6, 4);
+    setLedRotated90(7, 3); setLedRotated90(7, 4);
+  }
+  else if (pattern == "CHESSBOARD") {
+    // Checkerboard pattern (rotated 90 degrees right)
+    for(int row = 0; row < 8; row++) {
+      for(int col = 0; col < 8; col++) {
+        if((row + col) % 2 == 0) {
+          setLedRotated90(row, col);
+        }
+      }
+    }
+  }
+  else if (pattern == "CROSS") {
+    // X shape (rotated 90 degrees right)
+    for(int i = 0; i < 8; i++) {
+      setLedRotated90(i, i);     // Main diagonal
+      setLedRotated90(i, 7-i);   // Anti-diagonal
+    }
+  }
+  else {
+    // Unknown pattern - show error pattern (blinking corners, rotated)
+    setLedRotated90(0, 0); setLedRotated90(0, 7); setLedRotated90(7, 0); setLedRotated90(7, 7);
+  }
 }
