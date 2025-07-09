@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -33,6 +34,8 @@ import com.innodino.blocks.R
 import com.innodino.blocks.ui.led.LEDCrystalActivity
 import com.innodino.blocks.ui.dinobot.DinobotExpeditionActivity
 import com.innodino.blocks.ui.theme.InodinoBlocksTheme
+import com.innodino.blocks.ui.shared.ModuleThemes
+import com.innodino.blocks.ui.shared.MissionTheme
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.core.view.WindowCompat
 import com.innodino.blocks.ui.codebuilder.MissionCodeBuilderHostActivity
@@ -95,6 +98,9 @@ fun HomeScreen(
     onLEDFreePlayClick: () -> Unit,
     onRobotFreePlayClick: () -> Unit
 ) {
+    val moduleThemes = ModuleThemes()
+    val ledTheme = moduleThemes.LedModuleTheme()
+    val dinobotTheme = moduleThemes.DinobotModuleTheme()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -158,10 +164,7 @@ fun HomeScreen(
                         title = stringResource(R.string.led_module_title),
                         subtitle = stringResource(R.string.led_module_subtitle),
                         icon = "\uD83D\uDCA1",
-                        gradientColors = listOf(
-                            Color(0xFFEB5757), // Soft Coral
-                            Color(0xFFFFCE55) // Sun Yellow
-                        ),
+                        theme = ledTheme, // Pass full LED theme
                         adventureText = stringResource(R.string.led_adventures),
                         freePlayText = stringResource(R.string.led_free_play),
                         onAdventureClick = onLEDAdventureClick,
@@ -172,10 +175,7 @@ fun HomeScreen(
                         title = stringResource(R.string.robot_module_title),
                         subtitle = stringResource(R.string.robot_module_subtitle),
                         icon = "\uD83E\uDD16",
-                        gradientColors = listOf(
-                            Color(0xFF2D9CDB), // Tech Teal ONLY
-                            Color(0xFF2D9CDB)
-                        ),
+                        theme = dinobotTheme, // Pass full DinoBot theme
                         adventureText = stringResource(R.string.robot_adventures),
                         freePlayText = stringResource(R.string.robot_free_play),
                         onAdventureClick = onRobotAdventureClick,
@@ -309,7 +309,7 @@ fun AdventureCard(
     title: String,
     subtitle: String,
     icon: String,
-    gradientColors: List<Color>,
+    theme: MissionTheme, // Changed from color: Color to theme: MissionTheme
     adventureText: String,
     freePlayText: String,
     onAdventureClick: () -> Unit,
@@ -337,7 +337,7 @@ fun AdventureCard(
                     modifier = Modifier
                         .size(32.dp)
                         .background(
-                            brush = Brush.radialGradient(gradientColors),
+                            color = theme.primaryColor, // Use theme.primaryColor
                             shape = CircleShape
                         ),
                     contentAlignment = Alignment.Center
@@ -355,7 +355,7 @@ fun AdventureCard(
                         text = title,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = gradientColors[0],
+                        color = theme.primaryColor, // Use theme.primaryColor
                         maxLines = 1
                     )
                     Text(
@@ -375,7 +375,7 @@ fun AdventureCard(
                     onClick = onAdventureClick,
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = gradientColors[0],
+                        containerColor = theme.primaryColor, // Use theme.primaryColor
                         contentColor = Color.White
                     ),
                     shape = RoundedCornerShape(6.dp),
@@ -396,7 +396,9 @@ fun AdventureCard(
                     onClick = onFreePlayClick,
                     modifier = Modifier.weight(1f),
                     border = ButtonDefaults.outlinedButtonBorder.copy(
-                        brush = Brush.horizontalGradient(gradientColors)
+                       brush = Brush.horizontalGradient(
+                            listOf(theme.primaryColor, theme.primaryColor) // Use theme.primaryColor
+                        )
                     ),
                     shape = RoundedCornerShape(6.dp),
                     contentPadding = PaddingValues(vertical = 2.dp, horizontal = 0.dp)
@@ -405,7 +407,7 @@ fun AdventureCard(
                         text = freePlayText,
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp,
-                        color = gradientColors[0]
+                        color = theme.primaryColor // Use theme.primaryColor
                     )
                 }
             }
