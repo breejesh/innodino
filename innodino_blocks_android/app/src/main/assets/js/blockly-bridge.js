@@ -2,6 +2,7 @@
 window.runCode = function () {
 	console.log("Running code...");
 	showExecutionModal();
+	saveBlocks();
 	var code = Blockly.JavaScript.workspaceToCode(Blockly.getMainWorkspace());
 	try {
 		setTimeout(() => {
@@ -47,6 +48,7 @@ window.getSensorValue = (type) => {
 window.blocklyClearAll = function () {
 	if (window.workspace) {
 		window.workspace.clear();
+		saveBlocks();
 	}
 };
 

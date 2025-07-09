@@ -165,6 +165,12 @@ window.onload = function () {
 			loadBlockly(); // Try to load anyway
 		}
 	});
+
+	// 🦖 Save blocks before page closes
+	window.addEventListener("beforeunload", function () {
+		saveBlocks();
+		stopAutoSave();
+	});
 };
 
 // Register the custom flyout

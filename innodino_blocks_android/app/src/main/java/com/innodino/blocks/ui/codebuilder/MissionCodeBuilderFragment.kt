@@ -1,33 +1,28 @@
 package com.innodino.blocks.ui.codebuilder
 
-import android.content.Intent
+import android.app.Dialog
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.webkit.JavascriptInterface
-import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.core.content.ContextCompat
-import android.util.Log
-import android.widget.Toast
-import android.webkit.WebChromeClient
-import android.os.Handler
-import android.os.Looper
-import android.widget.ProgressBar
-import android.app.Dialog
-import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.google.gson.Gson
 import com.innodino.blocks.R
 import com.innodino.blocks.model.MissionData
-import com.innodino.blocks.ui.execution.CodeExecutionActivity
-import com.innodino.blocks.util.SensorProvider
 import com.innodino.blocks.viewmodel.MissionCodeBuilderViewModel
 
 /**
@@ -96,6 +91,12 @@ class MissionCodeBuilderFragment : Fragment() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 Log.d("MissionCodeBuilder", "WebView loaded: $url")
                 webViewLoaded = true
+                
+                // Set storage context for block persistence
+                val storageModule = module.uppercase()
+                val storageMissionId = if (freePlay) "freeplay" else (missionId ?: "unknown")
+                initializeStorageContext(storageModule, storageMissionId)
+                
                 // Pass allowed block names to JS
                 updateBlocklyToolbox(allowedBlocks)
                 progressBar.visibility = View.GONE
@@ -291,6 +292,9 @@ class MissionCodeBuilderFragment : Fragment() {
             if (nextMission != null) {
                 // Set the next mission as current
                 viewModel.setCurrentMission(nextMission)
+
+                // Update mission context in storage system
+                updateMissionContext(nextMission.id)
                 
                 // Reset workspace and toolbox for the new mission
                 val freePlay = arguments?.getBoolean("FREE_PLAY", false) == true
@@ -324,6 +328,24 @@ class MissionCodeBuilderFragment : Fragment() {
         Log.d("MissionCodeBuilder", "Resetting workspace for new mission with blocks: $allowedBlockNamesJson")
         val blocklyWebView = view?.findViewById<WebView>(R.id.blocklyWebView)
         blocklyWebView?.evaluateJavascript("resetWorkspaceForNewMission($allowedBlockNamesJson);", null)
+    }
+    
+    /**
+     * Initialize storage context for block persistence
+     */
+    private fun initializeStorageContext(module: String, missionId: String) {
+        val blocklyWebView = view?.findViewById<WebView>(R.id.blocklyWebView)
+        Log.d("MissionCodeBuilder", "Setting storage context: module=$module, mission=$missionId")
+        blocklyWebView?.evaluateJavascript("window.setRexAdventure('$module', '$missionId');", null)
+    }
+
+    /**
+     * Update storage context when mission changes
+     */
+    private fun updateMissionContext(missionId: String) {
+        val blocklyWebView = view?.findViewById<WebView>(R.id.blocklyWebView)
+        Log.d("MissionCodeBuilder", "Updating mission context: $missionId")
+        blocklyWebView?.evaluateJavascript("window.setRexMission('$missionId');", null)
     }
 
 }
