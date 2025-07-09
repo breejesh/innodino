@@ -3,7 +3,7 @@
 let workspace = null;
 
 // Wait for Blockly to be loaded before running any Blockly code
-function onBlocklyReady(callback) {
+window.onBlocklyReady = (callback) => {
 	const setupBlockly = () => {
 		callback();
 	};
@@ -26,23 +26,9 @@ function onBlocklyReady(callback) {
 			}
 		}, 3000);
 	}
-}
+};
 
-function getSensorValue(type) {
-	console.log("getSensorValue called with type:", type);
-	if (window.AndroidInputInterface && typeof window.AndroidInputInterface.getSensorValue === "function") {
-		console.log("Calling Android interface for sensor value:", type);
-		// Call Android interface
-		return window.AndroidInputInterface.getSensorValue(type);
-	}
-	// Fallback: simulate in browser
-	if (type === "DISTANCE") return Math.floor(Math.random() * 100);
-	if (type === "LIGHT") return Math.floor(Math.random() * 1024);
-	if (type === "TEMPERATURE") return (20 + Math.random() * 10).toFixed(1);
-	return 0;
-}
-
-function loadBlockly() {
+window.loadBlockly = () => {
 	try {
 		if (workspace) {
 			workspace.dispose();
@@ -103,26 +89,6 @@ function loadBlockly() {
 						colourTertiary: "#AED6F1",
 					},
 				},
-				categoryStyles: {
-					logic_category: {
-						colour: "#6FCF97",
-					},
-					loop_category: {
-						colour: "#6FCF97",
-					},
-					math_category: {
-						colour: "#4F4F4F",
-					},
-					variable_category: {
-						colour: "#4F4F4F",
-					},
-					text_category: {
-						colour: "#4F4F4F",
-					},
-					procedure_category: {
-						colour: "#2D9CDB",
-					},
-				},
 				componentStyles: {
 					workspaceBackgroundColour: "#FAFAFA",
 					toolboxBackgroundColour: "#FFFFFF",
@@ -145,263 +111,33 @@ function loadBlockly() {
 
 		const toolbox = workspace.getToolbox();
 		workspace.getComponentManager().removeCapability(toolbox.id, Blockly.ComponentManager.Capability.DELETE_AREA);
-
-		// Setup vertical flyout layout
-		setTimeout(() => {
-			forceVerticalFlyoutLayout();
-		}, 200);
 	} catch (e) {
 		document.body.innerHTML += '<div style="color:#EB5757;font-size:20px;text-align:center;margin-top:40px;">Blockly failed to load toolbox.<br>' + e + "</div>";
 		console.error("Blockly load error", e);
 	}
-}
-
-function addHiddenBlock(x, y) {
-	// After workspace is initialized
-	// Add a hidden block far to the left to expand workspace bounds
-	var xmlText = '<xml><block type="math_number" x="' + x + '" y="' + y + '" deletable="false" movable="false" collapsed="true" /></xml>';
-	var xml;
-	if (Blockly.Xml && Blockly.Xml.textToDom) {
-		xml = Blockly.Xml.textToDom(xmlText);
-	} else if (Blockly.utils && Blockly.utils.xml && Blockly.utils.xml.textToDom) {
-		xml = Blockly.utils.xml.textToDom(xmlText);
-	} else {
-		var parser = new DOMParser();
-		xml = parser.parseFromString(xmlText, "text/xml");
-	}
-	if (Blockly.Xml && Blockly.Xml.domToWorkspace) {
-		Blockly.Xml.domToWorkspace(xml, workspace);
-	}
-}
-
-// Function to set custom toolbox (called from Android)
-window.setToolbox = function (toolboxXml) {
-	console.log("Setting custom toolbox:", toolboxXml);
-	if (!workspace) {
-		console.error("Workspace not initialized");
-		return;
-	}
-	try {
-		// Parse the XML string and update toolbox
-		const parser = new DOMParser();
-		const toolboxDoc = parser.parseFromString(toolboxXml, "text/xml");
-		const toolboxElement = toolboxDoc.documentElement;
-
-		// Update the workspace toolbox
-		workspace.updateToolbox(toolboxElement);
-		console.log("Toolbox updated successfully");
-	} catch (e) {
-		console.error("Error setting toolbox:", e);
-	}
 };
 
-// Expose utility functions
-window.getCode = function () {
-	if (!workspace) return "";
-	return Blockly.JavaScript.workspaceToCode(workspace);
-};
-
-window.getXml = function () {
-	if (!workspace) return "";
-	return Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(workspace));
-};
-
-window.blocklyCenterOnBlocks = function () {
-	if (window.workspace) {
-		window.workspace.scrollCenter();
-	}
-};
-
-window.blocklyClearAll = function () {
-	if (window.workspace) {
-		window.workspace.clear();
-	}
-};
-
-// Comprehensive reset function for mission transitions
-window.resetWorkspaceForNewMission = function (allowedBlockNames) {
-	console.log("Resetting workspace for new mission with blocks:", allowedBlockNames);
-
-	// Clear the workspace first
-	if (window.workspace) {
-		window.workspace.clear();
-	}
-
-	// Update the toolbox with new allowed blocks
-	setAllowedBlocks(allowedBlockNames);
-
-	// Center the workspace view
-	if (window.workspace) {
-		window.workspace.scrollCenter();
-	}
-
-	console.log("Workspace reset complete");
-};
-
-// Simulate sendSerialCommand in browser
-window.sendSerialCommand = function (cmd) {
-	if (window.AndroidOutputInterface && typeof window.AndroidOutputInterface.sendCommandToArduino === "function") {
-		window.AndroidOutputInterface.sendCommandToArduino(cmd);
-	} else {
-		console.error("BlocklyJsBridge is not available.");
-		sleep(1);
-		console.log("Simulated sendSerialCommand:", cmd);
-	}
-};
-
-function sleep(seconds) {
+window.sleep = (seconds) => {
 	var e = new Date().getTime() + seconds * 1000;
 	while (new Date().getTime() <= e) {}
-}
-
-// Custom Hybrid Flyout - Horizontal position, Vertical layout
-class HybridFlyout extends Blockly.HorizontalFlyout {
-	constructor(workspaceOptions) {
-		super(workspaceOptions);
-		// Override to use vertical layout behavior
-		this.horizontalLayout = false; // This controls block arrangement
-	}
-
-	// Override layout to arrange blocks vertically like VerticalFlyout
-	layout_(contents) {
-		this.workspace_.scale = this.targetWorkspace.scale;
-		const margin = this.MARGIN;
-		const cursorX = this.RTL ? margin : margin + this.tabWidth_;
-		let cursorY = margin;
-
-		for (const item of contents) {
-			item.getElement().moveBy(cursorX, cursorY);
-			cursorY += item.getElement().getBoundingRectangle().getHeight() + margin;
-		}
-	}
-
-	// Override reflow to calculate height like VerticalFlyout
-	reflowInternal_() {
-		this.workspace_.scale = this.getFlyoutScale();
-		let flyoutHeight = this.getContents().reduce((maxHeightSoFar, item) => {
-			return maxHeightSoFar + item.getElement().getBoundingRectangle().getHeight();
-		}, 0);
-		flyoutHeight += this.MARGIN * (this.getContents().length + 1);
-		flyoutHeight *= this.workspace_.scale;
-		flyoutHeight += Blockly.Scrollbar.scrollbarThickness;
-
-		// Set a reasonable width for vertical layout
-		const flyoutWidth = 200; // Fixed width for vertical block layout
-
-		if (this.getHeight() !== flyoutHeight || this.getWidth() !== flyoutWidth) {
-			this.height_ = flyoutHeight;
-			this.width_ = flyoutWidth;
-			this.position();
-			this.targetWorkspace.resizeContents();
-			this.targetWorkspace.recordDragTargets();
-		}
-	}
-
-	// Override wheel scrolling for vertical behavior
-	wheel_(e) {
-		const scrollDelta = Blockly.browserEvents.getScrollDeltaPixels(e);
-
-		if (scrollDelta.y) {
-			const metricsManager = this.workspace_.getMetricsManager();
-			const scrollMetrics = metricsManager.getScrollMetrics();
-			const viewMetrics = metricsManager.getViewMetrics();
-			const pos = viewMetrics.top - scrollMetrics.top + scrollDelta.y;
-
-			this.workspace_.scrollbar?.setY(pos);
-			Blockly.WidgetDiv.hideIfOwnerIsInWorkspace(this.workspace_);
-			Blockly.dropDownDiv.hideWithoutAnimation();
-		}
-		e.preventDefault();
-		e.stopPropagation();
-	}
-
-	// Keep horizontal positioning but allow vertical scrolling
-	isDragTowardWorkspace(currentDragDeltaXY) {
-		const dx = currentDragDeltaXY.x;
-		const dy = currentDragDeltaXY.y;
-		const dragDirection = (Math.atan2(dy, dx) / Math.PI) * 180;
-		const range = this.dragAngleRange_;
-
-		// Allow both horizontal and vertical drag directions
-		return (dragDirection < 90 + range && dragDirection > 90 - range) || (dragDirection > -90 - range && dragDirection < -90 + range) || (dragDirection < range && dragDirection > -range) || dragDirection < -180 + range || dragDirection > 180 - range;
-	}
-}
-
-// Register the custom flyout
-Blockly.registry.register(Blockly.registry.Type.FLYOUTS_HORIZONTAL_TOOLBOX, "hybridFlyout", HybridFlyout);
-
-// DOM Manipulation Approach (Most Reliable)
-function forceVerticalFlyoutLayout() {
-	const flyout = workspace?.getFlyout?.();
-	if (!flyout || !flyout.isVisible()) return;
-
-	const flyoutSvg = flyout.svgGroup_;
-	if (!flyoutSvg) return;
-
-	// Find all block groups in the flyout
-	const blockGroups = flyoutSvg.querySelectorAll(".blocklyBlock");
-	let currentY = 20; // Starting Y position
-	const blockSpacing = 16; // Space between blocks
-	const leftMargin = 20; // Left margin for all blocks
-
-	blockGroups.forEach((blockGroup, index) => {
-		if (blockGroup && blockGroup.transform && blockGroup.transform.baseVal) {
-			// Get current transform or create new one
-			let transform = blockGroup.transform.baseVal.getItem(0);
-			if (!transform) {
-				transform = flyoutSvg.ownerSVGElement.createSVGTransform();
-				blockGroup.transform.baseVal.appendItem(transform);
-			}
-
-			// Set new vertical position
-			transform.setTranslate(leftMargin, currentY);
-
-			// Calculate next Y position based on block height
-			const bbox = blockGroup.getBBox();
-			currentY += bbox.height + blockSpacing;
-		}
-	});
-
-	// Update flyout scrolling area
-	if (flyout.workspace_ && flyout.workspace_.scrollbar) {
-		flyout.workspace_.scrollbar.setContainerVisible(true);
-	}
-}
-
-// Execution popup management (visual feedback only)
-let isExecuting = false;
+};
 
 // Show execution modal
 window.showExecutionModal = function () {
 	console.log("Showing execution modal...");
 	const modal = document.getElementById("executionModal");
 	if (modal) {
-		console.log("modal found");
+		console.log("modal found", modal);
 		modal.style.display = "flex";
-		isExecuting = true;
-
-		// Setup stop button handler (just hides popup)
-		const stopBtn = document.getElementById("stopExecutionBtn");
-		if (stopBtn) {
-			stopBtn.onclick = function () {
-				hideExecutionModal();
-			};
-		}
 	}
 };
 
-// Hide execution modal
 window.hideExecutionModal = function () {
+	console.log("Hiding execution modal...");
 	const modal = document.getElementById("executionModal");
 	if (modal) {
 		modal.style.display = "none";
-		isExecuting = false;
 	}
-};
-
-// Check if currently executing (for UI state)
-window.isExecuting = function () {
-	return isExecuting;
 };
 
 // Initialize on page load
@@ -421,59 +157,15 @@ window.onload = function () {
 			// Setup custom flyout before defining blocks
 			defineCustomBlocks();
 			loadBlockly();
-			setGlobalWorkspaceReference();
+			if (window.Blockly && typeof Blockly.getMainWorkspace === "function") {
+				window.workspace = Blockly.getMainWorkspace();
+			}
 		} catch (e) {
 			console.error("Error during initialization:", e);
 			loadBlockly(); // Try to load anyway
 		}
-		// Browser: Run generated code directly
-		var runBtn = document.getElementById("runCodeBtn");
-		if (runBtn) {
-			runBtn.onclick = function () {
-				runCode();
-			};
-		}
 	});
-
-	window.runCode = function () {
-		console.log("Running code...");
-		showExecutionModal();
-		var code = Blockly.JavaScript.workspaceToCode(Blockly.getMainWorkspace());
-		try {
-			console.log("eval start");
-
-			window.executionTimeoutId = setTimeout(() => {
-				eval(code);
-				hideExecutionModal();
-			}, 10);
-			console.log("eval end");
-		} catch (e) {
-			console.error("Error running code: " + e);
-			hideExecutionModal();
-		}
-	};
-
-	// Method to stop execution (called from Android)
-	window.stopCodeExecution = function () {
-		console.log("🛑 Rex stops the dino adventure immediately!");
-		executionStopped = true;
-
-		// Clear any pending timeouts
-		if (executionTimeoutId) {
-			clearTimeout(executionTimeoutId);
-			executionTimeoutId = null;
-		}
-
-		// Hide the execution modal
-		hideExecutionModal();
-
-		// Stop any ongoing operations
-		return true; // Return success status
-	};
 };
 
-function setGlobalWorkspaceReference() {
-	if (window.Blockly && typeof Blockly.getMainWorkspace === "function") {
-		window.workspace = Blockly.getMainWorkspace();
-	}
-}
+// Register the custom flyout
+Blockly.registry.register(Blockly.registry.Type.FLYOUTS_HORIZONTAL_TOOLBOX, "hybridFlyout", HybridFlyout);

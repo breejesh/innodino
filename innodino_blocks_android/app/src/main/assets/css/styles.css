@@ -273,3 +273,48 @@ body {
 .stop-icon {
 	font-size: 1.2em;
 }
+
+/* Rex's Adventure Mobile Run Button */
+.mobile-run-btn {
+	display: none; /* Hidden by default on desktop */
+	position: fixed;
+	bottom: 24px;
+	left: 24px;
+	z-index: 1000;
+	padding: 16px 28px;
+	font-size: 1.2em;
+	font-family: "Comic Sans MS", cursive, sans-serif;
+	background: linear-gradient(135deg, #6fcf97 0%, #85d4a6 100%);
+	color: #ffffff;
+	border: none;
+	border-radius: 12px;
+	box-shadow: 0 4px 12px rgba(111, 207, 151, 0.3);
+	cursor: pointer;
+	font-weight: bold;
+	transition: all 0.3s ease;
+}
+
+.mobile-run-btn:hover {
+	background: linear-gradient(135deg, #85d4a6 0%, #6fcf97 100%);
+	transform: translateY(-2px);
+	box-shadow: 0 6px 16px rgba(111, 207, 151, 0.4);
+}
+
+.mobile-run-btn:active {
+	transform: translateY(0);
+	box-shadow: 0 2px 8px rgba(111, 207, 151, 0.3);
+}
+
+/* Show Run Button ONLY on Desktop/Large Devices */
+@media (min-width: 1025px) {
+	.mobile-run-btn {
+		display: block;
+	}
+}
+
+/* Hide completely on tablets and mobile */
+@media (max-width: 1024px) {
+	.mobile-run-btn {
+		display: none !important;
+	}
+}

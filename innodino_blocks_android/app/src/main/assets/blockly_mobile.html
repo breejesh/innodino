@@ -41,13 +41,9 @@
   </div>
 
   <!-- Generation/Test Button for Browser -->
-  <button id="runBtn" style="display:block;position:fixed;bottom:24px;left:24px;z-index:1000;padding:16px 28px;font-size:1.2em;background:#6FCF97;color:#fff;border:none;border-radius:12px;box-shadow:0 2px 8px #0002;cursor:pointer;">
+  <button id="runBtn" class="mobile-run-btn">
     Run Code
   </button>
-  <!-- Generation/Test Button for Browser -->
-  <!-- <button id="stopBtn" style="display:block;position:fixed;bottom:24px;left:224px;z-index:1000;padding:16px 28px;font-size:1.2em;background:#EB5757;color:#fff;border:none;border-radius:12px;box-shadow:0 2px 8px #0002;cursor:pointer;">
-    Stop Code
-  </button> -->
 
   <!-- Blockly Toolbox Configuration -->
   <xml id="toolbox" style="display:none">
@@ -163,6 +159,8 @@
   <script src="js/blockly-blocks.js"></script>
   <script src="js/blockly-generators.js"></script>
   <script src="js/blockly-theme.js"></script>
+  <script src="js/blockly-hybrid-flyout.js"></script>
+  <script src="js/blockly-bridge.js"></script>
   <script src="js/blockly-main.js"></script>
   <script>
     // Called from Android to set allowed blocks (only block type names)
@@ -199,18 +197,12 @@
       }
     }
 
-    // Browser-only: Show generated code in an alert for testing
-    // document.getElementById('generateCodeBtn').onclick = function () {
-    //   var code = Blockly.JavaScript.workspaceToCode(Blockly.getMainWorkspace());
-    //   console.log("Generated code:\n" + code);
-    // };
-
     document.getElementById('runBtn').onclick = function () {
       runCode();
     };
-    document.getElementById('stopBtn').onclick = function () {
-      stopCodeExecution();
-    };
+    // document.getElementById('stopBtn').onclick = function () {
+    //   stopCodeExecution();
+    // };
 
 
   </script>
