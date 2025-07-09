@@ -160,17 +160,39 @@ window.onload = function () {
 			if (window.Blockly && typeof Blockly.getMainWorkspace === "function") {
 				window.workspace = Blockly.getMainWorkspace();
 			}
+			// 🦖 Setup custom number input popup after workspace is ready
+			setupInnodinoNumberInputs();
 		} catch (e) {
 			console.error("Error during initialization:", e);
 			loadBlockly(); // Try to load anyway
 		}
 	});
 
-	// 🦖 Save blocks before page closes
-	window.addEventListener("beforeunload", function () {
-		saveBlocks();
-		stopAutoSave();
-	});
+	// Function to setup custom number inputs
+	function setupInnodinoNumberInputs() {
+		if (!window.Blockly) return;
+
+		// Override FieldNumber's showEditor method
+		setTimeout(() => {
+			if (Blockly.FieldNumber && Blockly.FieldNumber.prototype.showEditor_) {
+				const originalShowEditor = Blockly.FieldNumber.prototype.showEditor_;
+				Blockly.FieldNumber.prototype.showEditor_ = function () {
+					const field = this;
+					const currentValue = field.getValue();
+
+					if (window.showInnodinoNumberDialog) {
+						window.showInnodinoNumberDialog("Enter a number:", currentValue, (newValue) => {
+							if (newValue !== null && newValue !== "") {
+								field.setValue(newValue);
+							}
+						});
+					} else {
+						originalShowEditor.call(this);
+					}
+				};
+			}
+		}, 100);
+	}
 };
 
 // Register the custom flyout

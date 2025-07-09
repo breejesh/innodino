@@ -40,6 +40,48 @@
     </div>
   </div>
 
+  <!-- Number Input Popup -->
+  <div id="numberInputPopup" class="innodino-number-popup" style="display: none;">
+    <div class="innodino-number-dialog">
+      <div class="innodino-number-header">
+        <h3>Enter Number</h3>
+      </div>
+      <div class="innodino-number-body">
+        <div class="innodino-number-label" id="numberInputMessage">Enter a number:</div>
+        <input
+          type="number"
+          class="innodino-number-input"
+          id="innodino-number-input"
+          placeholder="Enter..." />
+        <div class="innodino-number-buttons">
+          <button class="innodino-number-btn cancel" id="numberInputCancel">Cancel</button>
+          <button class="innodino-number-btn confirm" id="numberInputConfirm">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Text Input Popup for Variables -->
+  <div id="textInputPopup" class="innodino-number-popup" style="display: none;">
+    <div class="innodino-number-dialog">
+      <div class="innodino-number-header">
+        <h3>Create Variable</h3>
+      </div>
+      <div class="innodino-number-body">
+        <div class="innodino-number-label" id="textInputMessage">Enter variable name:</div>
+        <input
+          type="text"
+          class="innodino-number-input"
+          id="innodino-text-input"
+          placeholder="Enter.." />
+        <div class="innodino-number-buttons">
+          <button class="innodino-number-btn cancel" id="textInputCancel">Cancel</button>
+          <button class="innodino-number-btn confirm" id="textInputConfirm">Create</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Generation/Test Button for Browser -->
   <button id="runBtn" class="mobile-run-btn">
     Run Code
@@ -150,7 +192,7 @@
         </value>
       </block>
       <block type="variables_get">
-        <field name="VAR">item</field>
+        <field name="VAR">variable</field>
       </block>
     </category>
   </xml>
@@ -162,6 +204,7 @@
   <script src="js/blockly-hybrid-flyout.js"></script>
   <script src="js/blockly-bridge.js"></script>
   <script src="js/blockly-storage.js"></script>
+  <script src="js/blockly-popup.js"></script>
   <script src="js/blockly-main.js"></script>
   <script>
     // Called from Android to set allowed blocks (only block type names)
@@ -204,7 +247,6 @@
     // document.getElementById('stopBtn').onclick = function () {
     //   stopCodeExecution();
     // };
-
 
   </script>
 </body>

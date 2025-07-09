@@ -318,3 +318,238 @@ body {
 		display: none !important;
 	}
 }
+
+/* Custom Number Input Popup - InnoDino Style */
+.innodino-number-popup {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0, 0, 0, 0.4);
+	backdrop-filter: blur(4px);
+	z-index: 10001;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	animation: popupFadeIn 0.2s ease-out;
+}
+
+@keyframes popupFadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+.innodino-number-dialog {
+	background: #ffffff;
+	border-radius: 20px;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+	max-width: 350px;
+	width: 90%;
+	max-height: 80vh;
+	margin: 20px;
+	overflow: hidden;
+	animation: dialogSlideIn 0.3s ease-out;
+	position: relative;
+}
+
+@keyframes dialogSlideIn {
+	from {
+		opacity: 0;
+		transform: scale(0.8) translateY(-20px);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1) translateY(0);
+	}
+}
+
+.innodino-number-header {
+	background: linear-gradient(135deg, #6fcf97, #85d4a6);
+	padding: 20px;
+	text-align: center;
+}
+
+.innodino-number-header h3 {
+	margin: 0;
+	color: white;
+	font-size: 1.2em;
+	font-weight: bold;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+}
+
+.innodino-number-body {
+	padding: 25px;
+	text-align: center;
+}
+
+.innodino-number-label {
+	color: #4f4f4f;
+	font-size: 1em;
+	margin-bottom: 15px;
+	font-weight: 500;
+}
+
+.innodino-number-input {
+	width: 50%;
+	padding: 12px 16px;
+	font-size: 1.1em;
+	border: 2px solid #e0e0e0;
+	border-radius: 12px;
+	text-align: center;
+	font-weight: bold;
+	color: #4f4f4f;
+	background: #fafafa;
+	transition: all 0.2s ease;
+	margin-bottom: 20px;
+}
+
+.innodino-number-input:focus {
+	outline: none;
+	border-color: #6fcf97;
+	background: #ffffff;
+	box-shadow: 0 0 0 3px rgba(111, 207, 151, 0.1);
+}
+
+.innodino-number-input.invalid {
+	border-color: #eb5757 !important;
+	background: rgba(235, 87, 87, 0.1) !important;
+}
+
+.innodino-number-input.valid {
+	border-color: #6fcf97 !important;
+	background: rgba(111, 207, 151, 0.05) !important;
+}
+
+.innodino-number-buttons {
+	display: flex;
+	gap: 12px;
+	justify-content: center;
+}
+
+.innodino-number-btn {
+	padding: 12px 24px;
+	border: none;
+	border-radius: 10px;
+	font-size: 1em;
+	font-weight: bold;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	flex: 1;
+	min-width: 80px;
+}
+
+.innodino-number-btn.confirm {
+	background: linear-gradient(135deg, #6fcf97, #85d4a6);
+	color: white;
+	box-shadow: 0 2px 8px rgba(111, 207, 151, 0.3);
+}
+
+.innodino-number-btn.confirm:hover {
+	background: linear-gradient(135deg, #85d4a6, #6fcf97);
+	transform: translateY(-1px);
+	box-shadow: 0 4px 12px rgba(111, 207, 151, 0.4);
+}
+
+.innodino-number-btn.confirm:disabled {
+	background: #cccccc !important;
+	color: #888888 !important;
+	cursor: not-allowed !important;
+	transform: none !important;
+	box-shadow: none !important;
+}
+
+.innodino-number-btn.confirm:disabled:hover {
+	background: #cccccc !important;
+	transform: none !important;
+	box-shadow: none !important;
+}
+
+.innodino-number-btn.cancel {
+	background: #f5f5f5;
+	color: #4f4f4f;
+	border: 2px solid #e0e0e0;
+}
+
+.innodino-number-btn.cancel:hover {
+	background: #eeeeee;
+	border-color: #cccccc;
+	transform: translateY(-1px);
+}
+
+.innodino-number-btn:active {
+	transform: translateY(0);
+}
+
+/* Warning message for number limits */
+.innodino-warning-message {
+	background: rgba(255, 206, 85, 0.15);
+	border: 1px solid rgba(255, 206, 85, 0.4);
+	border-radius: 8px;
+	padding: 8px 12px;
+	margin-bottom: 12px;
+	color: #b8860b;
+	font-size: 0.85em;
+	font-weight: 500;
+	text-align: center;
+}
+
+/* Shake animation for invalid input */
+@keyframes shake {
+	0%,
+	100% {
+		transform: translateX(0);
+	}
+	10%,
+	30%,
+	50%,
+	70%,
+	90% {
+		transform: translateX(-5px);
+	}
+	20%,
+	40%,
+	60%,
+	80% {
+		transform: translateX(5px);
+	}
+}
+
+/* Quick number buttons */
+.innodino-quick-numbers {
+	display: flex;
+	gap: 8px;
+	justify-content: center;
+	margin-bottom: 15px;
+	flex-wrap: wrap;
+}
+
+.innodino-quick-btn {
+	width: 40px;
+	height: 40px;
+	border: 2px solid #e0e0e0;
+	background: #fafafa;
+	border-radius: 8px;
+	font-size: 0.9em;
+	font-weight: bold;
+	color: #4f4f4f;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.innodino-quick-btn:hover {
+	border-color: #6fcf97;
+	background: rgba(111, 207, 151, 0.1);
+	color: #6fcf97;
+}
+
+.innodino-quick-btn:active {
+	background: rgba(111, 207, 151, 0.2);
+}
