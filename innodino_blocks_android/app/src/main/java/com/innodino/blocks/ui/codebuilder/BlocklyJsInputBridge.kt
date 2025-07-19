@@ -3,17 +3,13 @@ package com.innodino.blocks.ui.codebuilder
 import android.util.Log
 import android.webkit.JavascriptInterface
 import kotlin.random.Random
+import com.innodino.blocks.util.DinoSerialHelper
 
 class BlocklyJsInputBridge {
     @JavascriptInterface
-    fun getSensorValue(type: String): String {
-        val value = when (type) {
-            "DISTANCE" -> Random.nextInt(0, 100).toString()
-            "LIGHT" -> Random.nextInt(0, 1024).toString()
-            "TEMPERATURE" -> (20 + Random.nextDouble() * 10).toString()
-            else -> "0"
-        }
-        Log.d("BlocklyJsInputBridge", "getSensorValue($type) = $value")
+    fun getSensorValue(command: String): String {
+        val value = DinoSerialHelper.sendCommand(command);
+        Log.d("BlocklyJsInputBridge", "getSensorValue($command) = $value")
         return value
     }
 }

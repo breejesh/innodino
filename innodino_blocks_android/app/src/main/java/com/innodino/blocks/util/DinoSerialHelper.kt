@@ -40,6 +40,41 @@ object DinoSerialHelper {
         return ""
     }
 
+    fun getSensorValue(command: String): Float {
+        if (!isConnected || serialPort == null) {
+            Log.w("DinoSerial", "Serial port not connected, cannot send command: $command")
+            return -1.0f
+        }
+        
+        try {
+            Log.d("DinoSerial", "Sending sensor command to Arduino: $command")
+            serialPort?.write(command.toByteArray(), 5000)
+            
+            // Read response with timeout
+            var response = ByteArray(2000)
+            val bytesRead = serialPort?.read(response, 10000) ?: 0
+            
+            if (bytesRead > 0) {
+                val responseString = String(response, 0, bytesRead).trim()
+                Log.d("DinoSerial", "Received sensor response: $responseString")
+                
+                // Simple parsing: get value after 3rd |
+                val parts = responseString.split("|")
+                if (parts.size >= 3) {
+                    val valuesPart = parts[2].removeSuffix(";")
+                    return valuesPart.toFloatOrNull() ?: -1.0f
+                }
+                
+                return -1.0f
+            }
+            return -1.0f
+        } catch (e: Exception) {
+            Log.e("DinoSerial", "Error getting sensor value for command: $command", e)
+            isConnected = false // Mark as disconnected on error
+        }
+        return -1.0f
+    }
+
     /**
      * Initializes the serial port with the correct baud rate and parameters.
      * Call this after opening the port and before sending commands.
@@ -81,4 +116,70 @@ object DinoSerialHelper {
             Log.d("DinoSerial", "Serial port disconnected")
         }
     }
+
+    /**
+     * Gets accelerometer values as a triple (X, Y, Z)
+     * @param command The sensor command (e.g., "@SENSOR|READ_ACCELEROMETER|;")
+     * @return Triple of X, Y, Z values or Triple(-1f, -1f, -1f) on error
+     */
+    fun getAccelerometerValues(command: String): Triple<Float, Float, Float> {
+        val response = sendCommand(command)
+        
+        if (response.startsWith("@SENSOR_DATA|ACCELEROMETER|")) {
+            val parts = response.split("|")
+            if (parts.size >= 3) {
+                val valuesPart = parts[2].removeSuffix(";")
+                val values = valuesPart.split(",")
+                if (values.size >= 3) {
+                    val x = values[0].toFloatOrNull() ?: -1.0f
+                    val y = values[1].toFloatOrNull() ?: -1.0f
+                    val z = values[2].toFloatOrNull() ?: -1.0f
+                    return Triple(x, y, z)
+                }
+            }
+        }
+        
+        return Triple(-1.0f, -1.0f, -1.0f)
+    }
+
+    /**
+     * Gets all sensor values as a data class
+     * @param command The sensor command (e.g., "@SENSOR|READ_ALL|;")
+     * @return SensorData object with all values or null on error
+     */
+    fun getAllSensorValues(command: String): SensorData? {
+        val response = sendCommand(command)
+        
+        if (response.startsWith("@SENSOR_DATA|ALL|")) {
+            val parts = response.split("|")
+            if (parts.size >= 3) {
+                val valuesPart = parts[2].removeSuffix(";")
+                val values = valuesPart.split(",")
+                if (values.size >= 6) {
+                    return SensorData(
+                        distance = values[0].toFloatOrNull() ?: -1.0f,
+                        temperature = values[1].toFloatOrNull() ?: -1.0f,
+                        lightLevel = values[2].toIntOrNull() ?: -1,
+                        accelX = values[3].toFloatOrNull() ?: -1.0f,
+                        accelY = values[4].toFloatOrNull() ?: -1.0f,
+                        accelZ = values[5].toFloatOrNull() ?: -1.0f
+                    )
+                }
+            }
+        }
+        
+        return null
+    }
+
+    /**
+     * Data class to hold all sensor readings
+     */
+    data class SensorData(
+        val distance: Float,        // cm
+        val temperature: Float,     // °C
+        val lightLevel: Int,        // 0-1023
+        val accelX: Float,          // m/s²
+        val accelY: Float,          // m/s²
+        val accelZ: Float           // m/s²
+    )
 }

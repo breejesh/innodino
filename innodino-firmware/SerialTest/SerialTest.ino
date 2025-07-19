@@ -12,19 +12,39 @@ LedControl lc = LedControl(12,11,10,1);
 byte triggerPin = 2;
 byte echoPin = 4;
 
+int leftMotorPin = 7;
+int leftMotorPinB = 8;
+int rightMotorPin = 5;
+int rightMotorPinB = 6;
 
 /* we always wait a bit between updates of the display */
 unsigned long delaytime = 10;
 
 void setup() {
+  initUltrasonic();
+  initRobot();
+  initLED();
+  Serial.begin(9600);
+}
+
+void initUltrasonic() {
+  HCSR04.begin(triggerPin, echoPin);
+}
+
+void initLED() {
   lc.shutdown(0,false);
   /* Set the brightness to a medium values */
   lc.setIntensity(0,1);
   /* and clear the display */
   lc.clearDisplay(0);
-  HCSR04.begin(triggerPin, echoPin);
   clearAll();
-  Serial.begin(9600);
+}
+
+void initRobot() {
+  pinMode(leftMotorPin, OUTPUT);  // sets the pin as output
+  pinMode(leftMotorPinB, OUTPUT);  // sets the pin as output
+  pinMode(rightMotorPin, OUTPUT);  // sets the pin as output
+  pinMode(rightMotorPinB, OUTPUT);  // sets the pin as output
 }
 
 void setIntensity(int val) {
@@ -49,14 +69,36 @@ void clearLed(int row, int col) {
   lc.setLed(0, row, col, false);
 }
 
-void pattern() {
-  for(int row=0;row<8;row++) {
-    for(int col=0;col<8;col++) {
-      delay(delaytime);
-      setLed(row, col);
-      delay(delaytime);
-    }
-  }
+void moveForward(int time) {
+  analogWrite(leftMotorPin, 255); // analogRead values go from 0 to 1023, analogWrite values from 0 to 255
+  analogWrite(rightMotorPin, 255); // analogRead values go from 0 to 1023, analogWrite values from 0 to 255
+  delay(time * 1000);
+  analogWrite(leftMotorPin, 0); // analogRead values go from 0 to 1023, analogWrite values from 0 to 255
+  analogWrite(rightMotorPin, 0); // analogRead values go from 0 to 1023, analogWrite values from 0 to 255
+}
+
+void moveBackward(int time) {
+  analogWrite(leftMotorPinB, 255); // analogRead values go from 0 to 1023, analogWrite values from 0 to 255
+  analogWrite(rightMotorPinB, 255); // analogRead values go from 0 to 1023, analogWrite values from 0 to 255
+  delay(time * 1000);
+  analogWrite(leftMotorPinB, 0); // analogRead values go from 0 to 1023, analogWrite values from 0 to 255
+  analogWrite(rightMotorPinB, 0); // analogRead values go from 0 to 1023, analogWrite values from 0 to 255
+}
+
+void turnRight(int time) {
+  analogWrite(leftMotorPin, 255); // analogRead values go from 0 to 1023, analogWrite values from 0 to 255
+  analogWrite(rightMotorPinB, 255); // analogRead values go from 0 to 1023, analogWrite values from 0 to 255
+  delay(time * 1000);
+  analogWrite(leftMotorPin, 0); // analogRead values go from 0 to 1023, analogWrite values from 0 to 255
+  analogWrite(rightMotorPinB, 0); // analogRead values go from 0 to 1023, analogWrite values from 0 to 255  
+}
+
+void turnLeft(int time) {
+  analogWrite(leftMotorPinB, 255); // analogRead values go from 0 to 1023, analogWrite values from 0 to 255
+  analogWrite(rightMotorPin, 255); // analogRead values go from 0 to 1023, analogWrite values from 0 to 255
+  delay(time * 1000);
+  analogWrite(leftMotorPinB, 0); // analogRead values go from 0 to 1023, analogWrite values from 0 to 255
+  analogWrite(rightMotorPin, 0); // analogRead values go from 0 to 1023, analogWrite values from 0 to 255  
 }
 
 int getDistance() {
@@ -101,8 +143,25 @@ void processMessage(String msg) {
     handleLED(action, params);
   } else if(module == "TIME") {
     handleTime(action, params);
+  } else if(module == "BOT") {
+    handleBot(action, params);
+  } else if(module == "SENSOR") {
+    handleSensorData(action, params);
   } else {
     sendError("UNKNOWN_MODULE");
+  }
+}
+
+void handleSensorData(String action, String params) {
+  if (action == "READ") {
+   if(params == "DISTANCE") {
+    int distance = getDistance();
+    Serial.println("@SENSOR_DATA|DISTANCE|" + String(distance) + ";");
+   } else {
+    sendError("BAD_PARAM");
+   }
+  } else {
+    sendError("UNKNOWN_ACTION");
   }
 }
 
@@ -148,6 +207,30 @@ void handleLED(String action, String params) {
   } else {
     sendError("UNKNOWN_ACTION");
   }
+}
+
+void handleBot(String action, String params) {
+  // param read common for now
+  int time = params.toInt();
+  if (time <= 0) {
+    sendError("BAD_PARAM");
+    return;
+  }
+   if (action == "MOVE_FORWARD") {
+    moveForward(time);
+    sendAck();
+   } else if(action == "MOVE_BACKWARD") {
+    moveBackward(time);
+    sendAck();
+   } else if(action == "TURN_RIGHT") {
+    turnRight(time);
+    sendAck();
+   } else if(action == "TURN_LEFT") {
+    turnLeft(time);
+    sendAck();
+   } else {
+    sendError("UNKNOWN_ACTION");
+   }
 }
 
 void sendAck() {

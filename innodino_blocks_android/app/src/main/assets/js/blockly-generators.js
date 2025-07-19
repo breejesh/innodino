@@ -51,7 +51,7 @@ Blockly.JavaScript.forBlock["turn_right"] = function (block) {
 };
 
 Blockly.JavaScript.forBlock["stop_robot"] = function (block) {
-	return 'sendSerialCommand("@ROBOT|STOP;");\n';
+	return 'sendSerialCommand("@ROBOT|STOP|;");\n';
 };
 
 // --- Time Blocks ---
@@ -62,7 +62,7 @@ Blockly.JavaScript.forBlock["wait_seconds"] = function (block) {
 
 // --- Sensor Blocks ---
 Blockly.JavaScript.forBlock["read_distance"] = function (block) {
-	return ['getSensorValue("DISTANCE")', Blockly.JavaScript.ORDER_FUNCTION_CALL];
+	return ['getSensorValue("@SENSOR|READ|DISTANCE;")', Blockly.JavaScript.ORDER_FUNCTION_CALL];
 };
 
 // --- Variable Blocks ---
