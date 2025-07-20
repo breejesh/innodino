@@ -12,10 +12,10 @@ LedControl lc = LedControl(12,11,10,1);
 byte triggerPin = 2;
 byte echoPin = 4;
 
-int leftMotorPin = 7;
-int leftMotorPinB = 8;
-int rightMotorPin = 5;
-int rightMotorPinB = 6;
+int leftMotorPin = 6;
+int leftMotorPinB = 5;
+int rightMotorPin = 8;
+int rightMotorPinB = 7;
 
 /* we always wait a bit between updates of the display */
 unsigned long delaytime = 10;
@@ -143,7 +143,7 @@ void processMessage(String msg) {
     handleLED(action, params);
   } else if(module == "TIME") {
     handleTime(action, params);
-  } else if(module == "BOT") {
+  } else if(module == "ROBOT") {
     handleBot(action, params);
   } else if(module == "SENSOR") {
     handleSensorData(action, params);
@@ -243,8 +243,6 @@ void sendError(String error) {
   Serial.println(";");
 }
 
-// Helper function to rotate coordinates 90 degrees clockwise
-// For 8x8 matrix: (row, col) -> (col, 7-row)
 void setLedRotated90(int row, int col) {
   setLed(col, 7 - row);
 }

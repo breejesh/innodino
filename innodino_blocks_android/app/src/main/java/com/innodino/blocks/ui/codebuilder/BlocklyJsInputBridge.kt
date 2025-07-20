@@ -7,8 +7,8 @@ import com.innodino.blocks.util.DinoSerialHelper
 
 class BlocklyJsInputBridge {
     @JavascriptInterface
-    fun getSensorValue(command: String): String {
-        val value = DinoSerialHelper.sendCommand(command);
+    fun getSensorValue(command: String): Float {
+        val value = DinoSerialHelper.getSensorValue(command);
         Log.d("BlocklyJsInputBridge", "getSensorValue($command) = $value")
         return value
     }
