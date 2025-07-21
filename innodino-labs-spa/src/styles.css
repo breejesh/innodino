@@ -7,13 +7,16 @@
 :root {
   /* Primary Colors - Playful & Energetic */
   --dino-green: #6FCF97;
+  --dino-green-dark: #3e7254;
   --sun-yellow: #FFCE55;
   --tech-teal: #2D9CDB;
+  --tech-teal-dark: #195274;
   --soft-coral: #EB5757;
 
   /* Secondary/Neutral Colors - Clean & Calm */
   --cloud-white: #FAFAFA;
   --slate-gray: #4F4F4F;
+  --almost-black: #222;
   --dino-brown: #A47551;
   --pure-white: #FFFFFF;
 

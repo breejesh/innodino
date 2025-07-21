@@ -10,7 +10,7 @@ InnoDino makes robotics and coding accessible through:
 - 🌐 **Offline-first** - works without internet
 - 🧩 **Modular design** - start small, expand as you grow
 
-> 🌐 **Learn more at [innodino.com](https://innodino.com)** - Explore kits, curriculum, and community resources
+> 🌐 **Learn more at [breejesh.github.io/innodino](https://breejesh.github.io/innodino/)** - Explore kits, curriculum, and community resources
 
 ## 🎬 See InnoDino in Action
 
