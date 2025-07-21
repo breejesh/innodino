@@ -1,41 +1,59 @@
-# InnoDino: Modular Robotics for All
+# 🦖 InnoDino: Modular Robotics for All
 
-## Overview
-InnoDino is an open-source, low-cost modular robotics learning platform designed to make hands-on coding and robotics accessible to every learner—especially those in under-resourced schools and communities. The project features:
+**Ultra-affordable, offline-first robotics learning platform for every child, everywhere.**
 
-- **Ultra-affordable hardware kits** (LED Matrix & Robot) at a price point not available anywhere else in the market
-- **Modular design**: Start with one kit, expand with more modules as you grow
-- **Visual block-based programming** via a mobile app (no PC required)
-- **Offline-first**: All coding and uploading works without internet
-- **Story-driven learning**: Each module is a playful, progressive adventure
-- **Open-source and extensible**: Designed for educators, makers, and students to remix and expand
+## ✨ What is InnoDino?
 
-## Why InnoDino?
-- **No other kit offers this combination of price, modularity, and offline mobile programming.**
-- Designed for real-world constraints: works in rural, low-connectivity, and low-income settings
-- Empowers independent, creative exploration—not just classroom demos
+InnoDino makes robotics and coding accessible through:
+- 💰 **Ultra-affordable** modular hardware kits
+- 📱 **Mobile app** with visual block programming (no PC needed)
+- 🌐 **Offline-first** - works without internet
+- 🧩 **Modular design** - start small, expand as you grow
 
-## Modules
-- **LED Matrix Module**: Learn coding basics, logic, and animation with an Arduino Nano-powered 8x8 LED grid
-- **DinoBot Module**: Program a simple robot to move, sense, and avoid obstacles
-- **Future Expansion**: Music, sensors, home automation, and more—all with the same controller
+> 🌐 **Learn more at [innodino.com](https://innodino.com)** - Explore kits, curriculum, and community resources
 
-## How It Works
-1. **Assemble your kit** (LED or Robot)
-2. **Download the InnoDino mobile app** (Android/iOS)
-3. **Create programs using drag-and-drop blocks**
-4. **Upload code to your kit via USB/serial cable**
-5. **See your code come to life—no internet or PC needed!**
+## 🎬 See InnoDino in Action
 
-## Who Is It For?
-- K-12 students, teachers, and parents
-- Rural schools, after-school programs, and community centers
-- Anyone who wants to learn robotics and coding affordably
+[![InnoDino Demo Video](https://img.shields.io/badge/▶️%20Watch%20Demo-YouTube-red?style=for-the-badge)](https://youtube.com/placeholder-demo-video)
 
-## Get Involved
-- All hardware designs, code, and curriculum are open-source
-- Contributions, translations, and new module ideas are welcome!
+*Watch students build, code, and bring their creations to life with InnoDino's intuitive block-based programming!*
+
+## 🚀 Quick Start
+
+1. **Choose your module**: LED Matrix or DinoBot
+2. **Download the mobile app** (Android)
+3. **Program with blocks** - drag, drop, create!
+4. **Connect via USB** and watch your code come to life
+
+## 📚 Documentation
+
+### **Modules**
+- 💡 [LED Module Guide](innodino_blocks_android/LED%20Module.md) - Learn with lights and animation
+- 🤖 [DinoBot Module Guide](innodino_blocks_android/DinoBot%20Module.md) - Build and program your robot
+
+### **Software & Development**
+- 📡 [DinoSerial Protocol](innodino_blocks_android/DinoSerial%20Protocol.md) - Communication protocol
+- 📱 [Android App README](innodino_blocks_android/README.md) - Mobile app development
+- 🌐 [Website README](innodino-labs-spa/README.md) - Product Website
+
+### **Getting Started**
+- 🔧 **Hardware**: Included with each kit
+- 📖 **Curriculum**: Progressive learning adventures
+- 🎯 **Examples**: Sample projects and code
+
+## 🎯 For Educators
+
+- **K-12 ready** - Age-appropriate progression
+- **Curriculum included** - Story-driven learning adventures
+- **Offline capable** - Perfect for any classroom setting
+- **Open source** - Customize and extend freely
+
+## 📄 License
+
+Licensed under GNU AGPL v3.0 - see [LICENSE](LICENSE) for details.
+- ✅ Free for educational and non-commercial use
+- 💼 Commercial licensing available
 
 ---
 
-**InnoDino: Bringing real robotics and coding to every child, everywhere.**
+**🦖 Bringing real robotics and coding to every child, everywhere.**
