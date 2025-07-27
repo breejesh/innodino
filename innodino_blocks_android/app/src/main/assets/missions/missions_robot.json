@@ -3,40 +3,40 @@
 		{
 			"id": "bot_1",
 			"title": "Mission 1: Zara's First Move",
-			"description": "Guide Zara the DinoBot to the lost city by moving her forward!",
-			"allowedBlocks": ["move_forward"],
+			"description": "Make Zara move forward 1 step. Use the 'Move Forward' block 1 time.",
+			"allowedBlocks": ["move_forward", "wait_seconds"],
 			"icon": "🤖",
 			"nextMissionId": "bot_2"
 		},
 		{
 			"id": "bot_2",
 			"title": "Mission 2: The Turning Point",
-			"description": "Teach Zara to turn left and right to navigate obstacles.",
-			"allowedBlocks": ["move_forward", "turn_left", "turn_right"],
+			"description": "Move forward 1 step, turn right, then move forward 1 more step and turn left to reach the target.",
+			"allowedBlocks": ["move_forward", "turn_left", "turn_right", "wait_seconds"],
 			"icon": "🔄",
 			"nextMissionId": "bot_3"
 		},
 		{
 			"id": "bot_3",
 			"title": "Mission 3: The Looping Path",
-			"description": "Use loops to help Zara cross the Dino Bridge.",
-			"allowedBlocks": ["move_forward", "turn_left", "turn_right", "repeat"],
+			"description": "Use a 'Repeat' loop to make Zara move forward and turn right 4 times to complete a square path.",
+			"allowedBlocks": ["move_forward", "turn_left", "turn_right", "controls_repeat_ext", "wait_seconds"],
 			"icon": "🔁",
 			"nextMissionId": "bot_4"
 		},
 		{
 			"id": "bot_4",
 			"title": "Mission 4: The Sensor Challenge",
-			"description": "Use sensors to avoid danger and reach the city gates.",
-			"allowedBlocks": ["move_forward", "turn_left", "turn_right", "repeat", "read_sensor", "controls_if"],
+			"description": "Program Zara to keep moving forward, but stop when the distance sensor detects an obstacle within 20cm.",
+			"allowedBlocks": ["move_forward", "turn_left", "turn_right", "controls_repeat_ext", "controls_whileUntil", "read_distance", "controls_if", "logic_compare", "logic_operation", "logic_boolean", "variables_set", "variables_get", "controls_ifelse", "math_number", "math_arithmetic"],
 			"icon": "🦖",
 			"nextMissionId": "bot_5"
 		},
 		{
 			"id": "bot_5",
 			"title": "FINALE: Save the Lost Dino City!",
-			"description": "Combine all your skills to help Zara save the city!",
-			"allowedBlocks": ["move_forward", "turn_left", "turn_right", "repeat", "read_sensor", "controls_if", "variables_set"],
+			"description": "Navigate the maze: keep moving forward unless an obstacle is detected, then turn and continue moving forward.",
+			"allowedBlocks": ["move_forward", "turn_left", "turn_right", "controls_repeat_ext", "controls_whileUntil", "read_distance", "controls_if", "variables_set"],
 			"icon": "🏆",
 			"nextMissionId": null
 		}

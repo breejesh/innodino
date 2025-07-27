@@ -14,9 +14,11 @@ InnoDino makes robotics and coding accessible through:
 
 ## 🎬 See InnoDino in Action
 
-[![InnoDino Demo Video](https://img.shields.io/badge/▶️%20Watch%20Demo-YouTube-red?style=for-the-badge)](https://youtube.com/placeholder-demo-video)
+[![InnoDino Demo Video](https://img.shields.io/badge/▶️%20Watch%20Trailer-YouTube-red?style=for-the-badge)](https://youtu.be/7SP1aFBtbIY)
 
-*Watch students build, code, and bring their creations to life with InnoDino's intuitive block-based programming!*
+[![InnoDino Demo Video](https://img.shields.io/badge/▶️%20Watch%20Presentation-YouTube-red?style=for-the-badge)](https://youtu.be/Pboqs_4Z1Ag)
+
+*See InnoDino's intuitive block-based programming in action!*
 
 ## 🚀 Quick Start
 
@@ -36,10 +38,8 @@ InnoDino makes robotics and coding accessible through:
 - 📱 [Android App README](innodino_blocks_android/README.md) - Mobile app development
 - 🌐 [Website README](innodino-labs-spa/README.md) - Product Website
 
-### **Getting Started**
-- 🔧 **Hardware**: Included with each kit
-- 📖 **Curriculum**: Progressive learning adventures
-- 🎯 **Examples**: Sample projects and code
+### **System Design**
+![InnoDino System Architecture](design-diagram.png)
 
 ## 🎯 For Educators
 

@@ -46,7 +46,7 @@ class MissionCodeBuilderFragment : Fragment() {
         val robot = listOf("move_forward", "move_backward", "turn_left", "turn_right", "stop_robot")
         val sensor = listOf("read_distance")
         val logic = listOf("logic_compare", "logic_operation", "logic_negate", "logic_boolean", "math_number", "math_arithmetic")
-        val control = listOf("controls_repeat_ext","controls_if","controls_ifelse", "wait_seconds")
+        val control = listOf("controls_repeat_ext", "controls_whileUntil", "controls_if", "controls_ifelse", "wait_seconds")
         val variable = listOf("variables_set", "variables_get")
         if(freePlay) {
             if(module == "led") {
@@ -189,18 +189,7 @@ class MissionCodeBuilderFragment : Fragment() {
             executeBlocklyFunction("blocklyClearAll")
         }
 
-        // Demo button
-        val demoButton = view.findViewById<View>(R.id.missionDemoButton)
-        demoButton.setOnClickListener {
-            val dialogView = layoutInflater.inflate(R.layout.dialog_demo, null)
-            val dialog = android.app.Dialog(requireContext())
-            dialog.setContentView(dialogView)
-            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-            dialog.setCancelable(true)
-            val okBtn = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.okButton)
-            okBtn.setOnClickListener { dialog.dismiss() }
-            dialog.show()
-        }
+
         blocklyWebView.addJavascriptInterface(BlocklyJsInputBridge(), "AndroidInputInterface")
         blocklyWebView.addJavascriptInterface(BlocklyJsOutputBridge(), "AndroidOutputInterface")
     }

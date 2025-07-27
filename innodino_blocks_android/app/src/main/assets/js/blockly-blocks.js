@@ -208,7 +208,7 @@ function defineCustomBlocks() {
         {
           "type": "field_variable",
           "name": "VAR",
-          "variable": "item"
+          "variable": "variable"
         },
         {
           "type": "input_value",

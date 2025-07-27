@@ -112,7 +112,6 @@
     </div>
   </section>
 
-
   <!-- About Section -->
   <section id="about" class="about-section">
     <div class="container">
@@ -129,32 +128,33 @@
             cutting-edge pedagogical research with playful, dinosaur-themed design to create
             an educational experience that kids love and parents trust.
           </p>
-
-          <div class="about-stats">
-            <div class="stat">
-              <div class="stat-number">8-16</div>
-              <div class="stat-label">Age Range</div>
-            </div>
-            <div class="stat">
-              <div class="stat-number">5</div>
-              <div class="stat-label">Skill Levels</div>
-            </div>
-            <div class="stat">
-              <div class="stat-number">100%</div>
-              <div class="stat-label">Block-Based</div>
-            </div>
-          </div>
         </div>
 
         <div class="about-visual">
-          <div class="dino-lab">
-            <div class="lab-equipment">
-              <div class="equipment-item">🔬</div>
-              <div class="equipment-item">⚡</div>
-              <div class="equipment-item">🤖</div>
-              <div class="equipment-item">💡</div>
+          <div class="about-video-section">
+            <div class="about-video-player">
+              <div class="video-wrapper">
+                <iframe
+                  id="demo-video"
+                  src="https://www.youtube.com/embed/7SP1aFBtbIY?modestbranding=1&rel=0&showinfo=0&controls=1&cc_load_policy=0&iv_load_policy=3&loop=1"
+                  title="InnoDino Demo Video"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen>
+                </iframe>
+              </div>
+
+              <div class="video-controls">
+                <div class="video-toggle">
+                  <button id="trailer-btn" class="video-btn active" (click)="switchVideo('trailer')">
+                    <span class="btn-text">Trailer</span>
+                  </button>
+                  <button id="presentation-btn" class="video-btn" (click)="switchVideo('presentation')">
+                    <span class="btn-text">Full Presentation</span>
+                  </button>
+                </div>
+              </div>
             </div>
-            <div class="lab-dino animate-float">🦖</div>
           </div>
         </div>
       </div>
@@ -226,102 +226,36 @@
         <!-- DinoBot Module -->
         <div class="module-card card">
           <div class="module-icon">
-            <span class="module-emoji">🚗</span>
+            <span class="module-emoji">🤖</span>
           </div>
           <h3 class="module-title">DinoBot Module</h3>
-          <p class="module-subtitle">Motor Robot + Ultrasonic Sensor</p>
+          <p class="module-subtitle">Motorized Robot + Ultrasonic Sensor</p>
           <p class="module-description">
-            Watch your programs come to life! Control a motorized robot with real sensors,
-            learning movement, conditions, and obstacle avoidance through hands-on exploration.
+            Build and program your own autonomous robot! Watch your code come to life as you control
+            motors, read sensors, and create intelligent behaviors that respond to the environment.
           </p>
 
-          <div class="module-features">
-            <h4>Learning Journey:</h4>
-            <div class="feature-list">
-              <div class="feature-item">
-                <span class="feature-badge orange">🟠</span>
-                <span>Basic Movement Commands</span>
-              </div>
-              <div class="feature-item">
-                <span class="feature-badge yellow">🟡</span>
-                <span>Variables & Storage</span>
-              </div>
-              <div class="feature-item">
-                <span class="feature-badge blue">🔵</span>
-                <span>Sensor-Based Conditions</span>
-              </div>
-              <div class="feature-item">
-                <span class="feature-badge purple">🟣</span>
-                <span>Loop Patterns & Dance</span>
-              </div>
-              <div class="feature-item">
-                <span class="feature-badge green">🟢</span>
-                <span>Advanced Obstacle Avoidance</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="module-highlights">
-            <div class="highlight">
-              <strong>Real-World Physics:</strong> Cause & effect relationships
-            </div>
-            <div class="highlight">
-              <strong>Interactive Learning:</strong> Immediate visual feedback
-            </div>
-            <div class="highlight">
-              <strong>Progressive Difficulty:</strong> From basics to autonomous behavior
-            </div>
+          <div class="module-images">
+            <img src="assets/dino-image-1.jpg" alt="DinoBot Module" class="module-image">
+            <img src="assets/dino-image-2.jpg" alt="DinoBot Module" class="module-image">
           </div>
         </div>
 
-        <!-- LED Module -->
+        <!-- LED Matrix Module -->
         <div class="module-card card">
           <div class="module-icon">
             <span class="module-emoji">💡</span>
           </div>
           <h3 class="module-title">LED Matrix Module</h3>
-          <p class="module-subtitle">LED Display + Ultrasonic Sensor</p>
+          <p class="module-subtitle">8x8 LED Display + Ultrasonic Sensor</p>
           <p class="module-description">
-            Create dazzling light patterns and interactive displays! Program individual LEDs
-            to respond to sensor input, building beautiful animations and games.
+            Create stunning light shows and interactive games! Program individual LEDs to display
+            patterns, animations, and respond to sensor input for immersive visual experiences.
           </p>
 
-          <div class="module-features">
-            <h4>Learning Journey:</h4>
-            <div class="feature-list">
-              <div class="feature-item">
-                <span class="feature-badge orange">🟠</span>
-                <span>Individual LED Control</span>
-              </div>
-              <div class="feature-item">
-                <span class="feature-badge yellow">🟡</span>
-                <span>Position Variables</span>
-              </div>
-              <div class="feature-item">
-                <span class="feature-badge blue">🔵</span>
-                <span>Sensor-Responsive Displays</span>
-              </div>
-              <div class="feature-item">
-                <span class="feature-badge purple">🟣</span>
-                <span>Pattern Generation</span>
-              </div>
-              <div class="feature-item">
-                <span class="feature-badge green">🟢</span>
-                <span>Interactive LED Games</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="module-highlights">
-            <div class="highlight">
-              <strong>Visual Creativity:</strong> Immediate artistic feedback
-            </div>
-            <div class="highlight">
-              <strong>Mathematical Concepts:</strong> Coordinates & patterns
-            </div>
-            <div class="highlight">
-              <strong>Game Development:</strong> Interactive entertainment programming
-            </div>
+          <div class="module-images">
+            <img src="assets/led-image-1.jpg" alt="DinoBot Module" class="module-image">
+            <img src="assets/led-image-2.jpg" alt="DinoBot Module" class="module-image">
           </div>
         </div>
 
@@ -339,36 +273,19 @@
           InnoDino is open source - transparent, customizable, and built for everyone
         </p>
       </div>
-
-      <div class="opensource-content">
-        <div class="opensource-cta">
-          <div class="opensource-box">
-            <h3>🚀 Join Our Community</h3>
-            <p>Help us build the future of accessible robotics education!</p>
-            <div class="opensource-buttons">
-              <a href="https://github.com/breejesh/innodino" target="_blank" class="btn btn-primary">
-                <span class="btn-icon">⭐</span>
-                <span class="btn-text">Star on GitHub</span>
-              </a>
-              <a href="https://github.com/breejesh/innodino/issues" target="_blank" class="btn btn-secondary">
-                <span class="btn-icon">🐛</span>
-                <span class="btn-text">Report Issues</span>
-              </a>
-              <a href="https://github.com/breejesh/innodino/blob/main/README.md" target="_blank" class="btn btn-secondary">
-                <span class="btn-icon">📖</span>
-                <span class="btn-text">Documentation</span>
-              </a>
-            </div>
-            <div class="opensource-stats">
-              <div class="stat-item">
-                <strong>🦖 Educators:</strong> Report bugs, suggest features
-              </div>
-              <div class="stat-item">
-                <strong>💻 Developers:</strong> Submit code, add new blocks
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="opensource-buttons">
+        <a href="https://github.com/breejesh/innodino" target="_blank" class="btn btn-secondary">
+          <span class="btn-icon">⭐</span>
+          <span class="btn-text">Star on GitHub</span>
+        </a>
+        <a href="https://github.com/breejesh/innodino/issues" target="_blank" class="btn btn-secondary">
+          <span class="btn-icon">🐛</span>
+          <span class="btn-text">Report Issues</span>
+        </a>
+        <a href="https://github.com/breejesh/innodino/blob/main/README.md" target="_blank" class="btn btn-secondary">
+          <span class="btn-icon">📖</span>
+          <span class="btn-text">Documentation</span>
+        </a>
       </div>
     </div>
   </section>

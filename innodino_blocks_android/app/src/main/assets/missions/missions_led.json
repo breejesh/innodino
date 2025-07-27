@@ -13,7 +13,7 @@
 			"id": "led_2",
 			"title": "Mission 2: Memory Crystals of Elder Triceratops",
 			"description": "Use variables to store value and turn the LED on at that value. Demonstrate variable usage.",
-			"allowedBlocks": ["turn_on_led", "turn_off_led", "wait_seconds", "variables_set", "variables_get"],
+			"allowedBlocks": ["turn_on_led", "turn_off_led", "set_led_brightness", "wait_seconds", "variables_set", "variables_get", "math_number", "math_arithmetic"],
 			"icon": "🦕",
 			"nextMissionId": "led_3",
 			"expectedAnimation": "led_on.json"
@@ -22,7 +22,7 @@
 			"id": "led_3",
 			"title": "Mission 3: The Guardian's Challenge",
 			"description": "Use the ultrasonic sensor to detect distance and control the LED based on sensor input. Practice If-else logic.",
-			"allowedBlocks": ["turn_on_led", "turn_off_led", "wait_seconds", "read_distance", "controls_if", "logic_compare"],
+			"allowedBlocks": ["turn_on_led", "turn_off_led", "wait_seconds", "read_distance", "controls_if", "controls_ifelse", "logic_compare", "logic_operation", "logic_boolean", "variables_set", "variables_get", "math_number", "math_arithmetic"],
 			"icon": "🛡️",
 			"nextMissionId": "led_4",
 			"expectedAnimation": "led_on.json"
@@ -31,7 +31,7 @@
 			"id": "led_4",
 			"title": "Mission 4: Rhythm of the Ancient Pterodactyl",
 			"description": "Turn on all the LED on and off using repeat. Practice loops.",
-			"allowedBlocks": ["turn_on_led", "turn_off_led", "repeat", "wait_seconds", "controls_if"],
+			"allowedBlocks": ["turn_on_led", "turn_off_led", "controls_repeat_ext", "controls_whileUntil", "wait_seconds", "controls_if", "logic_compare", "logic_operation", "logic_boolean", "variables_set", "variables_get", "controls_ifelse", "math_number", "math_arithmetic"],
 			"icon": "🎵",
 			"nextMissionId": "led_5",
 			"expectedAnimation": "led_on.json"
@@ -40,7 +40,7 @@
 			"id": "led_5",
 			"title": "FINALE: The Great Illumination Ceremony",
 			"description": "Combine sensors, variables, loops, and LED blocks to create a multi-step light show program.",
-			"allowedBlocks": ["read_distance", "controls_if", "wait_seconds", "logic_compare", "turn_on_led", "turn_off_led", "variables_set", "repeat"],
+			"allowedBlocks": ["read_distance", "controls_if", "controls_ifelse", "wait_seconds", "logic_compare", "logic_operation", "logic_boolean", "turn_on_led", "turn_off_led", "led_pattern", "clear_led", "set_led_brightness", "variables_set", "variables_get", "controls_repeat_ext", "controls_whileUntil", "math_number", "math_arithmetic"],
 			"icon": "🌟",
 			"nextMissionId": null,
 			"expectedAnimation": "led_on.json"

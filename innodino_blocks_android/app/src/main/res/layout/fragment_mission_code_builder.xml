@@ -42,23 +42,7 @@
             android:gravity="center_vertical"
             android:maxLines="4"
             android:ellipsize="end"/>
-        <Button
-            android:id="@+id/missionDemoButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Demo"
-            android:textColor="#FFF"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="0dp"
-            android:layout_gravity="center_vertical"
-            android:clickable="true"
-            android:focusable="true"/>
+
     </LinearLayout>
 
     <!-- Blockly WebView (max real estate) -->

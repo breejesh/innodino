@@ -155,7 +155,15 @@
     <category name="📏 Sensor" colour="#FFCE55">
       <block type="read_distance"></block>
     </category>
-
+    <category name="⏳ Time" colour="#6FCF97">
+       <block type="wait_seconds">
+        <value name="SECONDS">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+      </block>
+    </category>
     <category name="🔄 Control" colour="#6FCF97">
       <block type="controls_if"></block>
       <block type="controls_ifelse"></block>
@@ -166,13 +174,8 @@
           </shadow>
         </value>
       </block>
-      <block type="wait_seconds">
-        <value name="SECONDS">
-          <shadow type="math_number">
-            <field name="NUM">1</field>
-          </shadow>
-        </value>
-      </block>
+      <block type="controls_whileUntil"></block>
+    
     </category>
 
     <category name="🧠 Logic" colour="#6FCF97">
