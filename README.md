@@ -1,4 +1,4 @@
-# 🦖 InnoDino: Modular Robotics for All
+# 🦖 InnoDino
 
 **Ultra-affordable, offline-first robotics learning platform for every child, everywhere.**
 
@@ -19,6 +19,23 @@ InnoDino makes robotics and coding accessible through:
 [![InnoDino Demo Video](https://img.shields.io/badge/▶️%20Watch%20Presentation-YouTube-red?style=for-the-badge)](https://youtu.be/Pboqs_4Z1Ag)
 
 *See InnoDino's intuitive block-based programming in action!*
+
+## 📸 Gallery
+
+<p float="left">
+    <img src="innodino-labs-spa/src/assets/dino-image-1.jpg" alt="DinoBot Module 1" height="250"/>
+    <img src="innodino-labs-spa/src/assets/dino-image-2.jpg" alt="DinoBot Module 2" height="250"/>
+    <img src="innodino-labs-spa/src/assets/led-image-1.jpg" alt="LED Module 1" height="250"/>
+    <img src="innodino-labs-spa/src/assets/led-image-2.jpg" alt="LED Module 2" height="250"/>
+</p>
+
+<p float="left">
+    <img src="innodino-labs-spa/src/assets/ss-1.png" alt="App Screenshot" height="300"/>
+    <img src="innodino-labs-spa/src/assets/ss-2.png" alt="App Screenshot" height="300"/>
+    <img src="innodino-labs-spa/src/assets/ss-3.png" alt="App Screenshot" height="300"/>
+    <img src="innodino-labs-spa/src/assets/ss-4.png" alt="App Screenshot" height="300"/>
+    <img src="innodino-labs-spa/src/assets/ss-5.png" alt="App Screenshot" height="300"/>
+</p>
 
 ## 🚀 Quick Start
 
